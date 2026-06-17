@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const booking_controller_js_1 = require("../controllers/booking.controller.js");
+const auth_js_1 = require("../middleware/auth.js");
+const client_1 = require("@prisma/client");
+const router = (0, express_1.Router)();
+router.use(auth_js_1.authenticateToken);
+router.post('/', (0, auth_js_1.requireRoles)([client_1.UserRole.ADMIN, client_1.UserRole.STAFF, client_1.UserRole.MEMBER]), booking_controller_js_1.createBooking);
+router.post('/cancel', (0, auth_js_1.requireRoles)([client_1.UserRole.ADMIN, client_1.UserRole.STAFF, client_1.UserRole.MEMBER]), booking_controller_js_1.cancelBooking);
+router.get('/member/:memberId', (0, auth_js_1.requireRoles)([client_1.UserRole.ADMIN, client_1.UserRole.STAFF, client_1.UserRole.MEMBER]), booking_controller_js_1.getMemberBookings);
+exports.default = router;

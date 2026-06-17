@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  MEMBER
+  TRAINER
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+  PAUSED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  FAILED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  UPI
+  STRIPE
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole @default(MEMBER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  member       Member?
+  trainer      Trainer?
+}
+
+model Member {
+  id               String         @id @default(uuid())
+  userId           String         @unique
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinDate         DateTime       @default(now())
+  status           MemberStatus   @default(ACTIVE)
+  emergencyContact String?
+  subscriptions    Subscription[]
+  checkIns         CheckIn[]
+  bookings         ClassBooking[]
+}
+
+model MembershipPlan {
+  id             String         @id @default(uuid())
+  name           String
+  price          Float
+  durationMonths Int
+  description    String?
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  subscriptions  Subscription[]
+}
+
+model Subscription {
+  id        String             @id @default(uuid())
+  memberId  String
+  member    Member             @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      MembershipPlan     @relation(fields: [planId], references: [id])
+  startDate DateTime
+  endDate   DateTime
+  status    SubscriptionStatus @default(ACTIVE)
+  createdAt DateTime           @default(now())
+  payments  Payment[]
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  subscriptionId  String
+  subscription    Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  amount          Float
+  status          PaymentStatus @default(PENDING)
+  method          PaymentMethod @default(CASH)
+  stripePaymentId String?
+  paymentDate     DateTime      @default(now())
+}
+
+model CheckIn {
+  id        String   @id @default(uuid())
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  timestamp DateTime @default(now())
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model Trainer {
+  id        String       @id @default(uuid())
+  userId    String?      @unique
+  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  firstName String
+  lastName  String
+  specialty String
+  email     String?      @unique
+  phone     String?
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  classes   GroupClass[]
+}
+
+model GroupClass {
+  id              String         @id @default(uuid())
+  name            String
+  description     String?
+  trainerId       String
+  trainer         Trainer        @relation(fields: [trainerId], references: [id])
+  dateTime        DateTime
+  durationMinutes Int            @default(60)
+  capacity        Int            @default(20)
+  bookings        ClassBooking[]
+  createdAt       DateTime       @default(now())
+}
+
+model ClassBooking {
+  id       String        @id @default(uuid())
+  classId  String
+  class    GroupClass    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  memberId String
+  member   Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  bookedAt DateTime      @default(now())
+  status   BookingStatus @default(CONFIRMED)
+
+  @@unique([classId, memberId]) // Prevent duplicate bookings for same member in same class
+}
