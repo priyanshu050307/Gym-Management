@@ -18,6 +18,6 @@ router.get('/:id', getClassById);
 
 router.post('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, createClass);
 router.put('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, updateClass);
-router.delete('/:id', requireRoles([UserRole.ADMIN]) as any, deleteClass);
+router.delete('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, deleteClass);
 
 export default router;

@@ -26,6 +26,6 @@ router.get('/:id/feedback', getTrainerFeedback as any);
 
 router.post('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, createTrainer);
 router.put('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, updateTrainer);
-router.delete('/:id', requireRoles([UserRole.ADMIN]) as any, deleteTrainer);
+router.delete('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, deleteTrainer);
 
 export default router;

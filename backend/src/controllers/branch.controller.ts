@@ -1,18 +1,53 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import { UserRole } from '@prisma/client';
 import prisma from '../config/prisma.js';
 
 export const createBranch = async (req: Request, res: Response) => {
   try {
-    const { name, address, phone, gstNo } = req.body;
+    const { name, address, phone, gstNo, staffEmail, staffPassword, staffFirstName, staffLastName } = req.body;
     if (!name) {
       return res.status(400).json({ error: 'Branch name is required' });
     }
 
-    const branch = await prisma.branch.create({
-      data: { name, address, phone, gstNo },
+    if (staffEmail) {
+      const existingUser = await prisma.user.findUnique({ where: { email: staffEmail } });
+      if (existingUser) {
+        return res.status(400).json({ error: 'Staff email is already registered' });
+      }
+      if (!staffPassword || !staffFirstName || !staffLastName) {
+        return res.status(400).json({ error: 'All staff details (Password, First Name, Last Name) are required when adding branch staff' });
+      }
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const branch = await tx.branch.create({
+        data: { name, address, phone, gstNo },
+      });
+
+      let staffUser = null;
+      if (staffEmail) {
+        const passwordHash = await bcrypt.hash(staffPassword, 10);
+        staffUser = await tx.user.create({
+          data: {
+            email: staffEmail,
+            passwordHash,
+            firstName: staffFirstName,
+            lastName: staffLastName,
+            role: UserRole.STAFF,
+            branchId: branch.id,
+          },
+        });
+      }
+
+      return { branch, staffUser };
     });
 
-    return res.status(201).json({ message: 'Branch created successfully', branch });
+    return res.status(201).json({
+      message: 'Branch created successfully',
+      branch: result.branch,
+      staff: result.staffUser,
+    });
   } catch (error: any) {
     console.error('Create branch error:', error);
     return res.status(500).json({ error: 'Internal server error' });

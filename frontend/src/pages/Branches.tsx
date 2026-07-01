@@ -25,6 +25,13 @@ export const Branches: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [gstNo, setGstNo] = useState('');
 
+  // Staff registration state (for new branch creation)
+  const [createStaff, setCreateStaff] = useState(false);
+  const [staffEmail, setStaffEmail] = useState('');
+  const [staffPassword, setStaffPassword] = useState('');
+  const [staffFirstName, setStaffFirstName] = useState('');
+  const [staffLastName, setStaffLastName] = useState('');
+
   const fetchBranches = async () => {
     try {
       setLoading(true);
@@ -47,6 +54,11 @@ export const Branches: React.FC = () => {
     setAddress('');
     setPhone('');
     setGstNo('');
+    setCreateStaff(false);
+    setStaffEmail('');
+    setStaffPassword('');
+    setStaffFirstName('');
+    setStaffLastName('');
     setError('');
     setModalOpen(true);
   };
@@ -68,6 +80,13 @@ export const Branches: React.FC = () => {
       return;
     }
 
+    if (!editingBranch && createStaff) {
+      if (!staffEmail || !staffPassword || !staffFirstName || !staffLastName) {
+        setError('Please fill in all staff details.');
+        return;
+      }
+    }
+
     try {
       if (editingBranch) {
         // Update Branch
@@ -79,7 +98,16 @@ export const Branches: React.FC = () => {
         // Create Branch
         await apiFetch('/branches', {
           method: 'POST',
-          body: { name, address, phone, gstNo },
+          body: { 
+            name, 
+            address, 
+            phone, 
+            gstNo,
+            staffEmail: createStaff ? staffEmail : undefined,
+            staffPassword: createStaff ? staffPassword : undefined,
+            staffFirstName: createStaff ? staffFirstName : undefined,
+            staffLastName: createStaff ? staffLastName : undefined
+          },
         });
       }
       
@@ -204,8 +232,8 @@ export const Branches: React.FC = () => {
       {/* Modal for Create/Edit */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-md border border-slate-100/10 rounded-2xl overflow-hidden shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100/10">
+          <div className="glass-card w-full max-w-md border border-slate-100/10 rounded-2xl overflow-hidden shadow-2xl animate-fade-in max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100/10 shrink-0">
               <h2 className="text-xl font-bold text-gym-text">
                 {editingBranch ? 'Edit Branch' : 'Add Gym Branch'}
               </h2>
@@ -217,7 +245,7 @@ export const Branches: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4 max-h-[70vh]">
               {error && (
                 <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
                   {error}
@@ -277,7 +305,85 @@ export const Branches: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100/10">
+              {!editingBranch && (
+                <div className="border-t border-slate-100/10 pt-4 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="createStaffCheckbox"
+                      checked={createStaff}
+                      onChange={(e) => setCreateStaff(e.target.checked)}
+                      className="rounded border-slate-700 bg-slate-900 text-gym-primary focus:ring-gym-primary cursor-pointer h-4 w-4"
+                    />
+                    <label htmlFor="createStaffCheckbox" className="text-sm font-semibold text-gym-primary cursor-pointer select-none">
+                      Create an initial staff account for this branch
+                    </label>
+                  </div>
+                  
+                  {createStaff && (
+                    <div className="space-y-4 animate-fade-in">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-gym-muted mb-1">
+                            First Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={staffFirstName}
+                            onChange={(e) => setStaffFirstName(e.target.value)}
+                            className="gym-input text-sm"
+                            placeholder="John"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gym-muted mb-1">
+                            Last Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={staffLastName}
+                            onChange={(e) => setStaffLastName(e.target.value)}
+                            className="gym-input text-sm"
+                            placeholder="Doe"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-gym-muted mb-1">
+                          Staff Email *
+                        </label>
+                        <input
+                          type="email"
+                          value={staffEmail}
+                          onChange={(e) => setStaffEmail(e.target.value)}
+                          className="gym-input text-sm"
+                          placeholder="staff@gym.com"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-gym-muted mb-1">
+                          Staff Password *
+                        </label>
+                        <input
+                          type="password"
+                          value={staffPassword}
+                          onChange={(e) => setStaffPassword(e.target.value)}
+                          className="gym-input text-sm"
+                          placeholder="••••••••"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100/10 shrink-0">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}

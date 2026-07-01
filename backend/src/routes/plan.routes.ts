@@ -12,8 +12,8 @@ router.get('/', getPlans);
 router.get('/:id', getPlanById);
 
 // Administrative mutations
-router.post('/', requireRoles([UserRole.ADMIN]) as any, createPlan);
-router.put('/:id', requireRoles([UserRole.ADMIN]) as any, updatePlan);
-router.delete('/:id', requireRoles([UserRole.ADMIN]) as any, deletePlan);
+router.post('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, createPlan);
+router.put('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, updatePlan);
+router.delete('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, deletePlan);
 
 export default router;
