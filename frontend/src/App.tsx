@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext.js';
+import { AuthProvider } from './context/AuthContext.js';
 import { ProtectedRoute } from './components/ProtectedRoute.js';
 import { DashboardLayout } from './components/DashboardLayout.js';
 import { Login } from './pages/Login.js';
+import { LandingPage } from './pages/LandingPage.js';
 import { DashboardOverview } from './pages/DashboardOverview.js';
 import { MembersList } from './pages/MembersList.js';
 import { MemberRegister } from './pages/MemberRegister.js';
@@ -17,37 +18,23 @@ import { TrainerPortal } from './pages/TrainerPortal.js';
 import { Equipment } from './pages/Equipment.js';
 import { Supplements } from './pages/Supplements.js';
 
-function HomeRedirect() {
-  const { user } = useAuth();
-  if (user?.role === 'MEMBER') {
-    return <Navigate to="/portal" replace />;
-  }
-  if (user?.role === 'TRAINER') {
-    return <Navigate to="/trainer-portal" replace />;
-  }
-  return <Navigate to="/dashboard" replace />;
-}
-
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
 
           {/* Secure Administrative & Member Dashboard Routes */}
           <Route
-            path="/"
             element={
               <ProtectedRoute allowedRoles={['ADMIN', 'STAFF', 'MEMBER', 'TRAINER']}>
                 <DashboardLayout />
               </ProtectedRoute>
             }
           >
-            {/* Redirect root based on user role */}
-            <Route index element={<HomeRedirect />} />
-            
             {/* Administrative Routes */}
             <Route path="dashboard" element={<DashboardOverview />} />
             <Route path="members" element={<MembersList />} />

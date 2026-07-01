@@ -13,10 +13,7 @@ import {
   Package,
   TrendingDown,
   Tag,
-  DollarSign,
-  UserCheck,
-  History,
-  FileText
+  History
 } from 'lucide-react';
 
 interface SupplementData {

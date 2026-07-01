@@ -25,6 +25,7 @@ interface Trainer {
   phone?: string;
   isActive: boolean;
   user?: {
+    id: string;
     branchId?: string | null;
     branch?: {
       name: string;

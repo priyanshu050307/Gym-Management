@@ -27,8 +27,14 @@ export const Login: React.FC = () => {
         body: { email, password },
       });
 
+      let targetPath = from;
+      if (from === '/dashboard') {
+        if (data.user.role === 'MEMBER') targetPath = '/portal';
+        else if (data.user.role === 'TRAINER') targetPath = '/trainer-portal';
+      }
+
       login(data.token, data.user);
-      navigate(from, { replace: true });
+      navigate(targetPath, { replace: true });
     } catch (err: any) {
       setError(err.message || 'Failed to authenticate. Please check your credentials.');
     } finally {

@@ -11,14 +11,11 @@ import {
   Clock,
   CheckCircle2,
   AlertTriangle,
-  ChevronRight,
   Activity,
-  Star,
   RefreshCw,
   UserCheck,
   Loader2,
   XCircle,
-  Info,
 } from 'lucide-react';
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */

@@ -345,7 +345,7 @@ export const BillingList: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-200 text-sm">
                   {filteredPayments.map((payment) => {
-                    const user = payment.subscription.member.user;
+                    const memberUser = payment.subscription.member.user;
                     return (
                       <tr key={payment.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="px-6 py-4 font-mono text-xs text-gym-muted">
@@ -353,12 +353,12 @@ export const BillingList: React.FC = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div className="font-semibold text-gym-text">
-                            {user.firstName} {user.lastName}
+                            {memberUser.firstName} {memberUser.lastName}
                           </div>
-                          <div className="text-xs text-gym-muted">{user.email}</div>
+                          <div className="text-xs text-gym-muted">{memberUser.email}</div>
                         </td>
                         <td className="px-6 py-4 text-gym-muted">
-                          {user.branch?.name || <span className="italic text-slate-400">Global</span>}
+                          {memberUser.branch?.name || <span className="italic text-slate-400">Global</span>}
                         </td>
                         <td className="px-6 py-4 font-bold text-gym-text">
                           ₹{payment.amount.toFixed(2)}
