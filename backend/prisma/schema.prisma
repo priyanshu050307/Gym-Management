@@ -102,6 +102,9 @@ model Subscription {
   status    SubscriptionStatus @default(ACTIVE)
   createdAt DateTime           @default(now())
   payments  Payment[]
+
+  @@index([memberId])
+  @@index([planId])
 }
 
 model Payment {
@@ -116,6 +119,8 @@ model Payment {
   method          PaymentMethod @default(CASH)
   stripePaymentId String?
   paymentDate     DateTime      @default(now())
+
+  @@index([subscriptionId])
 }
 
 model CheckIn {
@@ -124,6 +129,8 @@ model CheckIn {
   member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
   timestamp    DateTime  @default(now())
   checkoutTime DateTime?
+
+  @@index([memberId])
 }
 
 enum BookingStatus {
@@ -160,6 +167,8 @@ model GroupClass {
   capacity        Int            @default(20)
   bookings        ClassBooking[]
   createdAt       DateTime       @default(now())
+
+  @@index([trainerId])
 }
 
 model ClassBooking {
@@ -172,6 +181,8 @@ model ClassBooking {
   status   BookingStatus @default(CONFIRMED)
 
   @@unique([classId, memberId]) // Prevent duplicate bookings for same member in same class
+  @@index([memberId])
+  @@index([classId])
 }
 
 model Branch {
@@ -219,6 +230,9 @@ model WorkoutPlan {
   days        WorkoutDay[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+
+  @@index([memberId])
+  @@index([trainerId])
 }
 
 model WorkoutDay {
@@ -251,6 +265,9 @@ model DietPlan {
   meals       DietMeal[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  @@index([memberId])
+  @@index([trainerId])
 }
 
 model DietMeal {
@@ -274,6 +291,8 @@ model ProgressLog {
   bodyFat    Float?
   muscleMass Float?
   loggedAt   DateTime @default(now())
+
+  @@index([memberId])
 }
 
 model TrainerFeedback {
@@ -285,6 +304,9 @@ model TrainerFeedback {
   rating    Int
   feedback  String?
   createdAt DateTime @default(now())
+
+  @@index([trainerId])
+  @@index([memberId])
 }
 
 model Equipment {
@@ -298,6 +320,8 @@ model Equipment {
   branch       Branch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  @@index([branchId])
 }
 
 model Supplement {
@@ -312,6 +336,8 @@ model Supplement {
   sales       SupplementSale[]
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+
+  @@index([branchId])
 }
 
 model SupplementSale {
@@ -328,4 +354,8 @@ model SupplementSale {
   branch       Branch     @relation(fields: [branchId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+
+  @@index([supplementId])
+  @@index([memberId])
+  @@index([branchId])
 }
