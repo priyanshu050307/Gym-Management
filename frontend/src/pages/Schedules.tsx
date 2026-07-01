@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../utils/api.js';
+import { useAuth } from '../context/AuthContext.js';
 import {
   Calendar,
   Users,
@@ -11,7 +12,8 @@ import {
   Search,
   X,
   Plus,
-  Loader2
+  Loader2,
+  Star
 } from 'lucide-react';
 
 interface Trainer {
@@ -22,6 +24,12 @@ interface Trainer {
   email?: string;
   phone?: string;
   isActive: boolean;
+  user?: {
+    branchId?: string | null;
+    branch?: {
+      name: string;
+    } | null;
+  } | null;
 }
 
 interface MemberSummary {
@@ -62,6 +70,7 @@ interface GroupClass {
 }
 
 export const Schedules: React.FC = () => {
+  const { user, activeBranchId, branches } = useAuth();
   // Navigation tabs: 'schedule' | 'trainers' | 'manage'
   const [activeTab, setActiveTab] = useState<'schedule' | 'trainers' | 'manage'>('schedule');
 
@@ -72,6 +81,10 @@ export const Schedules: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const displayedClasses = user?.role === 'TRAINER'
+    ? classes.filter(c => c.trainerId === user.trainer?.id || c.trainer?.user?.id === user.id)
+    : classes;
+
   // Forms state: Add/Edit Trainer
   const [showTrainerModal, setShowTrainerModal] = useState(false);
   const [editingTrainer, setEditingTrainer] = useState<Trainer | null>(null);
@@ -81,7 +94,8 @@ export const Schedules: React.FC = () => {
     specialty: '',
     email: '',
     phone: '',
-    isActive: true
+    isActive: true,
+    branchId: ''
   });
   const [trainerFormSubmitting, setTrainerFormSubmitting] = useState(false);
 
@@ -105,6 +119,24 @@ export const Schedules: React.FC = () => {
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
 
+  // Trainer Feedback Reviews Modal State
+  const [feedbackTrainer, setFeedbackTrainer] = useState<Trainer | null>(null);
+  const [feedbackLogs, setFeedbackLogs] = useState<any[]>([]);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
+
+  const handleViewFeedback = async (trainer: Trainer) => {
+    setFeedbackTrainer(trainer);
+    setLoadingFeedback(true);
+    try {
+      const data = await apiFetch<any>(`/trainers/${trainer.id}/feedback`);
+      setFeedbackLogs(data.reviews || []);
+    } catch (err: any) {
+      alert(err.message || 'Failed to fetch reviews');
+    } finally {
+      setLoadingFeedback(false);
+    }
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -127,7 +159,7 @@ export const Schedules: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [activeBranchId]);
 
   // Sync selected class data in booking modal when classes state changes
   useEffect(() => {
@@ -148,7 +180,8 @@ export const Schedules: React.FC = () => {
       specialty: '',
       email: '',
       phone: '',
-      isActive: true
+      isActive: true,
+      branchId: activeBranchId || (branches.length > 0 ? branches[0].id : '')
     });
     setShowTrainerModal(true);
   };
@@ -161,7 +194,8 @@ export const Schedules: React.FC = () => {
       specialty: trainer.specialty,
       email: trainer.email || '',
       phone: trainer.phone || '',
-      isActive: trainer.isActive
+      isActive: trainer.isActive,
+      branchId: trainer.user?.branchId || ''
     });
     setShowTrainerModal(true);
   };
@@ -388,25 +422,29 @@ export const Schedules: React.FC = () => {
           {/* Schedule Utilities */}
           <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
             <span className="text-xs text-gym-muted font-medium uppercase tracking-wider">
-              {classes.length} Sessions Scheduled
+              {displayedClasses.length} Sessions Scheduled
             </span>
-            <button
-              onClick={handleOpenClassAdd}
-              className="px-4 py-2 bg-gym-primary hover:bg-gym-primary/80 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition-all"
-            >
-              <PlusCircle className="h-4 w-4" />
-              Schedule Class
-            </button>
+            {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+              <button
+                onClick={handleOpenClassAdd}
+                className="px-4 py-2 bg-gym-primary hover:bg-gym-primary/80 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition-all"
+              >
+                <PlusCircle className="h-4 w-4" />
+                Schedule Class
+              </button>
+            )}
           </div>
 
           {/* Classes Listing */}
-          {classes.length === 0 ? (
+          {displayedClasses.length === 0 ? (
             <div className="glass-card rounded-2xl border border-slate-100 p-16 text-center text-gym-muted italic">
-              No classes scheduled yet. Click "Schedule Class" to schedule group fitness lessons.
+              {user?.role === 'TRAINER'
+                ? 'No classes scheduled for you yet.'
+                : 'No classes scheduled yet. Click "Schedule Class" to schedule group fitness lessons.'}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {classes.map((gClass) => {
+              {displayedClasses.map((gClass) => {
                 const dateObj = new Date(gClass.dateTime);
                 const dayName = dateObj.toLocaleDateString([], { weekday: 'long' });
                 const dateString = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
@@ -425,20 +463,22 @@ export const Schedules: React.FC = () => {
                         <span className="inline-flex px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-gym-primary/10 text-gym-primary border border-gym-primary/20">
                           {dayName}, {dateString}
                         </span>
-                        <div className="flex gap-1">
-                          <button
-                            onClick={() => handleOpenClassEdit(gClass)}
-                            className="p-1.5 hover:bg-slate-50 rounded-lg text-gym-muted hover:text-gym-text transition-colors"
-                          >
-                            <Edit2 className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleClassDelete(gClass.id)}
-                            className="p-1.5 hover:bg-red-500/10 rounded-lg text-gym-muted hover:text-red-400 transition-colors"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
+                        {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => handleOpenClassEdit(gClass)}
+                              className="p-1.5 hover:bg-slate-50 rounded-lg text-gym-muted hover:text-gym-text transition-colors"
+                            >
+                              <Edit2 className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleClassDelete(gClass.id)}
+                              className="p-1.5 hover:bg-red-500/10 rounded-lg text-gym-muted hover:text-red-400 transition-colors"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Info */}
@@ -482,8 +522,12 @@ export const Schedules: React.FC = () => {
                         onClick={() => setSelectedClassForBooking(gClass)}
                         className="w-full mt-3 py-2.5 bg-gym-primary/10 hover:bg-gym-primary text-gym-primary hover:text-white border border-gym-primary/20 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5"
                       >
-                        <Plus className="h-4 w-4" />
-                        Manage Roster & Bookings
+                        {user?.role === 'TRAINER' ? (
+                          <Users className="h-4 w-4" />
+                        ) : (
+                          <Plus className="h-4 w-4" />
+                        )}
+                        {user?.role === 'TRAINER' ? 'View Attendee Roster' : 'Manage Roster & Bookings'}
                       </button>
                     </div>
                   </div>
@@ -499,13 +543,15 @@ export const Schedules: React.FC = () => {
             <span className="text-xs text-gym-muted font-medium uppercase tracking-wider">
               {trainers.length} Trainers Enrolled
             </span>
-            <button
-              onClick={handleOpenTrainerAdd}
-              className="px-4 py-2 bg-gym-primary hover:bg-gym-primary/80 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition-all"
-            >
-              <UserPlus className="h-4 w-4" />
-              Add Trainer
-            </button>
+            {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+              <button
+                onClick={handleOpenTrainerAdd}
+                className="px-4 py-2 bg-gym-primary hover:bg-gym-primary/80 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition-all"
+              >
+                <UserPlus className="h-4 w-4" />
+                Add Trainer
+              </button>
+            )}
           </div>
 
           {trainers.length === 0 ? (
@@ -531,35 +577,63 @@ export const Schedules: React.FC = () => {
                       >
                         {trainer.isActive ? 'Active' : 'Inactive'}
                       </span>
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => handleOpenTrainerEdit(trainer)}
-                          className="p-1.5 hover:bg-slate-50 rounded-lg text-gym-muted hover:text-gym-text transition-colors"
-                        >
-                          <Edit2 className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleTrainerDelete(trainer.id)}
-                          className="p-1.5 hover:bg-red-500/10 rounded-lg text-gym-muted hover:text-red-400 transition-colors"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
+                      {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleOpenTrainerEdit(trainer)}
+                            className="p-1.5 hover:bg-slate-50 rounded-lg text-gym-muted hover:text-gym-text transition-colors"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleTrainerDelete(trainer.id)}
+                            className="p-1.5 hover:bg-red-500/10 rounded-lg text-gym-muted hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-1">
                       <h3 className="font-extrabold text-gym-text text-base truncate">
                         {trainer.firstName} {trainer.lastName}
                       </h3>
-                      <div className="inline-flex px-2.5 py-0.5 bg-gym-secondary/15 text-gym-secondary text-[10px] font-bold rounded-lg border border-gym-secondary/10">
-                        {trainer.specialty}
+                      <div className="flex gap-1.5 flex-wrap">
+                        <span className="inline-flex px-2.5 py-0.5 bg-gym-secondary/15 text-gym-secondary text-[10px] font-bold rounded-lg border border-gym-secondary/10">
+                          {trainer.specialty}
+                        </span>
+                        {trainer.user?.branch?.name && (
+                          <span className="inline-flex px-2.5 py-0.5 bg-gym-primary/10 text-gym-primary text-[10px] font-bold rounded-lg border border-gym-primary/25">
+                            {trainer.user.branch.name}
+                          </span>
+                        )}
                       </div>
                     </div>
 
                     {/* Contact info details */}
-                    <div className="space-y-1 pt-3 border-t border-slate-100 text-xs text-gym-muted font-mono">
-                      <p className="truncate">{trainer.email || 'No email registered'}</p>
-                      <p>{trainer.phone || 'No phone registered'}</p>
+                    <div className="space-y-1.5 pt-3 border-t border-slate-100 text-xs text-gym-muted">
+                      <p className="font-mono truncate">{trainer.email || 'No email registered'}</p>
+                      <p className="font-mono">{trainer.phone || 'No phone registered'}</p>
+                      
+                      {/* Ratings scoreboard */}
+                      <div className="flex items-center gap-1.5 pt-1.5 border-t border-slate-50 mt-1">
+                        <Star className="h-3.5 w-3.5 text-gym-secondary fill-gym-secondary" />
+                        <span className="text-xs font-bold text-gym-text">
+                          {(trainer as any).averageRating > 0 ? (trainer as any).averageRating : 'No Rating'}
+                        </span>
+                        <span className="text-[10px] text-gym-muted">
+                          ({(trainer as any).feedbackCount || 0} reviews)
+                        </span>
+                        {((trainer as any).feedbackCount || 0) > 0 && (
+                          <button
+                            onClick={() => handleViewFeedback(trainer)}
+                            className="text-[10px] text-gym-primary hover:underline font-bold ml-auto"
+                          >
+                            View Reviews
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -593,7 +667,7 @@ export const Schedules: React.FC = () => {
                     required
                     value={trainerForm.firstName}
                     onChange={(e) => setTrainerForm({ ...trainerForm, firstName: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none"
+                    className="gym-input"
                   />
                 </div>
                 <div>
@@ -603,7 +677,7 @@ export const Schedules: React.FC = () => {
                     required
                     value={trainerForm.lastName}
                     onChange={(e) => setTrainerForm({ ...trainerForm, lastName: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none"
+                    className="gym-input"
                   />
                 </div>
               </div>
@@ -616,7 +690,7 @@ export const Schedules: React.FC = () => {
                   placeholder="e.g. CrossFit, Yoga, Zumba, Cardio"
                   value={trainerForm.specialty}
                   onChange={(e) => setTrainerForm({ ...trainerForm, specialty: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none"
+                  className="gym-input"
                 />
               </div>
 
@@ -626,7 +700,7 @@ export const Schedules: React.FC = () => {
                   type="email"
                   value={trainerForm.email}
                   onChange={(e) => setTrainerForm({ ...trainerForm, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none"
+                  className="gym-input"
                 />
               </div>
 
@@ -636,9 +710,34 @@ export const Schedules: React.FC = () => {
                   type="text"
                   value={trainerForm.phone}
                   onChange={(e) => setTrainerForm({ ...trainerForm, phone: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none"
+                  className="gym-input"
                 />
               </div>
+
+              {user?.role === 'ADMIN' ? (
+                branches.length > 0 && (
+                  <div>
+                    <label className="block text-xs font-semibold text-gym-muted uppercase mb-1.5">Branch Assignment</label>
+                    <select
+                      value={trainerForm.branchId}
+                      onChange={(e) => setTrainerForm({ ...trainerForm, branchId: e.target.value })}
+                      className="gym-input"
+                    >
+                      <option value="">Select Branch...</option>
+                      {branches.map((b: any) => (
+                        <option key={b.id} value={b.id}>{b.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )
+              ) : (
+                <div>
+                  <label className="block text-xs font-semibold text-gym-muted uppercase mb-1.5">Branch</label>
+                  <p className="text-xs font-bold text-gym-text bg-slate-900/50 p-2.5 rounded-lg border border-slate-100/5">
+                    {branches.find(b => b.id === trainerForm.branchId)?.name || 'Home Branch'}
+                  </p>
+                </div>
+              )}
 
               <div className="flex items-center gap-2 pt-2">
                 <input
@@ -690,7 +789,7 @@ export const Schedules: React.FC = () => {
                   placeholder="e.g. Saturday Yoga, Morning Lift"
                   value={classForm.name}
                   onChange={(e) => setClassForm({ ...classForm, name: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none"
+                  className="gym-input"
                 />
               </div>
 
@@ -700,7 +799,7 @@ export const Schedules: React.FC = () => {
                   placeholder="Provide details of the workout session..."
                   value={classForm.description}
                   onChange={(e) => setClassForm({ ...classForm, description: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-sm focus:border-gym-primary focus:outline-none h-20 resize-none"
+                  className="gym-input h-20 resize-none"
                 />
               </div>
 
@@ -710,7 +809,7 @@ export const Schedules: React.FC = () => {
                   required
                   value={classForm.trainerId}
                   onChange={(e) => setClassForm({ ...classForm, trainerId: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-gym-darker border border-slate-200 text-gym-text text-sm focus:border-gym-primary focus:outline-none"
+                  className="gym-input"
                 >
                   <option value="" disabled>Select a trainer...</option>
                   {trainers.filter(t => t.isActive).map(t => (
@@ -732,7 +831,7 @@ export const Schedules: React.FC = () => {
                     required
                     value={classForm.dateTime}
                     onChange={(e) => setClassForm({ ...classForm, dateTime: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text text-sm focus:border-gym-primary focus:outline-none"
+                    className="gym-input"
                   />
                 </div>
                 <div>
@@ -743,7 +842,7 @@ export const Schedules: React.FC = () => {
                     min="10"
                     value={classForm.durationMinutes}
                     onChange={(e) => setClassForm({ ...classForm, durationMinutes: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text text-sm focus:border-gym-primary focus:outline-none"
+                    className="gym-input"
                   />
                 </div>
               </div>
@@ -756,7 +855,7 @@ export const Schedules: React.FC = () => {
                   min="1"
                   value={classForm.capacity}
                   onChange={(e) => setClassForm({ ...classForm, capacity: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text text-sm focus:border-gym-primary focus:outline-none"
+                  className="gym-input"
                 />
               </div>
 
@@ -813,62 +912,64 @@ export const Schedules: React.FC = () => {
               )}
 
               {/* Booking search bar adder */}
-              <form onSubmit={handleAddBooking} className="space-y-3 pb-6 border-b border-slate-100">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search member name or ID..."
-                    value={bookingSearchQuery}
-                    onChange={(e) => {
-                      setBookingSearchQuery(e.target.value);
-                      setBookingError(null);
-                    }}
-                    className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-xs focus:border-gym-primary focus:outline-none"
-                  />
-                  <Search className="absolute left-3 top-3.5 h-3.5 w-3.5 text-gym-muted" />
-                </div>
-
-                {bookingSearchQuery.trim() !== '' && (
-                  <div className="bg-gym-darker border border-slate-200 rounded-xl max-h-36 overflow-y-auto divide-y divide-slate-200">
-                    {filteredMembers.length === 0 ? (
-                      <div className="p-3 text-[11px] text-gym-muted text-center italic">
-                        No active members found matching query
-                      </div>
-                    ) : (
-                      filteredMembers.map(m => (
-                        <button
-                          key={m.id}
-                          type="button"
-                          onClick={() => {
-                            setBookingMemberId(m.id);
-                            setBookingSearchQuery(`${m.user.firstName} ${m.user.lastName}`);
-                          }}
-                          className={`w-full p-2.5 text-left text-xs transition-colors flex items-center justify-between hover:bg-slate-50 ${
-                            bookingMemberId === m.id ? 'bg-gym-primary/10 text-gym-primary font-bold' : 'text-gym-text'
-                          }`}
-                        >
-                          <div>
-                            <div>{m.user.firstName} {m.user.lastName}</div>
-                            <div className="text-[10px] text-gym-muted font-mono">{m.id.substring(0, 8)}...</div>
-                          </div>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
-                            {m.status}
-                          </span>
-                        </button>
-                      ))
-                    )}
+              {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                <form onSubmit={handleAddBooking} className="space-y-3 pb-6 border-b border-slate-100">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search member name or ID..."
+                      value={bookingSearchQuery}
+                      onChange={(e) => {
+                        setBookingSearchQuery(e.target.value);
+                        setBookingError(null);
+                      }}
+                      className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted text-xs focus:border-gym-primary focus:outline-none"
+                    />
+                    <Search className="absolute left-3 top-3.5 h-3.5 w-3.5 text-gym-muted" />
                   </div>
-                )}
 
-                <button
-                  type="submit"
-                  disabled={bookingLoading || !bookingMemberId}
-                  className="w-full py-2.5 bg-gym-primary hover:bg-gym-primary/80 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5"
-                >
-                  {bookingLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                  Register Member in Roster
-                </button>
-              </form>
+                  {bookingSearchQuery.trim() !== '' && (
+                    <div className="bg-gym-darker border border-slate-200 rounded-xl max-h-36 overflow-y-auto divide-y divide-slate-200">
+                      {filteredMembers.length === 0 ? (
+                        <div className="p-3 text-[11px] text-gym-muted text-center italic">
+                          No active members found matching query
+                        </div>
+                      ) : (
+                        filteredMembers.map(m => (
+                          <button
+                            key={m.id}
+                            type="button"
+                            onClick={() => {
+                              setBookingMemberId(m.id);
+                              setBookingSearchQuery(`${m.user.firstName} ${m.user.lastName}`);
+                            }}
+                            className={`w-full p-2.5 text-left text-xs transition-colors flex items-center justify-between hover:bg-slate-50 ${
+                              bookingMemberId === m.id ? 'bg-gym-primary/10 text-gym-primary font-bold' : 'text-gym-text'
+                            }`}
+                          >
+                            <div>
+                              <div>{m.user.firstName} {m.user.lastName}</div>
+                              <div className="text-[10px] text-gym-muted font-mono">{m.id.substring(0, 8)}...</div>
+                            </div>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
+                              {m.status}
+                            </span>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={bookingLoading || !bookingMemberId}
+                    className="w-full py-2.5 bg-gym-primary hover:bg-gym-primary/80 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5"
+                  >
+                    {bookingLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                    Register Member in Roster
+                  </button>
+                </form>
+              )}
 
               {/* Roster list */}
               <div className="mt-6 space-y-3">
@@ -892,12 +993,14 @@ export const Schedules: React.FC = () => {
                             {booking.member.id}
                           </div>
                         </div>
-                        <button
-                          onClick={() => handleCancelBooking(booking.memberId)}
-                          className="p-1.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-lg transition-all border border-red-500/20"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
+                        {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                          <button
+                            onClick={() => handleCancelBooking(booking.memberId)}
+                            className="p-1.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white rounded-lg transition-all border border-red-500/20"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -913,6 +1016,77 @@ export const Schedules: React.FC = () => {
               className="w-full py-3 bg-slate-50 hover:bg-slate-100 text-gym-text border border-slate-200 font-semibold rounded-xl text-xs transition-all mt-6"
             >
               Close Roster Drawer
+            </button>
+          </div>
+        </div>
+      )}
+      {/* TRAINER FEEDBACK REVIEWS MODAL */}
+      {feedbackTrainer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-gym-card border border-slate-200 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[85vh]">
+            <button
+              onClick={() => setFeedbackTrainer(null)}
+              className="absolute top-4 right-4 p-1.5 hover:bg-slate-50 rounded-lg text-gym-muted hover:text-gym-text transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="space-y-1 mb-4">
+              <h3 className="font-extrabold text-lg text-gym-text">
+                Feedback Scorecard: {feedbackTrainer.firstName} {feedbackTrainer.lastName}
+              </h3>
+              <p className="text-xs text-gym-muted">Reviews and feedback comments submitted by members.</p>
+            </div>
+
+            <div className="overflow-y-auto flex-1 pr-1 space-y-4 pt-2 divide-y divide-slate-100">
+              {loadingFeedback ? (
+                <div className="flex justify-center items-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-gym-primary" />
+                </div>
+              ) : feedbackLogs.length === 0 ? (
+                <div className="py-12 text-center text-sm text-gym-muted italic">
+                  No member reviews logged yet.
+                </div>
+              ) : (
+                feedbackLogs.map((log) => (
+                  <div key={log.id} className="pt-3 space-y-1.5 first:pt-0 first:border-0 border-t border-slate-50">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-xs text-gym-text">
+                        {log.member.user.firstName} {log.member.user.lastName}
+                      </span>
+                      <span className="text-[10px] text-gym-muted font-mono">
+                        {new Date(log.submittedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`h-3.5 w-3.5 ${
+                            star <= log.rating
+                              ? 'text-gym-secondary fill-gym-secondary'
+                              : 'text-slate-700'
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    {log.feedback && (
+                      <p className="text-xs text-gym-text leading-relaxed bg-slate-900/10 p-2.5 rounded-lg italic">
+                        "{log.feedback}"
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+
+            <button
+              onClick={() => setFeedbackTrainer(null)}
+              className="w-full py-3 bg-slate-50 hover:bg-slate-100 text-gym-text border border-slate-200 font-semibold rounded-xl text-xs transition-all mt-6"
+            >
+              Close Scorecard
             </button>
           </div>
         </div>

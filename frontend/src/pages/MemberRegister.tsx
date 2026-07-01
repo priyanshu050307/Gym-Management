@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiFetch } from '../utils/api.js';
+import { useAuth } from '../context/AuthContext.js';
 import { ArrowLeft, User, Mail, ShieldAlert, Phone, Sparkles } from 'lucide-react';
 
 interface PlanData {
@@ -12,6 +13,7 @@ interface PlanData {
 
 export const MemberRegister: React.FC = () => {
   const navigate = useNavigate();
+  const { user, branches, activeBranchId } = useAuth();
   const [plans, setPlans] = useState<PlanData[]>([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -24,6 +26,30 @@ export const MemberRegister: React.FC = () => {
   const [password, setPassword] = useState('');
   const [emergencyContact, setEmergencyContact] = useState('');
   const [planId, setPlanId] = useState('');
+  const [selectedBranchId, setSelectedBranchId] = useState('');
+  const [trainers, setTrainers] = useState<any[]>([]);
+  const [selectedTrainerId, setSelectedTrainerId] = useState('');
+
+  useEffect(() => {
+    if (user?.role === 'STAFF' && user.branchId) {
+      setSelectedBranchId(user.branchId);
+    } else if (activeBranchId) {
+      setSelectedBranchId(activeBranchId);
+    }
+  }, [user, activeBranchId]);
+
+  useEffect(() => {
+    const fetchTrainers = async () => {
+      try {
+        const url = selectedBranchId ? `/trainers?branchId=${selectedBranchId}` : '/trainers';
+        const data = await apiFetch<{ trainers: any[] }>(url);
+        setTrainers(data.trainers || []);
+      } catch (err: any) {
+        console.error('Failed to load trainers:', err);
+      }
+    };
+    fetchTrainers();
+  }, [selectedBranchId]);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -57,6 +83,8 @@ export const MemberRegister: React.FC = () => {
           password,
           emergencyContact,
           planId: planId || undefined,
+          branchId: selectedBranchId || undefined,
+          trainerId: selectedTrainerId || undefined,
         },
       });
 
@@ -104,7 +132,7 @@ export const MemberRegister: React.FC = () => {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="John"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
+                className="gym-input"
               />
             </div>
             <div>
@@ -115,7 +143,7 @@ export const MemberRegister: React.FC = () => {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Doe"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
+                className="gym-input"
               />
             </div>
           </div>
@@ -129,7 +157,7 @@ export const MemberRegister: React.FC = () => {
                 value={emergencyContact}
                 onChange={(e) => setEmergencyContact(e.target.value)}
                 placeholder="+1 (555) 019-2834"
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
+                className="gym-input pl-12 pr-4"
               />
             </div>
           </div>
@@ -150,7 +178,7 @@ export const MemberRegister: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="john.doe@gmail.com"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
+              className="gym-input"
             />
           </div>
 
@@ -162,7 +190,7 @@ export const MemberRegister: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
+              className="gym-input"
             />
             <p className="text-xs text-gym-muted mt-1">The member can change this password upon their first login.</p>
           </div>
@@ -190,18 +218,68 @@ export const MemberRegister: React.FC = () => {
               <select
                 value={planId}
                 onChange={(e) => setPlanId(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
+                className="gym-input"
               >
                 <option value="">No Active Plan (Register Only)</option>
                 {plans.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} - ${p.price.toFixed(2)} ({p.durationMonths} {p.durationMonths === 1 ? 'Month' : 'Months'})
+                    {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths} {p.durationMonths === 1 ? 'Month' : 'Months'})
                   </option>
                 ))}
               </select>
             </div>
           )}
         </div>
+
+        {/* Personal Trainer Assignment (Visible to Admin and Staff) */}
+        {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+          <div className="glass-card p-6 rounded-2xl border border-slate-100 space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2 text-gym-primary">
+              <User className="h-5 w-5" />
+              Personal Trainer (PT) Assignment
+            </h2>
+            <div>
+              <label className="block text-sm font-medium text-gym-text/80 mb-2">Select Personal Trainer</label>
+              <select
+                value={selectedTrainerId}
+                onChange={(e) => setSelectedTrainerId(e.target.value)}
+                className="gym-input"
+              >
+                <option value="">No Personal Trainer (General Plan)</option>
+                {trainers.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.firstName} {t.lastName} ({t.specialty})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+
+        {/* Branch Assignment (Only visible/editable by Admin) */}
+        {user?.role === 'ADMIN' && (
+          <div className="glass-card p-6 rounded-2xl border border-slate-100 space-y-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2 text-gym-primary">
+              <Sparkles className="h-5 w-5" />
+              Branch Assignment
+            </h2>
+            <div>
+              <label className="block text-sm font-medium text-gym-text/80 mb-2">Select Branch</label>
+              <select
+                value={selectedBranchId}
+                onChange={(e) => setSelectedBranchId(e.target.value)}
+                className="gym-input"
+              >
+                <option value="">No Specific Branch (Global)</option>
+                {branches.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
 
         <button
           type="submit"

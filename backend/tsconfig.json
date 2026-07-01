@@ -12,5 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
+  "ts-node": {
+    "experimentalResolver": true
+  },
   "include": ["src/**/*"]
 }

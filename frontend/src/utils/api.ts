@@ -17,6 +17,11 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestOption
     headers.set('Authorization', `Bearer ${token}`);
   }
 
+  const activeBranchId = localStorage.getItem('activeBranchId');
+  if (activeBranchId) {
+    headers.set('X-Branch-Id', activeBranchId);
+  }
+
   const config: RequestInit = {
     ...options,
     headers,

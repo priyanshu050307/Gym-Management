@@ -74,7 +74,7 @@ export const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@gym.com"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted focus:border-gym-primary focus:outline-none transition-all duration-200"
+              className="gym-input"
             />
           </div>
 
@@ -89,7 +89,7 @@ export const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted focus:border-gym-primary focus:outline-none transition-all duration-200"
+              className="gym-input"
             />
           </div>
 

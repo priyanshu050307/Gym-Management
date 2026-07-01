@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/prisma.js';
 import { BookingStatus, MemberStatus } from '@prisma/client';
+import { createNotification } from './notification.controller.js';
 
 export const createBooking = async (req: Request, res: Response) => {
   try {
@@ -39,6 +40,7 @@ export const createBooking = async (req: Request, res: Response) => {
     const groupClass = await prisma.groupClass.findUnique({
       where: { id: classId },
       include: {
+        trainer: true,
         bookings: {
           where: { status: BookingStatus.CONFIRMED },
         },
@@ -47,6 +49,17 @@ export const createBooking = async (req: Request, res: Response) => {
 
     if (!groupClass) {
       return res.status(404).json({ error: 'Group class session not found' });
+    }
+
+    if (groupClass.trainer?.userId) {
+      const trainerUser = await prisma.user.findUnique({
+        where: { id: groupClass.trainer.userId },
+      });
+      if (trainerUser && trainerUser.branchId !== member.user.branchId) {
+        return res.status(400).json({
+          error: 'Booking Denied: You can only book classes scheduled in your assigned branch.',
+        });
+      }
     }
 
     if (groupClass.bookings.length >= groupClass.capacity) {
@@ -72,6 +85,24 @@ export const createBooking = async (req: Request, res: Response) => {
         where: { id: existingBooking.id },
         data: { status: BookingStatus.CONFIRMED },
       });
+
+      // Send notifications
+      await createNotification(
+        member.userId,
+        'Booking Confirmed',
+        `Your slot in "${groupClass.name}" has been confirmed!`,
+        'BOOKING'
+      );
+
+      if (groupClass.trainer?.userId) {
+        await createNotification(
+          groupClass.trainer.userId,
+          'New Class Booking',
+          `${member.user.firstName} ${member.user.lastName} booked a slot in your class "${groupClass.name}".`,
+          'BOOKING'
+        );
+      }
+
       return res.status(200).json({ message: 'Booking re-confirmed successfully', booking: updatedBooking });
     }
 
@@ -83,6 +114,23 @@ export const createBooking = async (req: Request, res: Response) => {
         status: BookingStatus.CONFIRMED,
       },
     });
+
+    // Send notifications
+    await createNotification(
+      member.userId,
+      'Booking Confirmed',
+      `Your slot in "${groupClass.name}" has been confirmed!`,
+      'BOOKING'
+    );
+
+    if (groupClass.trainer?.userId) {
+      await createNotification(
+        groupClass.trainer.userId,
+        'New Class Booking',
+        `${member.user.firstName} ${member.user.lastName} booked a slot in your class "${groupClass.name}".`,
+        'BOOKING'
+      );
+    }
 
     return res.status(201).json({ message: 'Booking created successfully', booking });
   } catch (error: any) {
@@ -105,6 +153,16 @@ export const cancelBooking = async (req: Request, res: Response) => {
       const currentMember = await prisma.member.findUnique({ where: { userId: reqUser.id } });
       if (!currentMember || currentMember.id !== memberId) {
         return res.status(403).json({ error: 'Access Denied: You can only cancel your own class bookings.' });
+      }
+    }
+
+    if (reqUser && reqUser.role !== 'ADMIN' && reqUser.role !== 'MEMBER') {
+      const member = await prisma.member.findUnique({
+        where: { id: memberId },
+        include: { user: true },
+      });
+      if (!member || member.user.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only cancel bookings for members in your own branch.' });
       }
     }
 

@@ -8,6 +8,11 @@ import paymentRoutes from './routes/payment.routes.js';
 import trainerRoutes from './routes/trainer.routes.js';
 import classRoutes from './routes/class.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
+import branchRoutes from './routes/branch.routes.js';
+import notificationRoutes from './routes/notification.routes.js';
+import equipmentRoutes from './routes/equipment.routes.js';
+import supplementRoutes from './routes/supplement.routes.js';
+import saleRoutes from './routes/sale.routes.js';
 import { initCronJobs } from './config/cron.js';
 
 dotenv.config();
@@ -21,7 +26,7 @@ const app = express();
 app.use(cors({
   origin: '*', // For local dev, customize as needed
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Branch-Id'],
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,6 +44,11 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/trainers', trainerRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/branches', branchRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/equipments', equipmentRoutes);
+app.use('/api/supplements', supplementRoutes);
+app.use('/api/sales', saleRoutes);
 
 // 404 Route
 app.use((req, res) => {

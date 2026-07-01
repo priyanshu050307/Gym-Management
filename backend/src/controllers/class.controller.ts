@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middleware/auth.js';
 import prisma from '../config/prisma.js';
 
 export const createClass = async (req: Request, res: Response) => {
@@ -10,12 +11,20 @@ export const createClass = async (req: Request, res: Response) => {
     }
 
     // Verify trainer exists and is active
-    const trainer = await prisma.trainer.findUnique({ where: { id: trainerId } });
+    const trainer = await prisma.trainer.findUnique({
+      where: { id: trainerId },
+      include: { user: true },
+    });
     if (!trainer) {
       return res.status(404).json({ error: 'Trainer not found' });
     }
     if (!trainer.isActive) {
       return res.status(400).json({ error: 'Selected trainer profile is currently inactive' });
+    }
+
+    const reqUser = (req as any).user;
+    if (reqUser && reqUser.role !== 'ADMIN' && trainer.user?.branchId !== reqUser.branchId) {
+      return res.status(403).json({ error: 'Access Denied: You can only schedule classes for trainers in your own branch.' });
     }
 
     const groupClass = await prisma.groupClass.create({
@@ -39,10 +48,14 @@ export const createClass = async (req: Request, res: Response) => {
   }
 };
 
-export const getClasses = async (req: Request, res: Response) => {
+export const getClasses = async (req: AuthRequest, res: Response) => {
   try {
     // Optional query parameter to filter by date
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate, branchId } = req.query;
+    const activeBranchIdHeader = req.headers['x-branch-id'] as string | undefined;
+    const userRole = req.user?.role;
+    const userBranchId = req.user?.branchId;
+    const resolvedBranchId = (userRole !== 'ADMIN' ? userBranchId : (branchId as string || activeBranchIdHeader)) || undefined;
 
     const whereClause: any = {};
     if (startDate && endDate) {
@@ -52,10 +65,26 @@ export const getClasses = async (req: Request, res: Response) => {
       };
     }
 
+    if (resolvedBranchId) {
+      whereClause.trainer = {
+        user: {
+          branchId: resolvedBranchId,
+        },
+      };
+    }
+
     const classes = await prisma.groupClass.findMany({
       where: whereClause,
       include: {
-        trainer: true,
+        trainer: {
+          include: {
+            user: {
+              select: {
+                branchId: true,
+              },
+            },
+          },
+        },
         bookings: {
           include: {
             member: {
@@ -131,10 +160,28 @@ export const updateClass = async (req: Request, res: Response) => {
     if (capacity !== undefined) data.capacity = parseInt(capacity);
     if (dateTime !== undefined) data.dateTime = new Date(dateTime);
 
+    const existingClass = await prisma.groupClass.findUnique({
+      where: { id },
+      include: { trainer: { include: { user: true } } },
+    });
+    if (!existingClass) {
+      return res.status(404).json({ error: 'Class session not found' });
+    }
+    const reqUser = (req as any).user;
+    if (reqUser && reqUser.role !== 'ADMIN' && existingClass.trainer.user?.branchId !== reqUser.branchId) {
+      return res.status(403).json({ error: 'Access Denied: You can only update classes scheduled in your own branch.' });
+    }
+
     if (trainerId) {
-      const trainer = await prisma.trainer.findUnique({ where: { id: trainerId } });
+      const trainer = await prisma.trainer.findUnique({
+        where: { id: trainerId },
+        include: { user: true },
+      });
       if (!trainer) {
         return res.status(404).json({ error: 'Trainer not found' });
+      }
+      if (reqUser && reqUser.role !== 'ADMIN' && trainer.user?.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only assign trainers from your own branch.' });
       }
       data.trainerId = trainerId;
     }

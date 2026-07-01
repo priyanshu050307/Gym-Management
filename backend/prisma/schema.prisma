@@ -47,10 +47,14 @@ model User {
   firstName    String
   lastName     String
   role         UserRole @default(MEMBER)
+  branchId     String?
+  branch       Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   member       Member?
   trainer      Trainer?
+  notifications Notification[]
+  forgotTokens  ForgotPasswordToken[]
 }
 
 model Member {
@@ -60,9 +64,20 @@ model Member {
   joinDate         DateTime       @default(now())
   status           MemberStatus   @default(ACTIVE)
   emergencyContact String?
+  medicalHistory   String?
+  profilePhoto     String?
+  frozenStartDate  DateTime?
+  frozenEndDate    DateTime?
   subscriptions    Subscription[]
   checkIns         CheckIn[]
   bookings         ClassBooking[]
+  workoutPlan      WorkoutPlan?
+  dietPlan         DietPlan?
+  progressLogs     ProgressLog[]
+  feedbacks        TrainerFeedback[]
+  trainerId        String?
+  trainer          Trainer?       @relation("PersonalTrainer", fields: [trainerId], references: [id], onDelete: SetNull)
+  supplementSales  SupplementSale[]
 }
 
 model MembershipPlan {
@@ -94,6 +109,9 @@ model Payment {
   subscriptionId  String
   subscription    Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
   amount          Float
+  discount        Float         @default(0)
+  refundedAmount  Float         @default(0)
+  isRefunded      Boolean       @default(false)
   status          PaymentStatus @default(PENDING)
   method          PaymentMethod @default(CASH)
   stripePaymentId String?
@@ -101,10 +119,11 @@ model Payment {
 }
 
 model CheckIn {
-  id        String   @id @default(uuid())
-  memberId  String
-  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  timestamp DateTime @default(now())
+  id           String    @id @default(uuid())
+  memberId     String
+  member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  timestamp    DateTime  @default(now())
+  checkoutTime DateTime?
 }
 
 enum BookingStatus {
@@ -115,7 +134,7 @@ enum BookingStatus {
 model Trainer {
   id        String       @id @default(uuid())
   userId    String?      @unique
-  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName String
   lastName  String
   specialty String
@@ -124,6 +143,10 @@ model Trainer {
   isActive  Boolean      @default(true)
   createdAt DateTime     @default(now())
   classes   GroupClass[]
+  workoutPlans WorkoutPlan[]
+  dietPlans    DietPlan[]
+  feedbacks    TrainerFeedback[]
+  ptMembers    Member[]          @relation("PersonalTrainer")
 }
 
 model GroupClass {
@@ -149,4 +172,160 @@ model ClassBooking {
   status   BookingStatus @default(CONFIRMED)
 
   @@unique([classId, memberId]) // Prevent duplicate bookings for same member in same class
+}
+
+model Branch {
+  id          String       @id @default(uuid())
+  name        String
+  address     String?
+  phone       String?
+  gstNo       String?
+  users       User[]
+  equipments      Equipment[]
+  supplements     Supplement[]
+  supplementSales SupplementSale[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model ForgotPasswordToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   // e.g., "INFO", "ALERT", "BILLING", "BOOKING"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model WorkoutPlan {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  trainerId   String?
+  trainer     Trainer?      @relation(fields: [trainerId], references: [id], onDelete: SetNull)
+  memberId    String        @unique
+  member      Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  days        WorkoutDay[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model WorkoutDay {
+  id            String            @id @default(uuid())
+  workoutPlanId String
+  workoutPlan   WorkoutPlan       @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+  dayOfWeek     String
+  exercises     WorkoutExercise[]
+}
+
+model WorkoutExercise {
+  id           String     @id @default(uuid())
+  workoutDayId String
+  workoutDay   WorkoutDay @relation(fields: [workoutDayId], references: [id], onDelete: Cascade)
+  name         String
+  sets         Int
+  reps         String
+  weightLbs    Float?
+  notes        String?
+}
+
+model DietPlan {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  trainerId   String?
+  trainer     Trainer?   @relation(fields: [trainerId], references: [id], onDelete: SetNull)
+  memberId    String     @unique
+  member      Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  meals       DietMeal[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model DietMeal {
+  id         String   @id @default(uuid())
+  dietPlanId String
+  dietPlan   DietPlan @relation(fields: [dietPlanId], references: [id], onDelete: Cascade)
+  name       String
+  time       String?
+  items      String
+  calories   Int?
+  protein    Int?
+  carbs      Int?
+  fat        Int?
+}
+
+model ProgressLog {
+  id         String   @id @default(uuid())
+  memberId   String
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  weightKg   Float
+  bodyFat    Float?
+  muscleMass Float?
+  loggedAt   DateTime @default(now())
+}
+
+model TrainerFeedback {
+  id        String   @id @default(uuid())
+  trainerId String
+  trainer   Trainer  @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  rating    Int
+  feedback  String?
+  createdAt DateTime @default(now())
+}
+
+model Equipment {
+  id           String    @id @default(uuid())
+  name         String
+  quantity     Int       @default(1)
+  status       String    @default("WORKING") // e.g., "WORKING", "MAINTENANCE", "BROKEN"
+  lastServiced DateTime?
+  notes        String?
+  branchId     String
+  branch       Branch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Supplement {
+  id          String           @id @default(uuid())
+  name        String
+  price       Float
+  stock       Int              @default(0)
+  description String?
+  category    String?          // e.g., "PROTEIN", "CREATINE", "PREWORKOUT", "VITAMINS", "OTHER"
+  branchId    String
+  branch      Branch           @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  sales       SupplementSale[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model SupplementSale {
+  id           String     @id @default(uuid())
+  supplementId String
+  supplement   Supplement @relation(fields: [supplementId], references: [id], onDelete: Cascade)
+  memberId     String
+  member       Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  quantity     Int        @default(1)
+  soldPrice    Float
+  saleType     String     @default("PAID") // "PAID", "FREE_WITH_SUBSCRIPTION", "ADDITIONAL_CHARGED"
+  notes        String?
+  branchId     String
+  branch       Branch     @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }

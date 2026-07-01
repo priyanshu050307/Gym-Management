@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiFetch } from '../utils/api.js';
-import { Search, UserPlus, FileText, CheckCircle2, AlertTriangle, AlertCircle, Eye } from 'lucide-react';
+import { Search, UserPlus, FileText, CheckCircle2, AlertTriangle, AlertCircle, Eye, Trash2, Star } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.js';
 
 interface MemberData {
   id: string;
   status: 'ACTIVE' | 'INACTIVE' | 'PAUSED';
   joinDate: string;
   emergencyContact: string | null;
+  profilePhoto?: string | null;
+  trainerId?: string | null;
   user: {
     email: string;
     firstName: string;
     lastName: string;
+    branch?: {
+      id: string;
+      name: string;
+    } | null;
   };
   subscriptions: Array<{
     id: string;
@@ -23,11 +30,27 @@ interface MemberData {
 }
 
 export const MembersList: React.FC = () => {
+  const { user } = useAuth();
   const [members, setMembers] = useState<MemberData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
+
+  const handleDeleteMember = async (id: string) => {
+    if (!window.confirm('Are you sure you want to permanently delete this member? All subscriptions, payments, plans, check-ins, and logs will be deleted.')) {
+      return;
+    }
+
+    try {
+      await apiFetch(`/members/${id}`, {
+        method: 'DELETE',
+      });
+      await fetchMembers();
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete member.');
+    }
+  };
 
   const fetchMembers = async () => {
     try {
@@ -113,7 +136,7 @@ export const MembersList: React.FC = () => {
             placeholder="Search by name or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-gym-card/40 border border-slate-100 text-gym-text placeholder-gym-muted focus:border-gym-primary focus:outline-none transition-all"
+            className="gym-input pl-12 pr-4"
           />
         </div>
 
@@ -165,6 +188,7 @@ export const MembersList: React.FC = () => {
                   <tr className="border-b border-slate-100 text-gym-muted text-sm font-semibold">
                     <th className="px-6 py-4">Name</th>
                     <th className="px-6 py-4">Email</th>
+                    <th className="px-6 py-4">Branch</th>
                     <th className="px-6 py-4">Join Date</th>
                     <th className="px-6 py-4">Plan</th>
                     <th className="px-6 py-4">Status</th>
@@ -174,12 +198,40 @@ export const MembersList: React.FC = () => {
                 <tbody className="divide-y divide-slate-200 text-sm">
                   {members.map((member) => {
                     const activeSub = member.subscriptions[0];
+                    const isMyPTClient = user?.role === 'TRAINER' && member.trainerId === user?.trainer?.id;
                     return (
-                      <tr key={member.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="px-6 py-4 font-semibold text-gym-text">
-                          {member.user.firstName} {member.user.lastName}
+                      <tr
+                        key={member.id}
+                        className={`transition-colors ${
+                          isMyPTClient
+                            ? 'bg-violet-600/10 hover:bg-violet-600/15 border-l-4 border-violet-500'
+                            : 'hover:bg-white/[0.02]'
+                        }`}
+                      >
+                        <td className="px-6 py-4 font-semibold text-gym-text flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full border border-slate-200 bg-slate-900 overflow-hidden flex items-center justify-center shrink-0">
+                            {member.profilePhoto ? (
+                              <img src={member.profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="text-gym-primary font-bold text-xs uppercase">
+                                {member.user.firstName[0]}{member.user.lastName[0]}
+                              </div>
+                            )}
+                          </div>
+                          <span className="flex items-center gap-2">
+                            {member.user.firstName} {member.user.lastName}
+                            {isMyPTClient && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-violet-600 text-white shadow-sm border border-violet-500/30">
+                                <Star className="h-2.5 w-2.5 fill-white" />
+                                My PT Client
+                              </span>
+                            )}
+                          </span>
                         </td>
                         <td className="px-6 py-4 text-gym-muted">{member.user.email}</td>
+                        <td className="px-6 py-4 text-gym-muted">
+                          {member.user.branch?.name || <span className="italic text-slate-400">Global</span>}
+                        </td>
                         <td className="px-6 py-4 text-gym-muted">
                           {new Date(member.joinDate).toLocaleDateString()}
                         </td>
@@ -194,7 +246,7 @@ export const MembersList: React.FC = () => {
                           )}
                         </td>
                         <td className="px-6 py-4">{getStatusBadge(member.status)}</td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-6 py-4 text-right flex justify-end gap-2">
                           <Link
                             to={`/members/${member.id}`}
                             className="inline-flex items-center gap-1 px-3 py-2 bg-gym-primary/10 text-gym-primary border border-gym-primary/20 rounded-xl hover:bg-gym-primary hover:text-white transition-all text-xs font-semibold"
@@ -202,6 +254,14 @@ export const MembersList: React.FC = () => {
                             <Eye className="h-3.5 w-3.5" />
                             Details
                           </Link>
+                          {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                            <button
+                              onClick={() => handleDeleteMember(member.id)}
+                              className="p-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 rounded-xl transition-all"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     );

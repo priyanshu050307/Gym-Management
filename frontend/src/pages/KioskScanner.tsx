@@ -16,6 +16,8 @@ interface MemberCheckInProfile {
   status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'EXPIRED';
   expiryDate: string;
   checkInCountToday?: number;
+  profilePhoto?: string | null;
+  medicalHistory?: string | null;
 }
 
 interface SeededMemberSummary {
@@ -128,6 +130,8 @@ export const KioskScanner: React.FC = () => {
           status: res.member.status,
           expiryDate: res.member.expiryDate,
           checkInCountToday: 1, // Visual count
+          profilePhoto: res.member.profilePhoto,
+          medicalHistory: res.member.medicalHistory,
         },
       });
       playAccessGrantedSound();
@@ -141,6 +145,8 @@ export const KioskScanner: React.FC = () => {
               name: err.member.name,
               status: err.member.status,
               expiryDate: err.member.expiryDate,
+              profilePhoto: err.member.profilePhoto,
+              medicalHistory: err.member.medicalHistory,
             }
           : undefined,
       });
@@ -293,7 +299,7 @@ export const KioskScanner: React.FC = () => {
                 placeholder="Enter Member ID (UUID) manually..."
                 value={manualIdInput}
                 onChange={(e) => setManualIdInput(e.target.value)}
-                className="flex-1 px-4 py-3 rounded-xl bg-gym-card/40 border border-slate-100 text-gym-text placeholder-gym-muted focus:border-gym-primary focus:outline-none transition-all text-sm"
+                className="gym-input flex-1"
               />
               <button
                 type="submit"
@@ -422,19 +428,25 @@ export const KioskScanner: React.FC = () => {
 
                   {/* Profile Detail Block */}
                   {scanResult.profile ? (
-                    <div className="space-y-4 pt-4 border-t border-slate-100">
+                     <div className="space-y-4 pt-4 border-t border-slate-100">
                       <div className="flex items-center gap-4">
                         <div
-                          className={`h-14 w-14 rounded-full flex items-center justify-center font-bold text-lg border ${
+                          className={`h-14 w-14 rounded-full overflow-hidden flex items-center justify-center shrink-0 border ${
                             scanResult.success
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
-                              : 'bg-red-500/10 text-red-400 border-red-500/25'
+                              ? 'border-emerald-500/25 bg-slate-900'
+                              : 'border-red-500/25 bg-slate-900'
                           }`}
                         >
-                          {scanResult.profile.name
-                            .split(' ')
-                            .map((n) => n[0])
-                            .join('')}
+                          {scanResult.profile.profilePhoto ? (
+                            <img src={scanResult.profile.profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className={`font-bold text-lg ${scanResult.success ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {scanResult.profile.name
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')}
+                            </div>
+                          )}
                         </div>
                         <div>
                           <h3 className="font-extrabold text-gym-text text-base">
@@ -472,6 +484,13 @@ export const KioskScanner: React.FC = () => {
                           </div>
                         </div>
                       </div>
+
+                      {scanResult.profile.medicalHistory && (
+                        <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl flex items-start gap-2 animate-pulse">
+                          <div className="font-bold shrink-0">⚠️ MEDICAL:</div>
+                          <div className="font-semibold leading-relaxed">{scanResult.profile.medicalHistory}</div>
+                        </div>
+                      )}
                     </div>
                   ) : null}
 

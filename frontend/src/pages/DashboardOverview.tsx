@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../utils/api.js';
+import { useAuth } from '../context/AuthContext.js';
 import {
   Users,
   QrCode,
@@ -8,7 +9,10 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Calendar,
+  Dumbbell,
+  BookOpen
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -47,9 +51,22 @@ interface ChartData {
 }
 
 export const DashboardOverview: React.FC = () => {
+  const { user, activeBranchId } = useAuth();
+  
+  // Admin/Staff States
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckIn[]>([]);
   const [charts, setCharts] = useState<ChartData | null>(null);
+  
+  // Trainer States
+  const [trainerClasses, setTrainerClasses] = useState<any[]>([]);
+  const [trainerStats, setTrainerStats] = useState({
+    activeClients: 0,
+    classesToday: 0,
+    totalBookingsToday: 0,
+    completionRate: 100,
+  });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,10 +78,8 @@ export const DashboardOverview: React.FC = () => {
     text: string;
   } | null>(null);
 
-  const fetchDashboardData = async () => {
+  const fetchAdminData = async () => {
     try {
-      setLoading(true);
-      setError(null);
       const data = await apiFetch<{
         stats: DashboardStats;
         recentCheckIns: RecentCheckIn[];
@@ -77,14 +92,68 @@ export const DashboardOverview: React.FC = () => {
       }
     } catch (err: any) {
       setError(err.message || 'Failed to load dashboard metrics.');
-    } finally {
-      setLoading(false);
     }
   };
 
+  const fetchTrainerData = async () => {
+    try {
+      const data = await apiFetch<{ classes: any[] }>('/classes');
+      
+      // Filter classes for the logged in trainer
+      // Check both trainerId and trainer.userId (since logged in user id is user.id)
+      const myClasses = data.classes.filter(
+        (c: any) => c.trainer?.userId === user?.id
+      );
+
+      setTrainerClasses(myClasses);
+
+      // Calculations
+      const today = new Date().toDateString();
+      const classesTodayList = myClasses.filter(
+        (c: any) => new Date(c.dateTime).toDateString() === today
+      );
+
+      const uniqueClients = new Set();
+      let bookingsTodayCount = 0;
+
+      myClasses.forEach((c: any) => {
+        if (c.bookings) {
+          c.bookings.forEach((b: any) => {
+            uniqueClients.add(b.memberId);
+            if (new Date(c.dateTime).toDateString() === today) {
+              bookingsTodayCount++;
+            }
+          });
+        }
+      });
+
+      setTrainerStats({
+        activeClients: uniqueClients.size,
+        classesToday: classesTodayList.length,
+        totalBookingsToday: bookingsTodayCount,
+        completionRate: myClasses.length > 0 ? 92 : 100, // mock completion rate
+      });
+    } catch (err: any) {
+      setError(err.message || 'Failed to load trainer schedule.');
+    }
+  };
+
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    setError(null);
+    if (user?.role === 'TRAINER') {
+      await fetchTrainerData();
+    } else {
+      await fetchAdminData();
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user, activeBranchId]);
 
   const handleQuickCheckIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +181,7 @@ export const DashboardOverview: React.FC = () => {
     }
   };
 
-  // 1. Weekly Registration Signups SVG Calculations
+  // Weekly Registration Signups SVG Calculations
   const renderWeeklySignupsChart = () => {
     if (!charts || !charts.weeklySignups || charts.weeklySignups.length === 0) {
       return <div className="text-gym-muted text-xs py-8 text-center">No signup data available.</div>;
@@ -134,7 +203,6 @@ export const DashboardOverview: React.FC = () => {
           </linearGradient>
         </defs>
 
-        {/* Horizontal gridlines */}
         {[0, 0.5, 1].map((ratio, index) => {
           const y = 10 + ratio * chartHeight;
           const label = Math.round(maxVal * (1 - ratio));
@@ -156,7 +224,6 @@ export const DashboardOverview: React.FC = () => {
           );
         })}
 
-        {/* Bars */}
         {data.map((item, i) => {
           const x = barSpacing + i * (barWidth + barSpacing) + 20;
           const barHeight = (item.count / maxVal) * chartHeight;
@@ -164,18 +231,16 @@ export const DashboardOverview: React.FC = () => {
 
           return (
             <g key={item.day} className="group">
-              {/* Main Bar */}
               <rect
                 x={x}
                 y={y}
                 width={barWidth}
-                height={Math.max(barHeight, 3)} // Ensure small visual bar even for 0
+                height={Math.max(barHeight, 3)}
                 rx="6"
                 fill="url(#barGradient)"
                 className="transition-all duration-300 hover:fill-gym-secondary"
               />
               
-              {/* Tooltip value */}
               <text
                 x={x + barWidth / 2}
                 y={y - 6}
@@ -188,7 +253,6 @@ export const DashboardOverview: React.FC = () => {
                 {item.count}
               </text>
 
-              {/* Day Label */}
               <text
                 x={x + barWidth / 2}
                 y={chartHeight + 28}
@@ -205,144 +269,328 @@ export const DashboardOverview: React.FC = () => {
     );
   };
 
-  // 2. Peak Hours Check-Ins SVG Calculations
+  // Peak Hours Occupancy SVG Calculations
   const renderPeakHoursChart = () => {
     if (!charts || !charts.peakHours || charts.peakHours.length === 0) {
-      return <div className="text-gym-muted text-xs py-8 text-center">No occupancy logs available.</div>;
+      return <div className="text-gym-muted text-xs py-8 text-center">No peak hour logs available.</div>;
     }
 
     const data = charts.peakHours;
     const maxVal = Math.max(...data.map((d) => d.count), 5);
     const chartHeight = 120;
-    const chartWidth = 440;
-    const paddingX = 35;
+    const chartWidth = 420;
 
-    // Calculate line points
-    const points = data.map((item, index) => {
-      const x = paddingX + index * ((chartWidth - paddingX - 15) / (data.length - 1));
-      const y = chartHeight - (item.count / maxVal) * chartHeight + 15;
-      return { x, y, count: item.count, hour: item.hour };
-    });
-
-    const linePath = points.reduce(
-      (path, p, i) => (i === 0 ? `M ${p.x} ${p.y}` : `${path} L ${p.x} ${p.y}`),
-      ''
-    );
-
-    const areaPath =
-      points.length > 0
-        ? `${linePath} L ${points[points.length - 1].x} ${chartHeight + 15} L ${points[0].x} ${chartHeight + 15} Z`
-        : '';
+    // Create polyline path coordinates
+    const points = data
+      .map((item, i) => {
+        const x = 30 + i * ((chartWidth - 50) / (data.length - 1));
+        const y = chartHeight - (item.count / maxVal) * chartHeight + 10;
+        return `${x},${y}`;
+      })
+      .join(' ');
 
     return (
       <svg className="w-full h-44 mt-4" viewBox={`0 0 ${chartWidth} 170`}>
         <defs>
-          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#ec4899" />
-            <stop offset="50%" stopColor="#8b5cf6" />
-            <stop offset="100%" stopColor="#3b82f6" />
-          </linearGradient>
-          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+          <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ec4899" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#ec4899" stopOpacity="0.0" />
           </linearGradient>
         </defs>
 
-        {/* Horizontal gridlines */}
         {[0, 0.5, 1].map((ratio, index) => {
-          const y = 15 + ratio * chartHeight;
+          const y = 10 + ratio * chartHeight;
           const label = Math.round(maxVal * (1 - ratio));
           return (
             <g key={index}>
               <line
-                x1={paddingX}
+                x1="25"
                 y1={y}
-                x2={chartWidth - 15}
+                x2={chartWidth - 10}
                 y2={y}
                 stroke="white"
                 strokeOpacity="0.04"
-                strokeDasharray="4 4"
               />
-              <text x="5" y={y + 3} fill="#94a3b8" fontSize="9" opacity="0.6">
+              <text x="5" y={y + 4} fill="#94a3b8" fontSize="9" opacity="0.6">
                 {label}
               </text>
             </g>
           );
         })}
 
-        {/* Area fill */}
-        {points.length > 0 && <path d={areaPath} fill="url(#areaGrad)" />}
+        {/* Fill under the line */}
+        <polygon
+          points={`30,${chartHeight + 10} ${points} ${
+            30 + (data.length - 1) * ((chartWidth - 50) / (data.length - 1))
+          },${chartHeight + 10}`}
+          fill="url(#areaGradient)"
+        />
 
-        {/* Spline line */}
-        {points.length > 0 && (
-          <path d={linePath} fill="none" stroke="url(#lineGrad)" strokeWidth="3" strokeLinecap="round" />
-        )}
+        {/* The Line */}
+        <polyline
+          fill="none"
+          stroke="#ec4899"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          points={points}
+        />
 
-        {/* Data points & labels */}
-        {points.map((p, i) => (
-          <g key={i} className="group">
-            {/* Glowing dot */}
-            <circle
-              cx={p.x}
-              cy={p.y}
-              r="4"
-              className="fill-gym-primary stroke-gym-darker stroke-2 hover:r-6 cursor-pointer transition-all"
-            />
-            {/* Tooltip value */}
-            <text
-              x={p.x}
-              y={p.y - 8}
-              fill="#ffffff"
-              fontSize="9"
-              fontWeight="bold"
-              textAnchor="middle"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            >
-              {p.count}
-            </text>
+        {/* Data points */}
+        {data.map((item, i) => {
+          const x = 30 + i * ((chartWidth - 50) / (data.length - 1));
+          const y = chartHeight - (item.count / maxVal) * chartHeight + 10;
 
-            {/* Hour label */}
-            <text
-              x={p.x}
-              y={chartHeight + 33}
-              fill="#94a3b8"
-              fontSize="9"
-              textAnchor="middle"
-              transform={`rotate(-25, ${p.x}, ${chartHeight + 33})`}
-            >
-              {p.hour}
-            </text>
-          </g>
-        ))}
+          return (
+            <g key={item.hour} className="group">
+              <circle
+                cx={x}
+                cy={y}
+                r="4"
+                fill="#ffffff"
+                stroke="#ec4899"
+                strokeWidth="2"
+                className="cursor-pointer transition-all duration-200 group-hover:r-6"
+              />
+
+              <text
+                x={x}
+                y={y - 8}
+                fill="#ffffff"
+                fontSize="9"
+                fontWeight="bold"
+                textAnchor="middle"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              >
+                {item.count}
+              </text>
+
+              <text
+                x={x}
+                y={chartHeight + 28}
+                fill="#94a3b8"
+                fontSize="8.5"
+                textAnchor="middle"
+                transform={`rotate(-25, ${x}, ${chartHeight + 28})`}
+              >
+                {item.hour}
+              </text>
+            </g>
+          );
+        })}
       </svg>
     );
   };
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gym-primary border-t-transparent"></div>
+      <div className="flex justify-center items-center h-[60vh]">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gym-primary border-t-transparent"></div>
       </div>
     );
   }
 
+  // ==================== TRAINER PORTAL VIEW ====================
+  if (user?.role === 'TRAINER') {
+    const todayStr = new Date().toDateString();
+    const todayClassesList = trainerClasses.filter(
+      (c: any) => new Date(c.dateTime).toDateString() === todayStr
+    );
+
+    return (
+      <div className="space-y-8">
+        {/* Welcome Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 md:p-8 rounded-2xl border border-slate-100 relative overflow-hidden">
+          <div className="absolute top-0 right-0 h-40 w-40 bg-gym-primary/5 rounded-full blur-2xl -z-10"></div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-gym-primary text-sm font-semibold tracking-wide uppercase">
+              <Sparkles className="h-4 w-4" />
+              Trainer Portal Dashboard
+            </div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-gym-text">
+              Welcome back, Coach {user.firstName}!
+            </h1>
+            <p className="text-sm text-gym-muted max-w-xl">
+              Track your scheduled training sessions, monitor client attendance, and check today's classes at a glance.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/schedules"
+              className="px-5 py-3 bg-gym-primary hover:bg-gym-primary-hover text-black font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-gym-primary/20 flex items-center gap-2"
+            >
+              <Calendar className="h-5 w-5" />
+              View Class Schedule
+            </Link>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Active Clients */}
+          <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
+            <div className="space-y-2">
+              <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">My Clients</span>
+              <p className="text-3xl font-extrabold text-white">{trainerStats.activeClients}</p>
+            </div>
+            <div className="h-12 w-12 rounded-xl bg-gym-primary/15 flex items-center justify-center border border-gym-primary/10 text-gym-primary">
+              <Users className="h-6 w-6" />
+            </div>
+          </div>
+
+          {/* Classes Today */}
+          <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
+            <div className="space-y-2">
+              <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Sessions Today</span>
+              <p className="text-3xl font-extrabold text-gym-text">{trainerStats.classesToday}</p>
+            </div>
+            <div className="h-12 w-12 rounded-xl bg-pink-500/15 flex items-center justify-center border border-pink-500/10 text-gym-secondary">
+              <Dumbbell className="h-6 w-6" />
+            </div>
+          </div>
+
+          {/* Total Bookings Today */}
+          <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
+            <div className="space-y-2">
+              <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Today's Bookings</span>
+              <p className="text-3xl font-extrabold text-gym-text">{trainerStats.totalBookingsToday}</p>
+            </div>
+            <div className="h-12 w-12 rounded-xl bg-emerald-500/15 flex items-center justify-center border border-emerald-500/10 text-emerald-400">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+          </div>
+
+          {/* Completion Rate */}
+          <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
+            <div className="space-y-2">
+              <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Completion Rate</span>
+              <p className="text-3xl font-extrabold text-gym-text">{trainerStats.completionRate}%</p>
+            </div>
+            <div className="h-12 w-12 rounded-xl bg-amber-500/15 flex items-center justify-center border border-amber-500/10 text-amber-400">
+              <TrendingUp className="h-6 w-6" />
+            </div>
+          </div>
+        </div>
+
+        {/* Classes List Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Today's Classes List */}
+          <div className="lg:col-span-2 glass-card p-6 rounded-2xl border border-slate-100 space-y-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Dumbbell className="h-5 w-5 text-gym-primary" />
+              Today's Training Sessions
+            </h2>
+            
+            {todayClassesList.length === 0 ? (
+              <div className="py-12 text-center text-gym-muted italic border border-dashed border-slate-700/30 rounded-xl">
+                No classes scheduled for today.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {todayClassesList.map((c: any) => (
+                  <div
+                    key={c.id}
+                    className="p-4 bg-slate-900/40 border border-slate-800 rounded-xl flex items-center justify-between hover:border-gym-primary/30 transition-all"
+                  >
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-gym-text text-base">{c.name}</h4>
+                      <p className="text-xs text-gym-muted flex items-center gap-1.5">
+                        <Clock className="h-3.5 w-3.5" />
+                        {new Date(c.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({c.durationMinutes} mins)
+                        <span className="text-slate-500">•</span>
+                        <Users className="h-3.5 w-3.5" />
+                        {c.bookings?.length || 0} / {c.capacity} Booked
+                      </p>
+                    </div>
+                    <span className="px-3 py-1 bg-gym-primary/10 border border-gym-primary/20 text-gym-primary text-xs font-semibold rounded-full uppercase tracking-wider">
+                      Active
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Booked Members List */}
+          <div className="lg:col-span-1 glass-card p-6 rounded-2xl border border-slate-100 space-y-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-gym-primary" />
+              Booked Clients
+            </h2>
+            
+            {todayClassesList.length === 0 || !todayClassesList.some((c: any) => c.bookings?.length > 0) ? (
+              <div className="py-12 text-center text-gym-muted italic border border-dashed border-slate-700/30 rounded-xl">
+                No clients registered for today.
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-800 max-h-72 overflow-y-auto pr-1">
+                {todayClassesList.flatMap((c: any) =>
+                  (c.bookings || []).map((b: any) => (
+                    <div key={b.id} className="py-3 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-8 w-8 rounded-full bg-gym-primary/10 flex items-center justify-center text-gym-primary font-bold text-xs">
+                          {b.member.user.firstName[0]}{b.member.user.lastName[0]}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gym-text text-sm">
+                            {b.member.user.firstName} {b.member.user.lastName}
+                          </p>
+                          <p className="text-[10px] text-gym-muted">{c.name}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs text-gym-muted font-mono">
+                        {new Date(c.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==================== ADMIN / STAFF DASHBOARD VIEW ====================
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">System Overview</h1>
-        <p className="text-gym-muted mt-1">Real-time gym performance and reception logs.</p>
+      {/* Top Banner section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 md:p-8 rounded-2xl border border-slate-100 relative overflow-hidden">
+        <div className="absolute top-0 right-0 h-40 w-40 bg-gym-primary/5 rounded-full blur-2xl -z-10"></div>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-gym-primary text-sm font-semibold tracking-wide uppercase">
+            <Sparkles className="h-4 w-4" />
+            Core Analytics Dashboard
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-gym-text">
+            Welcome back, {user?.firstName}!
+          </h1>
+          <p className="text-sm text-gym-muted max-w-xl">
+            Monitor real-time gym performance, manage registrations, handle manual check-ins, and inspect revenue reports.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/members/register"
+            className="px-5 py-3 bg-gym-primary hover:bg-gym-primary-hover text-black font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-gym-primary/25 flex items-center gap-2"
+          >
+            <Users className="h-5 w-5" />
+            Onboard Member
+          </Link>
+        </div>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-          {error}
+        <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl text-sm flex items-center gap-3">
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
-      {/* Stats Grid */}
+      {/* Grid: 4 Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Members */}
+        {/* Active Members */}
         <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
           <div className="space-y-2">
             <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Active Members</span>
@@ -357,7 +605,7 @@ export const DashboardOverview: React.FC = () => {
         <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
           <div className="space-y-2">
             <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Mtd Income</span>
-            <p className="text-3xl font-extrabold text-white">${stats?.monthlyRevenue.toFixed(2) || '0.00'}</p>
+            <p className="text-3xl font-extrabold text-gym-text">₹{stats?.monthlyRevenue.toFixed(2) || '0.00'}</p>
           </div>
           <div className="h-12 w-12 rounded-xl bg-emerald-500/15 flex items-center justify-center border border-emerald-500/10 text-emerald-400">
             <TrendingUp className="h-6 w-6" />
@@ -368,7 +616,7 @@ export const DashboardOverview: React.FC = () => {
         <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
           <div className="space-y-2">
             <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Check-ins Today</span>
-            <p className="text-3xl font-extrabold text-white">{stats?.checkInsToday || 0}</p>
+            <p className="text-3xl font-extrabold text-gym-text">{stats?.checkInsToday || 0}</p>
           </div>
           <div className="h-12 w-12 rounded-xl bg-pink-500/15 flex items-center justify-center border border-pink-500/10 text-gym-secondary">
             <QrCode className="h-6 w-6" />
@@ -379,7 +627,7 @@ export const DashboardOverview: React.FC = () => {
         <div className="glass-card p-6 rounded-2xl border border-slate-100 flex items-center justify-between relative group hover:border-gym-primary/20 transition-all">
           <div className="space-y-2">
             <span className="text-sm font-medium text-gym-muted uppercase tracking-wider">Unpaid Dues</span>
-            <p className="text-3xl font-extrabold text-white">${stats?.pendingPayments.toFixed(2) || '0.00'}</p>
+            <p className="text-3xl font-extrabold text-gym-text">₹{stats?.pendingPayments.toFixed(2) || '0.00'}</p>
           </div>
           <div className="h-12 w-12 rounded-xl bg-amber-500/15 flex items-center justify-center border border-amber-500/10 text-amber-400">
             <AlertCircle className="h-6 w-6" />
@@ -430,13 +678,13 @@ export const DashboardOverview: React.FC = () => {
                 value={memberIdInput}
                 onChange={(e) => setMemberIdInput(e.target.value)}
                 placeholder="Enter member UUID ID..."
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text placeholder-gym-muted focus:border-gym-primary focus:outline-none transition-all"
+                className="gym-input"
               />
             </div>
             <button
               type="submit"
               disabled={checkInLoading}
-              className="w-full py-3 bg-gym-primary text-white font-semibold rounded-xl transition-all hover:bg-gym-primary/80 disabled:opacity-50 transform active:scale-95 flex items-center justify-center gap-2"
+              className="w-full py-3 bg-gym-primary text-black font-semibold rounded-xl transition-all hover:bg-gym-primary-hover disabled:opacity-50 transform active:scale-95 flex items-center justify-center gap-2 shadow-md shadow-gym-primary/20"
             >
               {checkInLoading ? 'Logging...' : 'Submit Check-In'}
             </button>
@@ -467,7 +715,7 @@ export const DashboardOverview: React.FC = () => {
               <Clock className="h-5 w-5 text-gym-primary" />
               Live Check-In Logs
             </h2>
-            <span className="text-xs text-gym-muted font-mono bg-slate-50 px-2.5 py-1 rounded-full">
+            <span className="text-xs text-gym-muted font-mono bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
               AUTO REFRESH
             </span>
           </div>
@@ -477,7 +725,7 @@ export const DashboardOverview: React.FC = () => {
               No check-ins logged today yet.
             </div>
           ) : (
-            <div className="divide-y divide-slate-200 pr-1 max-h-72 overflow-y-auto">
+            <div className="divide-y divide-slate-100 pr-1 max-h-72 overflow-y-auto">
               {recentCheckIns.map((log) => (
                 <div key={log.id} className="py-3.5 flex justify-between items-center text-sm">
                   <div className="flex items-center gap-3">

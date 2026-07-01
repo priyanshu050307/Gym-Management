@@ -1,15 +1,33 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middleware/auth.js';
 import prisma from '../config/prisma.js';
 import { PaymentStatus, PaymentMethod, SubscriptionStatus, MemberStatus } from '@prisma/client';
 import PDFDocument from 'pdfkit';
+import { createNotification } from './notification.controller.js';
 
-export const getPayments = async (req: Request, res: Response) => {
+export const getPayments = async (req: AuthRequest, res: Response) => {
   try {
-    const { status } = req.query;
+    const { status, branchId } = req.query;
 
     const filter: any = {};
     if (status && Object.values(PaymentStatus).includes(status as any)) {
       filter.status = status as PaymentStatus;
+    }
+
+    // Branch Filtering logic
+    const activeBranchIdHeader = req.headers['x-branch-id'] as string | undefined;
+    const userRole = req.user?.role;
+    const userBranchId = req.user?.branchId;
+    const resolvedBranchId = (userRole !== 'ADMIN' ? userBranchId : (branchId as string || activeBranchIdHeader)) || undefined;
+
+    if (resolvedBranchId) {
+      filter.subscription = {
+        member: {
+          user: {
+            branchId: resolvedBranchId,
+          },
+        },
+      };
     }
 
     const payments = await prisma.payment.findMany({
@@ -45,7 +63,7 @@ export const getPayments = async (req: Request, res: Response) => {
 export const recordManualPayment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { method } = req.body;
+    const { method, discount } = req.body;
 
     if (!method || !Object.values(PaymentMethod).includes(method)) {
       return res.status(400).json({ error: 'Valid payment method (CASH, CARD, UPI) is required' });
@@ -53,24 +71,46 @@ export const recordManualPayment = async (req: Request, res: Response) => {
 
     const payment = await prisma.payment.findUnique({
       where: { id },
-      include: { subscription: true },
+      include: {
+        subscription: {
+          include: {
+            member: true
+          }
+        }
+      },
     });
 
     if (!payment) {
       return res.status(404).json({ error: 'Payment record not found' });
     }
 
+    const reqUser = (req as any).user;
+    if (reqUser && reqUser.role !== 'ADMIN') {
+      const paymentMember = await prisma.member.findUnique({
+        where: { id: payment.subscription.memberId },
+        include: { user: true },
+      });
+      if (paymentMember?.user.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only record payments for members in your own branch.' });
+      }
+    }
+
     if (payment.status === PaymentStatus.PAID) {
       return res.status(400).json({ error: 'Payment has already been paid' });
     }
 
+    const discountAmount = discount ? parseFloat(discount) : 0;
+    const netAmount = Math.max(0, payment.amount - discountAmount);
+
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Mark payment as PAID
+      // 1. Mark payment as PAID with discount details
       const updatedPayment = await tx.payment.update({
         where: { id },
         data: {
           status: PaymentStatus.PAID,
           method: method as PaymentMethod,
+          discount: discountAmount,
+          amount: netAmount,
           paymentDate: new Date(),
         },
       });
@@ -90,6 +130,13 @@ export const recordManualPayment = async (req: Request, res: Response) => {
       return updatedPayment;
     });
 
+    await createNotification(
+      payment.subscription.member.userId,
+      'Payment Received',
+      `Payment of ₹${netAmount} recorded successfully using ${method} for membership plan.`,
+      'BILLING'
+    );
+
     return res.status(200).json({ message: 'Payment recorded successfully', payment: result });
   } catch (error: any) {
     console.error('Record manual payment error:', error);
@@ -108,11 +155,33 @@ export const processMockCardPayment = async (req: Request, res: Response) => {
 
     const payment = await prisma.payment.findUnique({
       where: { id },
-      include: { subscription: true },
+      include: {
+        subscription: {
+          include: {
+            member: true
+          }
+        }
+      },
     });
 
     if (!payment) {
       return res.status(404).json({ error: 'Payment record not found' });
+    }
+
+    const reqUser = (req as any).user;
+    if (reqUser && reqUser.role === 'MEMBER') {
+      const currentMember = await prisma.member.findUnique({ where: { userId: reqUser.id } });
+      if (!currentMember || currentMember.id !== payment.subscription.memberId) {
+        return res.status(403).json({ error: 'Access Denied: You can only pay for your own subscriptions.' });
+      }
+    } else if (reqUser && reqUser.role !== 'ADMIN') {
+      const paymentMember = await prisma.member.findUnique({
+        where: { id: payment.subscription.memberId },
+        include: { user: true },
+      });
+      if (paymentMember?.user.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only pay for members in your own branch.' });
+      }
     }
 
     if (payment.status === PaymentStatus.PAID) {
@@ -145,6 +214,13 @@ export const processMockCardPayment = async (req: Request, res: Response) => {
 
       return updatedPayment;
     });
+
+    await createNotification(
+      payment.subscription.member.userId,
+      'Payment Authorized',
+      `Mock Card payment of ₹${payment.amount} authorized and logged successfully.`,
+      'BILLING'
+    );
 
     return res.status(200).json({
       message: 'Mock Card payment authorized and logged successfully',
@@ -183,6 +259,16 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     const sub = payment.subscription;
     const member = sub.member;
     const user = member.user;
+
+    const reqUser = (req as any).user;
+    if (reqUser && reqUser.role === 'MEMBER' && user.id !== reqUser.id) {
+      return res.status(403).json({ error: 'Access Denied: You can only download your own invoices.' });
+    }
+    if (reqUser && reqUser.role !== 'ADMIN' && reqUser.role !== 'MEMBER') {
+      if (user.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only download invoices for members in your own branch.' });
+      }
+    }
 
     // Create a PDF Document
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
@@ -260,7 +346,7 @@ export const downloadInvoice = async (req: Request, res: Response) => {
        .text(`${sub.plan.durationMonths} ${sub.plan.durationMonths === 1 ? 'Month' : 'Months'}`, 280, itemRowTop + 15)
        .text(`${payment.method || 'PENDING'}`, 380, itemRowTop + 15)
        .fillColor('#0f172a')
-       .text(`$${payment.amount.toFixed(2)}`, 480, itemRowTop + 15, { align: 'right' });
+       .text(`Rs. ${payment.amount.toFixed(2)}`, 480, itemRowTop + 15, { align: 'right' });
 
     // Total section box
     const totalTop = itemRowTop + 50;
@@ -269,13 +355,13 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     doc.fontSize(11)
        .fillColor('#0f172a')
        .text('Subtotal:', 380, totalTop + 15)
-       .text(`$${payment.amount.toFixed(2)}`, 480, totalTop + 15, { align: 'right' })
+       .text(`Rs. ${payment.amount.toFixed(2)}`, 480, totalTop + 15, { align: 'right' })
        .text('Tax (0%):', 380, totalTop + 30)
-       .text('$0.00', 480, totalTop + 30, { align: 'right' })
+       .text('Rs. 0.00', 480, totalTop + 30, { align: 'right' })
        .fontSize(14)
        .fillColor(primaryColor)
        .text('Grand Total:', 380, totalTop + 55)
-       .text(`$${payment.amount.toFixed(2)}`, 480, totalTop + 55, { align: 'right' });
+       .text(`Rs. ${payment.amount.toFixed(2)}`, 480, totalTop + 55, { align: 'right' });
 
     // Footer signature
     doc.fillColor(secondaryColor)
@@ -286,6 +372,159 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     doc.end();
   } catch (error: any) {
     console.error('Download invoice PDF error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const refundPayment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    const payment = await prisma.payment.findUnique({
+      where: { id },
+      include: {
+        subscription: {
+          include: {
+            member: true
+          }
+        }
+      },
+    });
+
+    if (!payment) {
+      return res.status(404).json({ error: 'Payment record not found' });
+    }
+
+    const reqUser = (req as any).user;
+    if (reqUser && reqUser.role !== 'ADMIN') {
+      const paymentMember = await prisma.member.findUnique({
+        where: { id: payment.subscription.memberId },
+        include: { user: true },
+      });
+      if (paymentMember?.user.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only refund payments for members in your own branch.' });
+      }
+    }
+
+    if (payment.status !== PaymentStatus.PAID) {
+      return res.status(400).json({ error: 'Cannot refund an unpaid or pending payment' });
+    }
+
+    if (payment.isRefunded) {
+      return res.status(400).json({ error: 'Payment is already fully or partially refunded' });
+    }
+
+    const refundAmount = amount ? parseFloat(amount) : payment.amount;
+    if (refundAmount > payment.amount) {
+      return res.status(400).json({ error: `Refund amount (Rs. ${refundAmount}) cannot exceed paid amount (Rs. ${payment.amount})` });
+    }
+
+    const updatedPayment = await prisma.payment.update({
+      where: { id },
+      data: {
+        isRefunded: true,
+        refundedAmount: refundAmount,
+      },
+    });
+
+    await createNotification(
+      payment.subscription.member.userId,
+      'Refund Processed',
+      `A refund of ₹${refundAmount} has been processed for your payment.`,
+      'BILLING'
+    );
+
+    return res.status(200).json({ message: 'Refund processed successfully', payment: updatedPayment });
+  } catch (error: any) {
+    console.error('Refund payment error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const getDailyCollectionReport = async (req: AuthRequest, res: Response) => {
+  try {
+    const { date, branchId } = req.query;
+    const targetDate = date ? new Date(date as string) : new Date();
+
+    const startOfTarget = new Date(targetDate);
+    startOfTarget.setHours(0, 0, 0, 0);
+
+    const endOfTarget = new Date(targetDate);
+    endOfTarget.setHours(23, 59, 59, 999);
+
+    // Branch Filtering logic
+    const activeBranchIdHeader = req.headers['x-branch-id'] as string | undefined;
+    const userRole = req.user?.role;
+    const userBranchId = req.user?.branchId;
+    const resolvedBranchId = (userRole !== 'ADMIN' ? userBranchId : (branchId as string || activeBranchIdHeader)) || undefined;
+
+    const payments = await prisma.payment.findMany({
+      where: {
+        status: PaymentStatus.PAID,
+        paymentDate: {
+          gte: startOfTarget,
+          lte: endOfTarget,
+        },
+        subscription: resolvedBranchId ? {
+          member: {
+            user: {
+              branchId: resolvedBranchId,
+            },
+          },
+        } : undefined,
+      },
+      include: {
+        subscription: {
+          include: {
+            plan: true,
+            member: {
+              include: {
+                user: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { paymentDate: 'desc' },
+    });
+
+    // Calculations
+    let totalCollected = 0;
+    let totalDiscount = 0;
+    let totalRefunded = 0;
+    const methodBreakdown: { [key: string]: number } = {
+      CASH: 0,
+      CARD: 0,
+      UPI: 0,
+      STRIPE: 0,
+    };
+
+    payments.forEach((payment) => {
+      totalCollected += payment.amount;
+      totalDiscount += payment.discount;
+      totalRefunded += payment.refundedAmount;
+      if (payment.method) {
+        methodBreakdown[payment.method] = (methodBreakdown[payment.method] || 0) + payment.amount;
+      }
+    });
+
+    return res.status(200).json({
+      date: startOfTarget.toISOString().split('T')[0],
+      totalCollected,
+      totalDiscount,
+      totalRefunded,
+      methodBreakdown,
+      payments,
+    });
+  } catch (error: any) {
+    console.error('Daily collection report error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

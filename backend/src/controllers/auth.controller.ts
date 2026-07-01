@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma.js';
@@ -8,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key-replace-this-
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, firstName, lastName, role } = req.body;
+    const { email, password, firstName, lastName, role, branchId } = req.body;
 
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({ error: 'All fields are required' });
@@ -36,6 +37,7 @@ export const register = async (req: Request, res: Response) => {
           firstName,
           lastName,
           role: userRole,
+          branchId: branchId || null,
         },
       });
 
@@ -53,7 +55,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     const token = jwt.sign(
-      { id: result.user.id, email: result.user.email, role: result.user.role },
+      { id: result.user.id, email: result.user.email, role: result.user.role, branchId: result.user.branchId },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -81,7 +83,7 @@ export const login = async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { member: true },
+      include: { member: true, branch: true },
     });
 
     if (!user) {
@@ -94,7 +96,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role, branchId: user.branchId },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -122,6 +124,8 @@ export const getProfile = async (req: any, res: Response) => {
         firstName: true,
         lastName: true,
         role: true,
+        branchId: true,
+        branch: true,
         createdAt: true,
         member: {
           select: {
@@ -139,6 +143,12 @@ export const getProfile = async (req: any, res: Response) => {
             },
           },
         },
+        trainer: {
+          select: {
+            id: true,
+            isActive: true,
+          },
+        },
       },
     });
 
@@ -149,6 +159,81 @@ export const getProfile = async (req: any, res: Response) => {
     return res.status(200).json({ user });
   } catch (error: any) {
     console.error('Profile fetch error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // Return success message to prevent user enumeration
+      return res.status(200).json({ message: 'If the email exists, a reset link has been sent' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 3600000); // 1 hour expiry
+
+    await prisma.forgotPasswordToken.create({
+      data: {
+        userId: user.id,
+        token,
+        expiresAt,
+      },
+    });
+
+    console.log(`\n======================================================`);
+    console.log(`[PASSWORD RESET REQUEST] for user: ${email}`);
+    console.log(`Reset Token: ${token}`);
+    console.log(`Mock Reset Link: http://localhost:5173/reset-password?token=${token}`);
+    console.log(`======================================================\n`);
+
+    return res.status(200).json({
+      message: 'If the email exists, a reset link has been sent',
+      resetToken: token,
+    });
+  } catch (error: any) {
+    console.error('Forgot password error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) {
+      return res.status(400).json({ error: 'Token and new password are required' });
+    }
+
+    const tokenRecord = await prisma.forgotPasswordToken.findUnique({
+      where: { token },
+    });
+
+    if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
+      return res.status(400).json({ error: 'Invalid or expired token' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: tokenRecord.userId },
+        data: { passwordHash },
+      }),
+      prisma.forgotPasswordToken.delete({
+        where: { id: tokenRecord.id },
+      }),
+    ]);
+
+    return res.status(200).json({ message: 'Password reset successful' });
+  } catch (error: any) {
+    console.error('Reset password error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

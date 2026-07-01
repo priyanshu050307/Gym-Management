@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../utils/api.js';
+import { useAuth } from '../context/AuthContext.js';
 import {
   CreditCard,
   Search,
@@ -7,7 +8,8 @@ import {
   AlertCircle,
   X,
   Download,
-  ShieldCheck
+  ShieldCheck,
+  RotateCcw
 } from 'lucide-react';
 
 interface PaymentData {
@@ -16,6 +18,8 @@ interface PaymentData {
   status: 'PAID' | 'PENDING' | 'FAILED';
   method: 'CASH' | 'CARD' | 'UPI' | 'STRIPE';
   paymentDate: string;
+  isRefunded?: boolean;
+  refundedAmount?: number;
   subscription: {
     plan: {
       name: string;
@@ -25,12 +29,17 @@ interface PaymentData {
         firstName: string;
         lastName: string;
         email: string;
+        branch?: {
+          id: string;
+          name: string;
+        } | null;
       };
     };
   };
 }
 
 export const BillingList: React.FC = () => {
+  const { user } = useAuth();
   const [payments, setPayments] = useState<PaymentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -206,6 +215,25 @@ export const BillingList: React.FC = () => {
     });
   };
 
+  const handleRefund = async (paymentId: string) => {
+    if (!window.confirm('Are you sure you want to refund this payment? This will process a full refund and notify the member.')) {
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+      await apiFetch(`/payments/${paymentId}/refund`, {
+        method: 'POST',
+      });
+      alert('Refund processed successfully!');
+      fetchPayments();
+    } catch (err: any) {
+      alert(err.message || 'Failed to process refund.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   // Filter payments locally by member search
   const filteredPayments = payments.filter((payment) => {
     const user = payment.subscription.member.user;
@@ -255,7 +283,7 @@ export const BillingList: React.FC = () => {
             placeholder="Search by name, email, or invoice ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-gym-card/40 border border-slate-100 text-gym-text placeholder-gym-muted focus:border-gym-primary focus:outline-none transition-all"
+            className="gym-input pl-12 pr-4"
           />
         </div>
 
@@ -307,6 +335,7 @@ export const BillingList: React.FC = () => {
                   <tr className="border-b border-slate-100 text-gym-muted text-sm font-semibold">
                     <th className="px-6 py-4">Invoice ID</th>
                     <th className="px-6 py-4">Member</th>
+                    <th className="px-6 py-4">Branch</th>
                     <th className="px-6 py-4">Amount</th>
                     <th className="px-6 py-4">Plan</th>
                     <th className="px-6 py-4">Date / Method</th>
@@ -328,8 +357,11 @@ export const BillingList: React.FC = () => {
                           </div>
                           <div className="text-xs text-gym-muted">{user.email}</div>
                         </td>
+                        <td className="px-6 py-4 text-gym-muted">
+                          {user.branch?.name || <span className="italic text-slate-400">Global</span>}
+                        </td>
                         <td className="px-6 py-4 font-bold text-gym-text">
-                          ${payment.amount.toFixed(2)}
+                          ₹{payment.amount.toFixed(2)}
                         </td>
                         <td className="px-6 py-4 text-gym-muted">
                           {payment.subscription.plan.name}
@@ -372,13 +404,33 @@ export const BillingList: React.FC = () => {
                             </>
                           )}
                           {payment.status === 'PAID' && (
-                            <button
-                              onClick={() => handleDownloadInvoice(payment.id)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 text-gym-text transition-all text-xs font-semibold"
-                            >
-                              <Download className="h-3.5 w-3.5" />
-                              PDF
-                            </button>
+                            <div className="inline-flex items-center gap-2">
+                              {payment.isRefunded ? (
+                                <span className="inline-flex px-2 py-1 rounded-lg text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">
+                                  Refunded (₹{payment.refundedAmount})
+                                </span>
+                              ) : (
+                                <>
+                                  {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                                    <button
+                                      onClick={() => handleRefund(payment.id)}
+                                      disabled={actionLoading}
+                                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 rounded-xl transition-all text-xs font-semibold"
+                                    >
+                                      <RotateCcw className="h-3.5 w-3.5" />
+                                      Refund
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                              <button
+                                onClick={() => handleDownloadInvoice(payment.id)}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 text-gym-text transition-all text-xs font-semibold"
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                                PDF
+                              </button>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -429,7 +481,7 @@ export const BillingList: React.FC = () => {
               <div className="flex justify-between text-sm text-gym-muted pt-2 border-t border-slate-100">
                 <span>Amount Due</span>
                 <span className="font-bold text-gym-primary text-base">
-                  ${activePayment.amount.toFixed(2)}
+                  ₹{activePayment.amount.toFixed(2)}
                 </span>
               </div>
             </div>
@@ -442,7 +494,7 @@ export const BillingList: React.FC = () => {
                 <select
                   value={manualMethod}
                   onChange={(e) => setManualMethod(e.target.value as any)}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:outline-none focus:border-gym-primary"
+                  className="gym-input"
                 >
                   <option value="CASH">Cash Payment</option>
                   <option value="CARD">Debit / Credit Card Swipe</option>
@@ -538,7 +590,7 @@ export const BillingList: React.FC = () => {
                       value={cardName}
                       onChange={(e) => setCardName(e.target.value)}
                       placeholder="JOHN DOE"
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text uppercase focus:outline-none focus:border-gym-primary text-sm"
+                      className="gym-input uppercase"
                     />
                   </div>
 
@@ -550,7 +602,7 @@ export const BillingList: React.FC = () => {
                       value={cardNumber}
                       onChange={handleCardNumberChange}
                       placeholder="4242 4242 4242 4242"
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:outline-none focus:border-gym-primary font-mono text-sm"
+                      className="gym-input font-mono"
                     />
                   </div>
 
@@ -563,7 +615,7 @@ export const BillingList: React.FC = () => {
                         value={cardExpiry}
                         onChange={handleExpiryChange}
                         placeholder="MM/YY"
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:outline-none focus:border-gym-primary font-mono text-sm"
+                        className="gym-input font-mono"
                       />
                     </div>
                     <div>
@@ -575,7 +627,7 @@ export const BillingList: React.FC = () => {
                         value={cardCVC}
                         onChange={(e) => setCardCVC(e.target.value.replace(/\D/g, ''))}
                         placeholder="•••"
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:outline-none focus:border-gym-primary font-mono text-sm"
+                        className="gym-input font-mono"
                       />
                     </div>
                   </div>
@@ -586,7 +638,7 @@ export const BillingList: React.FC = () => {
                   type="submit"
                   className="w-full py-4 bg-gradient-premium text-white font-bold rounded-xl shadow-lg transition-all transform active:scale-[0.98] hover:opacity-95 text-sm"
                 >
-                  Pay ${activePayment.amount.toFixed(2)} Online
+                  Pay ₹{activePayment.amount.toFixed(2)} Online
                 </button>
               </form>
             )}

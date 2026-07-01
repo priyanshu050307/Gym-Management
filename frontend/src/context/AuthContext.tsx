@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiFetch } from '../utils/api.js';
 
-export type UserRole = 'ADMIN' | 'STAFF' | 'MEMBER';
+export type UserRole = 'ADMIN' | 'STAFF' | 'MEMBER' | 'TRAINER';
 
 export interface UserProfile {
   id: string;
@@ -9,6 +9,14 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   role: UserRole;
+  branchId?: string | null;
+  branch?: {
+    id: string;
+    name: string;
+    address?: string;
+    phone?: string;
+    gstNo?: string;
+  } | null;
   member?: {
     id: string;
     status: string;
@@ -16,12 +24,19 @@ export interface UserProfile {
     emergencyContact?: string;
     subscriptions?: any[];
   };
+  trainer?: {
+    id: string;
+    isActive: boolean;
+  } | null;
 }
 
 interface AuthContextType {
   user: UserProfile | null;
   token: string | null;
   loading: boolean;
+  activeBranchId: string | null;
+  setActiveBranchId: (id: string | null) => void;
+  branches: any[];
   login: (token: string, user: UserProfile) => void;
   logout: () => void;
   refreshProfile: () => Promise<void>;
@@ -33,6 +48,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
+  const [activeBranchId, setActiveBranchIdState] = useState<string | null>(localStorage.getItem('activeBranchId'));
+  const [branches, setBranches] = useState<any[]>([]);
+
+  const setActiveBranchId = (id: string | null) => {
+    if (id) {
+      localStorage.setItem('activeBranchId', id);
+    } else {
+      localStorage.removeItem('activeBranchId');
+    }
+    setActiveBranchIdState(id);
+  };
 
   const login = (newToken: string, newUser: UserProfile) => {
     localStorage.setItem('token', newToken);
@@ -42,8 +68,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('activeBranchId');
     setToken(null);
     setUser(null);
+    setBranches([]);
+    setActiveBranchIdState(null);
   };
 
   const refreshProfile = async () => {
@@ -66,8 +95,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initAuth();
   }, [token]);
 
+  useEffect(() => {
+    const fetchBranches = async () => {
+      if (user && (user.role === 'ADMIN' || user.role === 'STAFF' || user.role === 'TRAINER')) {
+        try {
+          const data = await apiFetch<{ branches: any[] }>('/branches');
+          setBranches(data.branches);
+          if (user.role !== 'ADMIN') {
+            if (user.branchId && activeBranchId !== user.branchId) {
+              setActiveBranchId(user.branchId);
+            }
+          } else {
+            // If no activeBranchId is set yet, default to user's branch
+            if (!activeBranchId && user.branchId) {
+              setActiveBranchId(user.branchId);
+            }
+          }
+        } catch (err) {
+          console.error('Failed to fetch branches:', err);
+        }
+      }
+    };
+    fetchBranches();
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, refreshProfile }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        activeBranchId,
+        setActiveBranchId,
+        branches,
+        login,
+        logout,
+        refreshProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

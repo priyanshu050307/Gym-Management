@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { NotificationPopup } from './NotificationPopup.js';
 import {
   LayoutDashboard,
   Users,
@@ -12,22 +13,28 @@ import {
   Menu,
   X,
   Dumbbell,
-  User as UserIcon
+  User as UserIcon,
+  MapPin,
+  ShoppingBag
 } from 'lucide-react';
 
 export const DashboardLayout: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, activeBranchId, setActiveBranchId, branches } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigationItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Members', path: '/members', icon: Users, roles: ['ADMIN', 'STAFF'] },
+    { name: 'My Dashboard', path: '/trainer-portal', icon: LayoutDashboard, roles: ['TRAINER'] },
+    { name: 'Members', path: '/members', icon: Users, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
     { name: 'Membership Plans', path: '/plans', icon: FileText, roles: ['ADMIN', 'STAFF'] },
     { name: 'Billing & Payments', path: '/billing', icon: CreditCard, roles: ['ADMIN', 'STAFF'] },
     { name: 'Check-In Kiosk', path: '/kiosk', icon: QrCode, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Classes & Bookings', path: '/schedules', icon: Calendar, roles: ['ADMIN', 'STAFF'] },
+    { name: 'Classes & Bookings', path: '/schedules', icon: Calendar, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
+    { name: 'Equipment', path: '/equipment', icon: Dumbbell, roles: ['ADMIN', 'STAFF'] },
+    { name: 'Supplements Inventory', path: '/supplements', icon: ShoppingBag, roles: ['ADMIN', 'STAFF'] },
+    { name: 'Branches', path: '/branches', icon: MapPin, roles: ['ADMIN'] },
     { name: 'My Portal', path: '/portal', icon: LayoutDashboard, roles: ['MEMBER'] },
   ];
 
@@ -42,6 +49,7 @@ export const DashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gym-darker flex">
+      <NotificationPopup />
       {/* Sidebar for Desktop */}
       <aside className="hidden md:flex md:w-64 md:flex-col glass-card border-r border-slate-100 h-screen sticky top-0">
         <div className="flex items-center gap-3 px-6 h-20 border-b border-slate-100">
@@ -50,6 +58,26 @@ export const DashboardLayout: React.FC = () => {
             GYMNASIUM
           </span>
         </div>
+
+        {branches.length > 0 && user?.role === 'ADMIN' && (
+          <div className="px-6 py-4 border-b border-slate-100">
+            <label className="block text-[10px] font-semibold text-gym-muted uppercase tracking-wider mb-1">
+              Active Branch
+            </label>
+            <select
+              value={activeBranchId || ''}
+              onChange={(e) => setActiveBranchId(e.target.value || null)}
+              className="w-full bg-slate-900 border border-slate-800 text-gym-text text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-gym-primary cursor-pointer"
+            >
+              <option value="">All Branches</option>
+              {branches.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {filteredNavigation.map((item) => {
@@ -114,6 +142,25 @@ export const DashboardLayout: React.FC = () => {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden fixed inset-0 top-20 z-10 glass-card bg-white/95 flex flex-col">
+            {branches.length > 0 && user?.role === 'ADMIN' && (
+              <div className="px-6 pt-6 pb-2 border-b border-slate-100">
+                <label className="block text-[10px] font-semibold text-gym-muted uppercase tracking-wider mb-1">
+                  Active Branch
+                </label>
+                <select
+                  value={activeBranchId || ''}
+                  onChange={(e) => setActiveBranchId(e.target.value || null)}
+                  className="w-full bg-slate-900 border border-slate-800 text-gym-text text-sm rounded-lg px-2.5 py-2.5 focus:outline-none focus:border-gym-primary cursor-pointer text-white"
+                >
+                  <option value="">All Branches</option>
+                  {branches.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <nav className="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
               {filteredNavigation.map((item) => {
                 const Icon = item.icon;

@@ -166,7 +166,7 @@ export const Plans: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gym-text/80 mb-2">Price (USD)</label>
+                <label className="block text-sm font-medium text-gym-text/80 mb-2">Price (INR)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -252,7 +252,7 @@ export const Plans: React.FC = () => {
               <div className="space-y-4 relative z-10">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-bold text-lg text-white group-hover:text-gym-primary transition-colors">
+                    <h3 className="font-bold text-lg text-gym-text group-hover:text-gym-primary transition-colors">
                       {plan.name}
                     </h3>
                     <span className="inline-block text-xs font-semibold text-gym-muted uppercase mt-1">
@@ -267,7 +267,7 @@ export const Plans: React.FC = () => {
                 </div>
 
                 <div className="flex items-baseline gap-1 pt-2">
-                  <span className="text-3xl font-extrabold text-gym-primary">${plan.price.toFixed(2)}</span>
+                  <span className="text-3xl font-extrabold text-gym-primary">₹{plan.price.toFixed(2)}</span>
                   <span className="text-xs text-gym-muted">/pkg</span>
                 </div>
 
