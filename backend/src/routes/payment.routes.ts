@@ -7,6 +7,7 @@ import {
   refundPayment,
   getDailyCollectionReport
 } from '../controllers/payment.controller.js';
+import { createRazorpayOrder, verifyRazorpayPayment } from '../controllers/razorpay.controller.js';
 import { authenticateToken, requireRoles } from '../middleware/auth.js';
 import { UserRole } from '@prisma/client';
 
@@ -19,6 +20,8 @@ router.get('/report/daily', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as an
 router.get('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, getPayments);
 router.post('/:id/manual', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, recordManualPayment);
 router.post('/:id/mock-pay', processMockCardPayment as any);
+router.post('/:id/razorpay-order', createRazorpayOrder as any);
+router.post('/razorpay-verify', verifyRazorpayPayment as any);
 router.get('/:id/invoice', downloadInvoice as any);
 router.post('/:id/refund', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, refundPayment);
 

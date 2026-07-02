@@ -234,6 +234,71 @@ export const BillingList: React.FC = () => {
     }
   };
 
+  const handleRazorpayPayment = async (payment: PaymentData) => {
+    const loaded = await new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+
+    if (!loaded) {
+      alert('Razorpay SDK failed to load. Are you offline?');
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+      const orderData = await apiFetch<any>(`/payments/${payment.id}/razorpay-order`, {
+        method: 'POST',
+      });
+
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Gymnasium Club',
+        description: `Membership Fee - ${payment.subscription.plan.name}`,
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          try {
+            setActionLoading(true);
+            await apiFetch<any>('/payments/razorpay-verify', {
+              method: 'POST',
+              body: {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              },
+            });
+            alert('Razorpay payment verified and activated successfully!');
+            fetchPayments();
+          } catch (err: any) {
+            alert(err.message || 'Payment verification failed.');
+          } finally {
+            setActionLoading(false);
+          }
+        },
+        prefill: {
+          name: orderData.member.name,
+          email: orderData.member.email,
+          contact: orderData.member.phone,
+        },
+        theme: {
+          color: '#8b5cf6',
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      alert(err.message || 'Failed to initiate Razorpay payment.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   // Filter payments locally by member search
   const filteredPayments = payments.filter((payment) => {
     const user = payment.subscription.member.user;
@@ -381,7 +446,7 @@ export const BillingList: React.FC = () => {
                         <td className="px-6 py-4">{getStatusBadge(payment.status)}</td>
                         <td className="px-6 py-4 text-right space-y-1.5 sm:space-y-0 sm:space-x-1.5 whitespace-nowrap">
                           {payment.status === 'PENDING' && (
-                            <>
+                            <div className="flex flex-col sm:flex-row gap-1.5 justify-end">
                               <button
                                 onClick={() => {
                                   setActivePayment(payment);
@@ -399,9 +464,15 @@ export const BillingList: React.FC = () => {
                                 }}
                                 className="inline-flex items-center px-2.5 py-1.5 bg-gym-secondary/10 text-gym-secondary border border-gym-secondary/20 rounded-xl hover:bg-gym-secondary hover:text-white transition-all text-xs font-semibold"
                               >
-                                Pay Online
+                                Pay Online (Mock)
                               </button>
-                            </>
+                              <button
+                                onClick={() => handleRazorpayPayment(payment)}
+                                className="inline-flex items-center px-2.5 py-1.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl hover:bg-indigo-500 hover:text-white transition-all text-xs font-semibold"
+                              >
+                                Pay with Razorpay
+                              </button>
+                            </div>
                           )}
                           {payment.status === 'PAID' && (
                             <div className="inline-flex items-center gap-2">

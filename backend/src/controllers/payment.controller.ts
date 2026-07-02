@@ -4,6 +4,7 @@ import prisma from '../config/prisma.js';
 import { PaymentStatus, PaymentMethod, SubscriptionStatus, MemberStatus } from '@prisma/client';
 import PDFDocument from 'pdfkit';
 import { createNotification } from './notification.controller.js';
+import { activateSubscriptionAfterPayment } from '../utils/subscription.js';
 
 export const getPayments = async (req: AuthRequest, res: Response) => {
   try {
@@ -115,17 +116,8 @@ export const recordManualPayment = async (req: Request, res: Response) => {
         },
       });
 
-      // 2. Activate subscription
-      await tx.subscription.update({
-        where: { id: payment.subscriptionId },
-        data: { status: SubscriptionStatus.ACTIVE },
-      });
-
-      // 3. Mark member as ACTIVE
-      await tx.member.update({
-        where: { id: payment.subscription.memberId },
-        data: { status: MemberStatus.ACTIVE },
-      });
+      // 2. Activate subscription and set dates appropriately
+      await activateSubscriptionAfterPayment(tx, payment);
 
       return updatedPayment;
     });
@@ -200,17 +192,8 @@ export const processMockCardPayment = async (req: Request, res: Response) => {
         },
       });
 
-      // Activate subscription
-      await tx.subscription.update({
-        where: { id: payment.subscriptionId },
-        data: { status: SubscriptionStatus.ACTIVE },
-      });
-
-      // Mark member as ACTIVE
-      await tx.member.update({
-        where: { id: payment.subscription.memberId },
-        data: { status: MemberStatus.ACTIVE },
-      });
+      // Activate subscription and set dates appropriately
+      await activateSubscriptionAfterPayment(tx, payment);
 
       return updatedPayment;
     });

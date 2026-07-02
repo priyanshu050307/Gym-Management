@@ -42,17 +42,17 @@ export const registerMember = async (req: AuthRequest, res: Response) => {
         },
       });
 
-      // 2. Create Member
+      // 2. Create Member (starts as INACTIVE until paid)
       const member = await tx.member.create({
         data: {
           userId: user.id,
           emergencyContact,
-          status: MemberStatus.ACTIVE,
+          status: MemberStatus.INACTIVE,
           trainerId: trainerId || null,
         },
       });
 
-      // 3. Create Subscription if planId is provided
+      // 3. Create Subscription if planId is provided (starts as PENDING until paid)
       if (planId) {
         const plan = await tx.membershipPlan.findUnique({ where: { id: planId } });
         if (!plan) {
@@ -69,7 +69,7 @@ export const registerMember = async (req: AuthRequest, res: Response) => {
             planId: plan.id,
             startDate,
             endDate,
-            status: SubscriptionStatus.ACTIVE,
+            status: SubscriptionStatus.PENDING,
           },
         });
 
@@ -259,28 +259,30 @@ export const addSubscriptionToMember = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Member not found' });
     }
 
+    const reqUser = (req as any).user;
+    if (reqUser?.role === 'MEMBER' && reqUser.id !== member.userId) {
+      return res.status(403).json({ error: 'Access Denied: You cannot configure subscription plans for other members.' });
+    }
+    if (reqUser?.role !== 'ADMIN' && reqUser?.role !== 'STAFF' && reqUser?.role !== 'MEMBER') {
+      return res.status(403).json({ error: 'Access Denied' });
+    }
+
     const plan = await prisma.membershipPlan.findUnique({ where: { id: planId } });
     if (!plan) {
       return res.status(404).json({ error: 'Plan not found' });
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Cancel any currently active subscriptions to prevent overlap
-      await tx.subscription.updateMany({
-        where: { memberId, status: SubscriptionStatus.ACTIVE },
-        data: { status: SubscriptionStatus.CANCELLED, endDate: new Date() },
-      });
-
-      // 2. Create new subscription
+      // 1. Create new subscription as PENDING (will be activated and date-calculated on successful payment)
       const startDate = new Date();
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + plan.durationMonths);
 
       const subscription = await tx.subscription.create({
-        data: { memberId, planId, startDate, endDate, status: SubscriptionStatus.ACTIVE },
+        data: { memberId, planId, startDate, endDate, status: SubscriptionStatus.PENDING },
       });
 
-      // 3. Generate a pending payment record
+      // 2. Generate a pending payment record
       const payment = await tx.payment.create({
         data: {
           subscriptionId: subscription.id,
@@ -288,12 +290,6 @@ export const addSubscriptionToMember = async (req: Request, res: Response) => {
           status: PaymentStatus.PENDING,
           method: PaymentMethod.CASH,
         },
-      });
-
-      // 4. Mark member as ACTIVE
-      await tx.member.update({
-        where: { id: memberId },
-        data: { status: MemberStatus.ACTIVE },
       });
 
       return { subscription, payment };
@@ -330,7 +326,6 @@ export const logMemberCheckIn = async (req: Request, res: Response) => {
         subscriptions: {
           where: { status: SubscriptionStatus.ACTIVE },
           orderBy: { endDate: 'desc' },
-          take: 1,
         },
       },
     });
@@ -348,8 +343,14 @@ export const logMemberCheckIn = async (req: Request, res: Response) => {
     }
 
     // Verify Active Status and Subscription
-    const activeSub = member.subscriptions[0];
-    const isPlanValid = activeSub && new Date(activeSub.endDate) > new Date();
+    const activeSub = member.subscriptions.find(sub => 
+      new Date(sub.startDate) <= new Date() && 
+      new Date(sub.endDate) > new Date()
+    ) || member.subscriptions[0];
+
+    const isPlanValid = activeSub && 
+      new Date(activeSub.startDate) <= new Date() && 
+      new Date(activeSub.endDate) > new Date();
 
     if (member.status !== MemberStatus.ACTIVE || !isPlanValid) {
       return res.status(400).json({

@@ -30,7 +30,7 @@ router.get('/dashboard/stats', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as
 router.get('/', requireRoles([UserRole.ADMIN, UserRole.STAFF, UserRole.TRAINER]) as any, getMembers);
 router.get('/:id', getMemberById as any); // Members can fetch their own details, check in controllers could refine permission checks if needed
 router.put('/:id/status', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, updateMemberStatus);
-router.post('/:id/subscription', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, addSubscriptionToMember);
+router.post('/:id/subscription', requireRoles([UserRole.ADMIN, UserRole.STAFF, UserRole.MEMBER]) as any, addSubscriptionToMember);
 router.post('/:id/checkin', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, logMemberCheckIn);
 router.post('/:id/freeze', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, freezeMember);
 router.post('/:id/unfreeze', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, unfreezeMember);

@@ -35,7 +35,9 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestOption
   
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+    const err = new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+    Object.assign(err, errorData);
+    throw err;
   }
 
   // Handle empty responses

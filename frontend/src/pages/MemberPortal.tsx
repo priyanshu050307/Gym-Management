@@ -189,6 +189,10 @@ export const MemberPortal: React.FC = () => {
   const [newBodyFat, setNewBodyFat] = useState('');
   const [newMuscleMass, setNewMuscleMass] = useState('');
   const [savingProgress, setSavingProgress] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [availablePlans, setAvailablePlans] = useState<any[]>([]);
+  const [selectedPlanId, setSelectedPlanId] = useState<string>('');
+  const [showSubscribeForm, setShowSubscribeForm] = useState(false);
 
   const fetchClasses = async () => {
     try {
@@ -255,6 +259,60 @@ export const MemberPortal: React.FC = () => {
       setTrainers(data.trainers || []);
     } catch (err) {
       console.error('Failed to fetch trainers:', err);
+    }
+  };
+
+  const fetchPlans = async () => {
+    try {
+      const data = await apiFetch<{ plans: any[] }>('/plans');
+      setAvailablePlans(data.plans || []);
+      if (data.plans?.length > 0) {
+        setSelectedPlanId(data.plans[0].id);
+      }
+    } catch (err) {
+      console.error('Failed to fetch membership plans:', err);
+    }
+  };
+
+  const handleProfileAndSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!memberId) {
+      alert("No member profile ID found.");
+      return;
+    }
+    if (!selectedPlanId) {
+      alert("Please select a membership plan.");
+      return;
+    }
+
+    try {
+      setPaymentLoading(true);
+
+      // 1. Save info first (Emergency Contact & Medical History)
+      await apiFetch(`/members/${memberId}/profile`, {
+        method: 'PUT',
+        body: {
+          emergencyContact,
+          medicalHistory,
+          profilePhoto,
+        },
+      });
+
+      // 2. Add subscription to member (which generates a PENDING payment)
+      const subRes = await apiFetch<any>(`/members/${memberId}/subscription`, {
+        method: 'POST',
+        body: { planId: selectedPlanId },
+      });
+
+      const payment = subRes.payment;
+      const plan = availablePlans.find((p) => p.id === selectedPlanId);
+
+      // 3. Open Razorpay checkout flow immediately for this newly created payment!
+      await handleRazorpayPayment(payment.id, plan?.name || 'Standard Plan');
+    } catch (err: any) {
+      alert(err.message || 'Failed to subscribe and initiate payment.');
+    } finally {
+      setPaymentLoading(false);
     }
   };
 
@@ -332,6 +390,7 @@ export const MemberPortal: React.FC = () => {
     fetchClasses();
     fetchPortalData();
     fetchTrainers();
+    fetchPlans();
     // Refresh user profile info on mount to ensure billing/subscription status is latest
     refreshProfile();
   }, [memberId]);
@@ -375,10 +434,99 @@ export const MemberPortal: React.FC = () => {
     }
   };
 
+  const handleRazorpayPayment = async (paymentId: string, planName: string) => {
+    const loaded = await new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+
+    if (!loaded) {
+      alert('Razorpay SDK failed to load. Are you offline?');
+      return;
+    }
+
+    try {
+      setPaymentLoading(true);
+      const orderData = await apiFetch<any>(`/payments/${paymentId}/razorpay-order`, {
+        method: 'POST',
+      });
+
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Gymnasium Club',
+        description: `Membership Fee - ${planName}`,
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          try {
+            setPaymentLoading(true);
+            await apiFetch<any>('/payments/razorpay-verify', {
+              method: 'POST',
+              body: {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              },
+            });
+            alert('Razorpay payment verified and activated successfully!');
+            refreshProfile();
+          } catch (err: any) {
+            alert(err.message || 'Payment verification failed.');
+          } finally {
+            setPaymentLoading(false);
+          }
+        },
+        prefill: {
+          name: orderData.member.name,
+          email: orderData.member.email,
+          contact: orderData.member.phone,
+        },
+        theme: {
+          color: '#8b5cf6',
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      alert(err.message || 'Failed to initiate Razorpay payment.');
+    } finally {
+      setPaymentLoading(false);
+    }
+  };
+
   // Get current subscription details
-  const activeSubscription = user?.member?.subscriptions?.[0];
-  const activePlan = activeSubscription?.plan;
+  const nowTime = new Date().getTime();
+  const activeSubscription = user?.member?.subscriptions?.find((sub: any) => 
+    sub.status === 'ACTIVE' && 
+    new Date(sub.startDate).getTime() <= nowTime && 
+    new Date(sub.endDate).getTime() > nowTime
+  ) || user?.member?.subscriptions?.find((sub: any) => sub.status === 'ACTIVE') || user?.member?.subscriptions?.[0];
+  const activePlan = activeSubscription?.status === 'ACTIVE' ? activeSubscription?.plan : null;
   const payments = activeSubscription?.payments || [];
+
+  const getRemainingDays = () => {
+    if (!activeSubscription || !activeSubscription.endDate) return null;
+    const end = new Date(activeSubscription.endDate).getTime();
+    const now = new Date().getTime();
+    const diffTime = end - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+  const daysRemaining = getRemainingDays();
+
+  useEffect(() => {
+    if (activePlan && availablePlans.length > 0) {
+      const hasPlan = availablePlans.some(p => p.id === activePlan.id);
+      if (hasPlan) {
+        setSelectedPlanId(activePlan.id);
+      }
+    }
+  }, [activePlan, availablePlans]);
 
   return (
     <div className="space-y-8">
@@ -391,6 +539,41 @@ export const MemberPortal: React.FC = () => {
           Access your digital gym card, monitor your active plan, workouts, diet, and track your progress.
         </p>
       </div>
+
+      {daysRemaining !== null && daysRemaining <= 2 && (
+        <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${
+          daysRemaining < 0 
+            ? 'bg-red-500/10 border-red-500/20 text-red-400' 
+            : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+        }`}>
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
+            <div>
+              <h4 className="font-extrabold text-sm">
+                {daysRemaining < 0 ? 'Membership Subscription Expired' : 'Membership Expiring Soon'}
+              </h4>
+              <p className="text-xs opacity-95 mt-0.5">
+                {daysRemaining < 0 
+                  ? `Your subscription to "${activeSubscription?.plan?.name || 'Standard Plan'}" has expired. Please renew to restore check-in access.` 
+                  : `Your subscription to "${activeSubscription?.plan?.name || 'Standard Plan'}" expires in ${daysRemaining} day${daysRemaining === 1 ? '' : 's'} (on ${new Date(activeSubscription.endDate).toLocaleDateString()}). Extend your membership now.`
+                }
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              setShowSubscribeForm(true);
+            }}
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all whitespace-nowrap ${
+              daysRemaining < 0 
+                ? 'bg-red-500 text-white hover:bg-red-600' 
+                : 'bg-amber-500 text-black hover:bg-amber-600'
+            }`}
+          >
+            {daysRemaining < 0 ? 'Renew Subscription' : 'Extend Membership'}
+          </button>
+        </div>
+      )}
 
       {/* Tab Navigation Menu */}
       <div className="flex flex-wrap border-b border-slate-800 gap-6">
@@ -510,47 +693,126 @@ export const MemberPortal: React.FC = () => {
 
             {/* Card 2: Plan & Membership Details */}
             <div className="glass-card rounded-2xl border border-slate-100 p-6 flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-gym-secondary flex items-center gap-1.5">
-                    <User className="h-4.5 w-4.5" />
-                    Membership Details
-                  </h2>
-                  <p className="text-xs text-gym-muted">Your active plan levels and key billing timelines.</p>
-                </div>
+              {(!activePlan || showSubscribeForm) ? (
+                <form onSubmit={handleProfileAndSubscribe} className="space-y-4">
+                  <div className="space-y-1">
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-gym-secondary flex items-center gap-1.5">
+                      <CreditCard className="h-4.5 w-4.5" />
+                      Configure Membership
+                    </h2>
+                    <p className="text-xs text-gym-muted">Complete your details and select a subscription plan.</p>
+                  </div>
 
-                <div className="space-y-3.5 pt-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gym-muted">Active Plan:</span>
-                    <span className="font-extrabold text-gym-text">{activePlan ? activePlan.name : 'No Active Plan'}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gym-muted">Billing Cycle:</span>
-                    <span className="font-medium text-gym-text">
-                      {activePlan ? `${activePlan.durationMonths} Month(s)` : 'N/A'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gym-muted">Member ID:</span>
-                    <span className="font-mono text-xs text-gym-muted truncate max-w-[150px]">{memberId || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gym-muted">Join Date:</span>
-                    <span className="font-medium text-gym-text">
-                      {user?.member?.joinDate ? new Date(user.member.joinDate).toLocaleDateString() : 'N/A'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gym-muted">Emergency Contact:</span>
-                    <span className="font-medium text-gym-text">{user?.member?.emergencyContact || 'Not Set'}</span>
-                  </div>
-                </div>
-              </div>
+                  <div className="space-y-3 pt-2">
+                    <div>
+                      <label className="block text-xs font-semibold text-gym-muted mb-1">Emergency Contact *</label>
+                      <input
+                        type="text"
+                        required
+                        value={emergencyContact}
+                        onChange={(e) => setEmergencyContact(e.target.value)}
+                        className="gym-input text-xs py-1.5 px-3"
+                        placeholder="Emergency contact phone number"
+                      />
+                    </div>
 
-              {!activePlan && (
-                <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs rounded-xl flex items-start gap-2">
-                  <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
-                  <span>You have no active plan subscription. Visit the front desk to configure a membership plan.</span>
+                    <div>
+                      <label className="block text-xs font-semibold text-gym-muted mb-1">Medical History / Notes</label>
+                      <textarea
+                        value={medicalHistory}
+                        onChange={(e) => setMedicalHistory(e.target.value)}
+                        className="gym-input text-xs py-1.5 px-3 h-16 resize-none"
+                        placeholder="Any medical conditions or notes..."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gym-muted mb-1">Membership Plan *</label>
+                      <select
+                        required
+                        value={selectedPlanId}
+                        onChange={(e) => setSelectedPlanId(e.target.value)}
+                        className="gym-input text-xs py-1.5 px-3"
+                      >
+                        {availablePlans.map((plan) => (
+                          <option key={plan.id} value={plan.id} className="text-slate-900">
+                            {plan.name} ({plan.durationMonths} Month{plan.durationMonths > 1 ? 's' : ''}) — ₹{plan.price.toLocaleString()}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-2">
+                    {activePlan && (
+                      <button
+                        type="button"
+                        onClick={() => setShowSubscribeForm(false)}
+                        className="flex-1 py-2 rounded-xl border border-slate-700 text-gym-text hover:bg-slate-800 text-xs font-bold transition-all"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={paymentLoading || !selectedPlanId}
+                      className="flex-1 py-2 rounded-xl bg-gym-secondary hover:bg-gym-secondary/80 text-black text-xs font-extrabold transition-all disabled:opacity-50"
+                    >
+                      {paymentLoading ? 'Processing...' : 'Subscribe & Pay'}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="flex flex-col justify-between h-full space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <h2 className="text-sm font-bold uppercase tracking-wider text-gym-secondary flex items-center gap-1.5">
+                        <User className="h-4.5 w-4.5" />
+                        Membership Details
+                      </h2>
+                      <p className="text-xs text-gym-muted">Your active plan levels and key billing timelines.</p>
+                    </div>
+
+                    <div className="space-y-3.5 pt-2">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Active Plan:</span>
+                        <span className="font-extrabold text-gym-text">{activePlan.name}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Expiry Date:</span>
+                        <span className="font-extrabold text-gym-text">
+                          {activeSubscription?.endDate ? new Date(activeSubscription.endDate).toLocaleDateString() : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Billing Cycle:</span>
+                        <span className="font-medium text-gym-text">
+                          {activePlan.durationMonths} Month(s)
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Member ID:</span>
+                        <span className="font-mono text-xs text-gym-muted truncate max-w-[150px]">{memberId || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Join Date:</span>
+                        <span className="font-medium text-gym-text">
+                          {user?.member?.joinDate ? new Date(user.member.joinDate).toLocaleDateString() : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Emergency Contact:</span>
+                        <span className="font-medium text-gym-text">{user?.member?.emergencyContact || 'Not Set'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setShowSubscribeForm(true)}
+                    className="w-full py-2 bg-gym-primary hover:bg-gym-primary/80 text-white rounded-xl text-xs font-bold transition-all"
+                  >
+                    Change / Upgrade Plan
+                  </button>
                 </div>
               )}
             </div>
@@ -588,18 +850,29 @@ export const MemberPortal: React.FC = () => {
                           >
                             {payment.status}
                           </span>
-                          <button
-                            onClick={() => printInvoice(
-                              payment,
-                              `${user?.firstName} ${user?.lastName}`,
-                              activePlan?.name || 'Standard Plan',
-                              user?.branch?.name || 'Main Branch'
-                            )}
-                            className="p-1 hover:bg-slate-200 text-gym-muted hover:text-gym-text rounded transition-all"
-                            title="Print Invoice Receipt"
-                          >
-                            <Printer className="h-3.5 w-3.5" />
-                          </button>
+                          {payment.status === 'PENDING' && (
+                            <button
+                              disabled={paymentLoading}
+                              onClick={() => handleRazorpayPayment(payment.id, activePlan?.name || 'Standard Plan')}
+                              className="px-2 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold transition-all disabled:opacity-50"
+                            >
+                              {paymentLoading ? 'Loading...' : 'Pay Now'}
+                            </button>
+                          )}
+                          {payment.status === 'PAID' && (
+                            <button
+                              onClick={() => printInvoice(
+                                payment,
+                                `${user?.firstName} ${user?.lastName}`,
+                                activePlan?.name || 'Standard Plan',
+                                user?.branch?.name || 'Main Branch'
+                              )}
+                              className="p-1 hover:bg-slate-200 text-gym-muted hover:text-gym-text rounded transition-all"
+                              title="Print Invoice Receipt"
+                            >
+                              <Printer className="h-3.5 w-3.5" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))

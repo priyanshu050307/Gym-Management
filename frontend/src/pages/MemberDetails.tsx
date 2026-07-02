@@ -477,7 +477,12 @@ export const MemberDetails: React.FC = () => {
     );
   }
 
-  const activeSub = member.subscriptions.find((sub) => sub.status === 'ACTIVE');
+  const nowTime = new Date().getTime();
+  const activeSub = member.subscriptions.find((sub) => 
+    sub.status === 'ACTIVE' && 
+    new Date(sub.startDate).getTime() <= nowTime && 
+    new Date(sub.endDate).getTime() > nowTime
+  ) || member.subscriptions.find((sub) => sub.status === 'ACTIVE') || member.subscriptions[0];
 
   return (
     <div className="space-y-8">

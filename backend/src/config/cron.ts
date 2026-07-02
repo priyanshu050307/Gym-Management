@@ -36,11 +36,22 @@ export const checkExpiredSubscriptions = async () => {
             data: { status: SubscriptionStatus.EXPIRED },
           });
 
-          // Mark member status as INACTIVE
-          await tx.member.update({
-            where: { id: sub.memberId },
-            data: { status: MemberStatus.INACTIVE },
+          // Only mark member status as INACTIVE if they have no other active subscription
+          const otherActiveSubCount = await tx.subscription.count({
+            where: {
+              memberId: sub.memberId,
+              status: SubscriptionStatus.ACTIVE,
+              id: { not: sub.id },
+              endDate: { gt: now },
+            },
           });
+
+          if (otherActiveSubCount === 0) {
+            await tx.member.update({
+              where: { id: sub.memberId },
+              data: { status: MemberStatus.INACTIVE },
+            });
+          }
 
           // Send notification
           await createNotification(

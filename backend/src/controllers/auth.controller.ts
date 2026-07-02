@@ -139,7 +139,6 @@ export const getProfile = async (req: any, res: Response) => {
                 payments: true,
               },
               orderBy: { startDate: 'desc' },
-              take: 1,
             },
           },
         },
