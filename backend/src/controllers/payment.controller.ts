@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth.js';
 import prisma from '../config/prisma.js';
+import { cacheDelPrefix } from '../config/cache.js';
 import { PaymentStatus, PaymentMethod, SubscriptionStatus, MemberStatus } from '@prisma/client';
 import PDFDocument from 'pdfkit';
 import { createNotification } from './notification.controller.js';
@@ -28,6 +29,21 @@ export const getPayments = async (req: AuthRequest, res: Response) => {
             branchId: resolvedBranchId,
           },
         },
+      };
+    } else {
+      // Find all branches owned by this admin
+      const ownedBranches = await prisma.branch.findMany({
+        where: req.user?.email === 'admin@gym.com' ? {
+          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        } : { ownerId: req.user?.id || '' },
+        select: { id: true }
+      });
+      filter.subscription = {
+        member: {
+          user: {
+            branchId: { in: ownedBranches.map(b => b.id) }
+          }
+        }
       };
     }
 
@@ -86,13 +102,29 @@ export const recordManualPayment = async (req: Request, res: Response) => {
     }
 
     const reqUser = (req as any).user;
-    if (reqUser && reqUser.role !== 'ADMIN') {
-      const paymentMember = await prisma.member.findUnique({
-        where: { id: payment.subscription.memberId },
-        include: { user: true },
-      });
-      if (paymentMember?.user.branchId !== reqUser.branchId) {
-        return res.status(403).json({ error: 'Access Denied: You can only record payments for members in your own branch.' });
+    const paymentMember = await prisma.member.findUnique({
+      where: { id: payment.subscription.memberId },
+      include: { user: true },
+    });
+    if (!paymentMember) {
+      return res.status(404).json({ error: 'Associated member not found' });
+    }
+
+    if (reqUser && reqUser.email !== 'admin@gym.com') {
+      if (reqUser.role === 'ADMIN') {
+        if (paymentMember.user.branchId) {
+          const branch = await prisma.branch.findUnique({
+            where: { id: paymentMember.user.branchId },
+            select: { ownerId: true },
+          });
+          if (branch && branch.ownerId !== reqUser.id) {
+            return res.status(403).json({ error: 'Access Denied: You do not own the branch this member belongs to.' });
+          }
+        }
+      } else {
+        if (paymentMember.user.branchId !== reqUser.branchId) {
+          return res.status(403).json({ error: 'Access Denied: You can only record payments for members in your own branch.' });
+        }
       }
     }
 
@@ -129,6 +161,22 @@ export const recordManualPayment = async (req: Request, res: Response) => {
       'BILLING'
     );
 
+    // Invalidate caches
+    if (reqUser) {
+      let ownerId = reqUser.id;
+      if (reqUser.role === 'STAFF' && reqUser.branchId) {
+        const branch = await prisma.branch.findUnique({
+          where: { id: reqUser.branchId },
+          select: { ownerId: true }
+        });
+        ownerId = branch?.ownerId || '';
+      }
+      if (ownerId) {
+        cacheDelPrefix(`members:${ownerId}`);
+        cacheDelPrefix(`dashboard:${ownerId}`);
+      }
+    }
+
     return res.status(200).json({ message: 'Payment recorded successfully', payment: result });
   } catch (error: any) {
     console.error('Record manual payment error:', error);
@@ -161,18 +209,33 @@ export const processMockCardPayment = async (req: Request, res: Response) => {
     }
 
     const reqUser = (req as any).user;
-    if (reqUser && reqUser.role === 'MEMBER') {
-      const currentMember = await prisma.member.findUnique({ where: { userId: reqUser.id } });
-      if (!currentMember || currentMember.id !== payment.subscription.memberId) {
-        return res.status(403).json({ error: 'Access Denied: You can only pay for your own subscriptions.' });
-      }
-    } else if (reqUser && reqUser.role !== 'ADMIN') {
-      const paymentMember = await prisma.member.findUnique({
-        where: { id: payment.subscription.memberId },
-        include: { user: true },
-      });
-      if (paymentMember?.user.branchId !== reqUser.branchId) {
-        return res.status(403).json({ error: 'Access Denied: You can only pay for members in your own branch.' });
+    const paymentMember = await prisma.member.findUnique({
+      where: { id: payment.subscription.memberId },
+      include: { user: true },
+    });
+    if (!paymentMember) {
+      return res.status(404).json({ error: 'Associated member not found' });
+    }
+
+    if (reqUser && reqUser.email !== 'admin@gym.com') {
+      if (reqUser.role === 'MEMBER') {
+        if (reqUser.id !== paymentMember.userId) {
+          return res.status(403).json({ error: 'Access Denied: You can only pay for your own subscriptions.' });
+        }
+      } else if (reqUser.role === 'ADMIN') {
+        if (paymentMember.user.branchId) {
+          const branch = await prisma.branch.findUnique({
+            where: { id: paymentMember.user.branchId },
+            select: { ownerId: true },
+          });
+          if (branch && branch.ownerId !== reqUser.id) {
+            return res.status(403).json({ error: 'Access Denied: You do not own the branch this member belongs to.' });
+          }
+        }
+      } else {
+        if (paymentMember.user.branchId !== reqUser.branchId) {
+          return res.status(403).json({ error: 'Access Denied: You can only pay for members in your own branch.' });
+        }
       }
     }
 

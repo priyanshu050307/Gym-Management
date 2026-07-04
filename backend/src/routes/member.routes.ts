@@ -12,12 +12,17 @@ import {
   updateMemberProfile,
   upgradeDowngradeSubscription,
   deleteMember,
+  uploadMemberPhoto,
 } from '../controllers/member.controller.js';
 import { getMemberWorkoutPlan, assignWorkoutPlan, deleteWorkoutPlan } from '../controllers/workout.controller.js';
 import { getMemberDietPlan, assignDietPlan, deleteDietPlan } from '../controllers/diet.controller.js';
 import { getProgressLogs, createProgressLog, getMemberAttendance } from '../controllers/progress.controller.js';
 import { submitTrainerFeedback } from '../controllers/feedback.controller.js';
 import { authenticateToken, requireRoles } from '../middleware/auth.js';
+import { validate } from '../middleware/validate.js';
+import { createMemberSchema } from '../schemas/member.schema.js';
+import { profileUpload } from '../config/cloudinary.js';
+import { uploadRateLimiter } from '../middleware/rateLimiter.js';
 import { UserRole } from '@prisma/client';
 
 const router = Router();
@@ -25,10 +30,10 @@ const router = Router();
 router.use(authenticateToken as any);
 
 // Admins and Staff can perform most member actions
-router.post('/register', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, registerMember);
+router.post('/register', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, validate(createMemberSchema), registerMember);
 router.get('/dashboard/stats', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, getDashboardStats);
 router.get('/', requireRoles([UserRole.ADMIN, UserRole.STAFF, UserRole.TRAINER]) as any, getMembers);
-router.get('/:id', getMemberById as any); // Members can fetch their own details, check in controllers could refine permission checks if needed
+router.get('/:id', getMemberById as any);
 router.put('/:id/status', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, updateMemberStatus);
 router.post('/:id/subscription', requireRoles([UserRole.ADMIN, UserRole.STAFF, UserRole.MEMBER]) as any, addSubscriptionToMember);
 router.post('/:id/checkin', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, logMemberCheckIn);
@@ -37,6 +42,15 @@ router.post('/:id/unfreeze', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as a
 router.put('/:id/profile', updateMemberProfile as any);
 router.post('/:id/upgrade-downgrade', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, upgradeDowngradeSubscription);
 router.delete('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, deleteMember);
+
+// Photo upload (Cloudinary)
+router.post(
+  '/:id/photo',
+  requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any,
+  uploadRateLimiter,
+  profileUpload.single('photo'),
+  uploadMemberPhoto as any
+);
 
 // Workout Plan routes
 router.get('/:id/workout', getMemberWorkoutPlan as any);

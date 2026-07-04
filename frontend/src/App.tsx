@@ -20,6 +20,8 @@ const Branches = lazy(() => import('./pages/Branches.js').then(m => ({ default: 
 const TrainerPortal = lazy(() => import('./pages/TrainerPortal.js').then(m => ({ default: m.TrainerPortal })));
 const Equipment = lazy(() => import('./pages/Equipment.js').then(m => ({ default: m.Equipment })));
 const Supplements = lazy(() => import('./pages/Supplements.js').then(m => ({ default: m.Supplements })));
+const SaaSBilling = lazy(() => import('./pages/SaaSBilling.js').then(m => ({ default: m.SaaSBilling })));
+const RegisterOwner = lazy(() => import('./pages/RegisterOwner.js').then(m => ({ default: m.RegisterOwner })));
 
 function App() {
   return (
@@ -34,6 +36,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register-owner" element={<RegisterOwner />} />
 
             {/* Secure Administrative & Member Dashboard Routes */}
             <Route
@@ -55,6 +58,7 @@ function App() {
               <Route path="branches" element={<Branches />} />
               <Route path="equipment" element={<Equipment />} />
               <Route path="supplements" element={<Supplements />} />
+              <Route path="subscription" element={<SaaSBilling />} />
 
               {/* Member Self-Service Portal Route */}
               <Route path="portal" element={<MemberPortal />} />

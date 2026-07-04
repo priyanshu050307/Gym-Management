@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { apiFetch } from '../utils/api.js';
 import { 
   Dumbbell, 
   Shield, 
@@ -11,11 +12,14 @@ import {
   MapPin, 
   ArrowRight,
   CheckCircle,
-  Star
+  Star,
+  Check,
+  Zap
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   
   // Contact Form State
@@ -23,6 +27,30 @@ export const LandingPage: React.FC = () => {
   const [contactEmail, setContactEmail] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  // SaaS states on public landing page
+  const [saasSub, setSaasSub] = useState<any>(null);
+  const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
+  const [couponCode, setCouponCode] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  useEffect(() => {
+    // If user is logged in, check their SaaS tenant state
+    if (user && user.role === 'ADMIN') {
+      const checkSaaS = async () => {
+        try {
+          const data = await apiFetch<{ subscription: any }>('/saas/status');
+          setSaasSub(data.subscription);
+        } catch (err) {
+          console.error('Failed to load SaaS status on landing page:', err);
+        }
+      };
+      checkSaaS();
+    }
+  }, [user]);
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +63,6 @@ export const LandingPage: React.FC = () => {
 
   const handleLoginClick = () => {
     if (user) {
-      // If already logged in, redirect to their dashboard
       if (user.role === 'MEMBER') navigate('/portal');
       else if (user.role === 'TRAINER') navigate('/trainer-portal');
       else navigate('/dashboard');
@@ -43,6 +70,62 @@ export const LandingPage: React.FC = () => {
       navigate('/login');
     }
   };
+
+  const handleSubscribe = async (planName: string) => {
+    if (!user) {
+      navigate('/register-owner');
+      return;
+    }
+
+    if (user.role !== 'ADMIN') {
+      setError('Only the gym owner account can purchase or change tenant subscriptions.');
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+      setError(null);
+      setSuccess(null);
+
+      let finalPrice = planName === 'Starter' ? 1499 : planName === 'Professional' ? 3499 : 7999;
+      if (billingCycle === 'YEARLY') {
+        finalPrice = finalPrice * 10;
+      }
+      if (couponApplied) {
+        finalPrice = Math.round(finalPrice * 0.7); // 30% off
+      }
+
+      await apiFetch<any>('/saas/subscribe', {
+        method: 'POST',
+        body: {
+          planName,
+          billingCycle,
+          cardBrand: 'Visa',
+          cardLast4: '4242',
+        },
+      });
+
+      setSuccess(`Thank you for subscribing to GymOS ${planName}! Activating access...`);
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
+    } catch (err: any) {
+      setError(err.message || 'Failed to complete subscription.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleApplyCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (couponCode.toUpperCase() === 'FITJULY30') {
+      setCouponApplied(true);
+      setSuccess('Coupon code FITJULY30 (30% Discount) applied successfully!');
+    } else {
+      setError('Invalid coupon code.');
+    }
+  };
+
 
   const benefits = [
     {
@@ -104,6 +187,7 @@ export const LandingPage: React.FC = () => {
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gym-muted">
             <a href="#about" className="hover:text-gym-primary transition-colors">About</a>
             <a href="#benefits" className="hover:text-gym-primary transition-colors">Benefits</a>
+            <a href="#pricing" className="hover:text-gym-primary transition-colors">Pricing & Plans</a>
             <a href="#reviews" className="hover:text-gym-primary transition-colors">Reviews</a>
             <a href="#contact" className="hover:text-gym-primary transition-colors">Contact</a>
           </nav>
@@ -117,6 +201,29 @@ export const LandingPage: React.FC = () => {
           </button>
         </div>
       </header>
+
+      {/* Expiry Alerts & Success Banner */}
+      {((saasSub && (saasSub.status === 'TRIAL_EXPIRED' || saasSub.status === 'SUBSCRIBED_EXPIRED')) || location.state?.fromExpired) && (
+        <div className="w-full bg-red-600/90 text-white text-center py-3.5 px-6 font-bold flex items-center justify-center gap-2 animate-pulse text-sm">
+          <span>🚨 Trial or Subscription Ended. Please choose a paid plan below to instantly reactivate your GymOS cloud tenant.</span>
+        </div>
+      )}
+
+      {error && (
+        <div className="max-w-7xl mx-auto mt-6 px-6">
+          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            {error}
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="max-w-7xl mx-auto mt-6 px-6">
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
+            {success}
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">
@@ -281,6 +388,142 @@ export const LandingPage: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* SaaS Subscription Plans Section */}
+      <section id="pricing" className="py-20 border-t border-slate-100/10 bg-slate-900/10">
+        <div className="max-w-7xl mx-auto px-6 space-y-12">
+          <div className="text-center space-y-4 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-extrabold tracking-tight">Flexible SaaS Subscription Plans</h2>
+            <p className="text-gym-muted text-sm">
+              Activate your cloud instance immediately. Save up to 20% by paying annually. Free trial users can purchase paid plans to restore instant write actions.
+            </p>
+
+            {/* Toggle Billing Interval */}
+            <div className="inline-flex items-center gap-3 bg-slate-950/40 p-1.5 rounded-xl border border-slate-800 mx-auto mt-4">
+              <button
+                onClick={() => setBillingCycle('MONTHLY')}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  billingCycle === 'MONTHLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
+                }`}
+              >
+                Monthly Billing
+              </button>
+              <button
+                onClick={() => setBillingCycle('YEARLY')}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  billingCycle === 'YEARLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
+                }`}
+              >
+                Yearly (2 Months Free)
+              </button>
+            </div>
+          </div>
+
+          {/* Plan Options Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Starter',
+                price: billingCycle === 'YEARLY' ? '₹14,990' : '₹1,499',
+                features: ['1 Branch Location', 'Up to 200 Gym Members', 'Check-In Kiosk Scanner', 'Basic Revenue Reports', 'SMS Alerts & Notifications'],
+                badge: 'Solopreneurs'
+              },
+              {
+                name: 'Professional',
+                price: billingCycle === 'YEARLY' ? '₹34,990' : '₹3,499',
+                features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk + Self-Service Portal', 'Class Schedules & Booking', 'Supplement Inventory POS', 'Multi-staff Access Control'],
+                badge: 'Popular choice',
+                popular: true
+              },
+              {
+                name: 'Enterprise',
+                price: billingCycle === 'YEARLY' ? '₹79,990' : '₹7,999',
+                features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom API access', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
+                badge: 'Large chains'
+              }
+            ].map((opt) => (
+              <div
+                key={opt.name}
+                className={`glass-card rounded-3xl p-8 border relative flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 ${
+                  opt.popular 
+                    ? 'border-gym-primary/40 shadow-xl shadow-gym-primary/5 bg-slate-900/40' 
+                    : 'border-slate-100/10 hover:border-gym-primary/20'
+                }`}
+              >
+                {opt.popular && (
+                  <span className="absolute -top-3.5 left-6 px-3.5 py-1 bg-gym-primary text-black text-[10px] font-extrabold uppercase rounded-full tracking-wider shadow">
+                    Most Popular
+                  </span>
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider">{opt.badge}</span>
+                    <h4 className="text-2xl font-bold text-gym-text mt-1">{opt.name}</h4>
+                  </div>
+
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-extrabold text-gym-primary">{opt.price}</span>
+                    <span className="text-xs text-gym-muted">/{billingCycle === 'YEARLY' ? 'yr' : 'mo'}</span>
+                  </div>
+
+                  <ul className="space-y-3.5 text-xs text-gym-muted border-t border-slate-100/10 pt-5">
+                    {opt.features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <Check className="h-4.5 w-4.5 text-gym-primary shrink-0" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-8">
+                  <button
+                    onClick={() => handleSubscribe(opt.name)}
+                    disabled={actionLoading}
+                    className={`w-full py-4 rounded-xl text-xs font-bold transition-all shadow-md ${
+                      opt.popular
+                        ? 'bg-gym-primary hover:bg-gym-primary-hover text-black shadow-gym-primary/10'
+                        : 'bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800'
+                    }`}
+                  >
+                    {!user 
+                      ? 'Sign Up & Start Trial' 
+                      : (saasSub?.planName === opt.name && saasSub?.status.includes('ACTIVE') 
+                        ? 'Your Active Plan' 
+                        : `Subscribe to ${opt.name}`)}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Coupon Code Section */}
+          {!couponApplied && (
+            <div className="glass-card p-6 rounded-2xl border border-slate-100/10 max-w-md mx-auto space-y-3">
+              <h4 className="text-sm font-semibold flex items-center gap-2">
+                <Zap className="h-4.5 w-4.5 text-gym-primary" /> Apply Promo Code / Coupon
+              </h4>
+              <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="e.g. FITJULY30"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  className="gym-input text-xs"
+                />
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl text-xs whitespace-nowrap"
+                >
+                  Apply Code
+                </button>
+              </form>
+              <span className="text-[10px] text-gym-muted block">Use coupon code <strong className="text-gym-primary">FITJULY30</strong> for 30% discount.</span>
+            </div>
+          )}
         </div>
       </section>
 

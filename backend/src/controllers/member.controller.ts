@@ -2,8 +2,76 @@ import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth.js';
 import bcrypt from 'bcryptjs';
 import prisma from '../config/prisma.js';
+import { cacheGet, cacheSet, cacheDel, cacheDelPrefix, CacheKeys } from '../config/cache.js';
 import { UserRole, MemberStatus, SubscriptionStatus, PaymentStatus, PaymentMethod } from '@prisma/client';
 import { createNotification } from './notification.controller.js';
+import logger from '../config/logger.js';
+import { emitNewCheckIn, emitMemberRegistered } from '../config/socket.js';
+
+const invalidateMemberCaches = async (reqUser: any) => {
+  if (!reqUser) return;
+  let ownerId = reqUser.id;
+  if (reqUser.role === 'STAFF' && reqUser.branchId) {
+    const branch = await prisma.branch.findUnique({
+      where: { id: reqUser.branchId },
+      select: { ownerId: true }
+    });
+    ownerId = branch?.ownerId || '';
+  }
+  if (ownerId) {
+    cacheDelPrefix(`members:${ownerId}`);
+    cacheDelPrefix(`dashboard:${ownerId}`);
+  }
+};
+
+const checkMemberAccess = async (reqUser: any, memberId: string) => {
+  if (!reqUser) {
+    return { errorStatus: 401, error: 'Unauthorized', member: null };
+  }
+
+  const member = await prisma.member.findUnique({
+    where: { id: memberId },
+    include: { user: true },
+  });
+
+  if (!member) {
+    return { errorStatus: 404, error: 'Member not found', member: null };
+  }
+
+  // 1. Global Admin admin@gym.com bypasses all checks
+  if (reqUser.email === 'admin@gym.com') {
+    return { member };
+  }
+
+  // 2. Tenant owner (ADMIN role) checks
+  if (reqUser.role === 'ADMIN') {
+    if (member.user.branchId) {
+      const branch = await prisma.branch.findUnique({
+        where: { id: member.user.branchId },
+        select: { ownerId: true },
+      });
+      if (branch && branch.ownerId !== reqUser.id) {
+        return { errorStatus: 403, error: 'Access Denied: You do not own the branch this member belongs to.', member: null };
+      }
+    }
+    return { member };
+  }
+
+  // 3. Member role checks
+  if (reqUser.role === 'MEMBER') {
+    if (reqUser.id !== member.userId) {
+      return { errorStatus: 403, error: 'Access Denied: You can only access your own profile.', member: null };
+    }
+    return { member };
+  }
+
+  // 4. Staff & Trainer roles checks
+  if (member.user.branchId !== reqUser.branchId) {
+    return { errorStatus: 403, error: 'Access Denied: You can only access members belonging to your own branch.', member: null };
+  }
+
+  return { member };
+};
 
 export const registerMember = async (req: AuthRequest, res: Response) => {
   try {
@@ -87,6 +155,8 @@ export const registerMember = async (req: AuthRequest, res: Response) => {
       return { user, member };
     });
 
+    await invalidateMemberCaches(req.user);
+
     return res.status(201).json({
       message: 'Member registered successfully',
       memberId: result.member.id,
@@ -113,9 +183,34 @@ export const getMembers = async (req: AuthRequest, res: Response) => {
     const userBranchId = req.user?.branchId;
     const resolvedBranchId = (userRole !== 'ADMIN' ? userBranchId : (branchId as string || activeBranchIdHeader)) || undefined;
 
+    let ownerId = req.user?.id || '';
+    if (userRole === 'STAFF' && userBranchId) {
+      const branch = await prisma.branch.findUnique({
+        where: { id: userBranchId },
+        select: { ownerId: true }
+      });
+      ownerId = branch?.ownerId || '';
+    }
+
+    const cacheKey = `members:${ownerId}:${resolvedBranchId || 'all'}:${status || ''}:${search || ''}`;
+    const cached = cacheGet<any[]>(cacheKey);
+    if (cached) {
+      return res.status(200).json({ members: cached });
+    }
+
     if (resolvedBranchId) {
       filter.user = {
         branchId: resolvedBranchId,
+      };
+    } else {
+      const ownedBranches = await prisma.branch.findMany({
+        where: req.user?.email === 'admin@gym.com' ? {
+          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        } : { ownerId: req.user?.id || '' },
+        select: { id: true }
+      });
+      filter.user = {
+        branchId: { in: ownedBranches.map(b => b.id) }
       };
     }
 
@@ -155,6 +250,8 @@ export const getMembers = async (req: AuthRequest, res: Response) => {
       orderBy: { joinDate: 'desc' },
     });
 
+    cacheSet(cacheKey, members, 15);
+
     return res.status(200).json({ members });
   } catch (error: any) {
     console.error('Fetch members error:', error);
@@ -165,6 +262,12 @@ export const getMembers = async (req: AuthRequest, res: Response) => {
 export const getMemberById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const reqUser = (req as any).user;
+
+    const access = await checkMemberAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
+    }
 
     const member = await prisma.member.findUnique({
       where: { id },
@@ -195,21 +298,6 @@ export const getMemberById = async (req: Request, res: Response) => {
       },
     });
 
-    if (!member) {
-      return res.status(404).json({ error: 'Member not found' });
-    }
-
-    // Authorization & Branch Isolation guards
-    const reqUser = (req as any).user;
-    if (reqUser?.role === 'MEMBER' && reqUser.id !== member.userId) {
-      return res.status(403).json({ error: 'Access Denied: You can only view your own profile.' });
-    }
-    if (reqUser?.role !== 'ADMIN' && reqUser?.role !== 'MEMBER') {
-      if (member.user.branchId !== reqUser?.branchId) {
-        return res.status(403).json({ error: 'Access Denied: You can only view profiles of members in your own branch.' });
-      }
-    }
-
     return res.status(200).json({ member });
   } catch (error: any) {
     console.error('Fetch member by ID error:', error);
@@ -221,6 +309,12 @@ export const updateMemberStatus = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { status, emergencyContact } = req.body;
+    const reqUser = (req as any).user;
+
+    const access = await checkMemberAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
+    }
 
     const updatedData: any = {};
     if (status && Object.values(MemberStatus).includes(status)) {
@@ -235,6 +329,8 @@ export const updateMemberStatus = async (req: Request, res: Response) => {
       data: updatedData,
     });
 
+    await invalidateMemberCaches(reqUser);
+
     return res.status(200).json({ message: 'Member status updated', member });
   } catch (error: any) {
     console.error('Update member status error:', error);
@@ -246,26 +342,18 @@ export const addSubscriptionToMember = async (req: Request, res: Response) => {
   try {
     const { id: memberId } = req.params;
     const { planId } = req.body;
+    const reqUser = (req as any).user;
 
     if (!planId) {
       return res.status(400).json({ error: 'PlanId is required' });
     }
 
-    const member = await prisma.member.findUnique({
-      where: { id: memberId },
-      include: { user: true },
-    });
-    if (!member) {
-      return res.status(404).json({ error: 'Member not found' });
+    const access = await checkMemberAccess(reqUser, memberId);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
     }
 
-    const reqUser = (req as any).user;
-    if (reqUser?.role === 'MEMBER' && reqUser.id !== member.userId) {
-      return res.status(403).json({ error: 'Access Denied: You cannot configure subscription plans for other members.' });
-    }
-    if (reqUser?.role !== 'ADMIN' && reqUser?.role !== 'STAFF' && reqUser?.role !== 'MEMBER') {
-      return res.status(403).json({ error: 'Access Denied' });
-    }
+    const member = access.member!;
 
     const plan = await prisma.membershipPlan.findUnique({ where: { id: planId } });
     if (!plan) {
@@ -302,6 +390,8 @@ export const addSubscriptionToMember = async (req: Request, res: Response) => {
       `A new membership plan "${plan.name}" has been added to your account. It is valid until ${new Date(result.subscription.endDate).toLocaleDateString()}.`,
       'BILLING'
     );
+
+    await invalidateMemberCaches(reqUser);
 
     return res.status(201).json({
       message: 'Subscription added successfully',
@@ -376,6 +466,8 @@ export const logMemberCheckIn = async (req: Request, res: Response) => {
       'INFO'
     );
 
+    await invalidateMemberCaches(reqUser);
+
     return res.status(201).json({
       message: 'Access Granted: Check-in logged successfully',
       checkIn,
@@ -402,6 +494,35 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     const userBranchId = req.user?.branchId;
     const resolvedBranchId = (userRole !== 'ADMIN' ? userBranchId : (branchId as string || activeBranchIdHeader)) || undefined;
 
+    let ownerId = req.user?.id || '';
+    if (userRole === 'STAFF' && userBranchId) {
+      const branch = await prisma.branch.findUnique({
+        where: { id: userBranchId },
+        select: { ownerId: true }
+      });
+      ownerId = branch?.ownerId || '';
+    }
+
+    const cacheKey = CacheKeys.dashboardStats(ownerId, resolvedBranchId);
+    const cached = cacheGet<any>(cacheKey);
+    if (cached) {
+      return res.status(200).json(cached);
+    }
+
+    // Resolve branch isolation condition
+    let branchFilter: any;
+    if (resolvedBranchId) {
+      branchFilter = { equals: resolvedBranchId };
+    } else {
+      const ownedBranches = await prisma.branch.findMany({
+        where: req.user?.email === 'admin@gym.com' ? {
+          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        } : { ownerId: req.user?.id || '' },
+        select: { id: true }
+      });
+      branchFilter = { in: ownedBranches.map(b => b.id) };
+    }
+
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
@@ -409,7 +530,7 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     const totalMembers = await prisma.member.count({
       where: {
         status: MemberStatus.ACTIVE,
-        user: resolvedBranchId ? { branchId: resolvedBranchId } : undefined,
+        user: { branchId: branchFilter },
       },
     });
 
@@ -419,13 +540,13 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
         paymentDate: {
           gte: startOfMonth,
         },
-        subscription: resolvedBranchId ? {
+        subscription: {
           member: {
             user: {
-              branchId: resolvedBranchId,
+              branchId: branchFilter,
             },
           },
-        } : undefined,
+        },
       },
       _sum: {
         amount: true,
@@ -442,24 +563,24 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
         timestamp: {
           gte: startOfToday,
         },
-        member: resolvedBranchId ? {
+        member: {
           user: {
-            branchId: resolvedBranchId,
+            branchId: branchFilter,
           },
-        } : undefined,
+        },
       },
     });
 
     const pendingResult = await prisma.payment.aggregate({
       where: {
         status: PaymentStatus.PENDING,
-        subscription: resolvedBranchId ? {
+        subscription: {
           member: {
             user: {
-              branchId: resolvedBranchId,
+              branchId: branchFilter,
             },
           },
-        } : undefined,
+        },
       },
       _sum: {
         amount: true,
@@ -469,13 +590,13 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     const pendingPayments = pendingResult._sum.amount || 0;
 
     const recentCheckIns = await prisma.checkIn.findMany({
-      where: resolvedBranchId ? {
+      where: {
         member: {
           user: {
-            branchId: resolvedBranchId,
+            branchId: branchFilter,
           },
         },
-      } : undefined,
+      },
       orderBy: { timestamp: 'desc' },
       take: 5,
       include: {
@@ -502,9 +623,9 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
         joinDate: {
           gte: sevenDaysAgo,
         },
-        user: resolvedBranchId ? {
-          branchId: resolvedBranchId,
-        } : undefined,
+        user: {
+          branchId: branchFilter,
+        },
       },
       select: {
         joinDate: true,
@@ -534,20 +655,21 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       count,
     }));
 
-    // 2. Peak Hours Check-Ins (Last 30 Days)
+    // 2. Peak Hours Analysis (Last 30 Days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    thirtyDaysAgo.setHours(0, 0, 0, 0);
 
     const checkInsLastMonth = await prisma.checkIn.findMany({
       where: {
         timestamp: {
           gte: thirtyDaysAgo,
         },
-        member: resolvedBranchId ? {
+        member: {
           user: {
-            branchId: resolvedBranchId,
+            branchId: branchFilter,
           },
-        } : undefined,
+        },
       },
       select: {
         timestamp: true,
@@ -602,7 +724,7 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       },
     });
 
-    return res.status(200).json({
+    const responseData = {
       stats: {
         totalMembers,
         monthlyRevenue,
@@ -616,7 +738,11 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
         weeklySignups,
         peakHours,
       },
-    });
+    };
+
+    cacheSet(cacheKey, responseData, 30);
+
+    return res.status(200).json(responseData);
   } catch (error: any) {
     console.error('Fetch dashboard stats error:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -627,9 +753,15 @@ export const freezeMember = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { startDate, endDate } = req.body;
+    const reqUser = (req as any).user;
 
     if (!startDate || !endDate) {
       return res.status(400).json({ error: 'Start date and end date are required to freeze membership' });
+    }
+
+    const access = await checkMemberAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
     }
 
     const member = await prisma.member.update({
@@ -648,6 +780,8 @@ export const freezeMember = async (req: Request, res: Response) => {
       'ALERT'
     );
 
+    await invalidateMemberCaches(reqUser);
+
     return res.status(200).json({ message: 'Membership frozen successfully', member });
   } catch (error: any) {
     console.error('Freeze member error:', error);
@@ -658,6 +792,12 @@ export const freezeMember = async (req: Request, res: Response) => {
 export const unfreezeMember = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const reqUser = (req as any).user;
+
+    const access = await checkMemberAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
+    }
 
     const member = await prisma.member.update({
       where: { id },
@@ -674,6 +814,8 @@ export const unfreezeMember = async (req: Request, res: Response) => {
       'Your membership has been successfully unfrozen. Welcome back to active workouts!',
       'ALERT'
     );
+
+    await invalidateMemberCaches(reqUser);
 
     return res.status(200).json({ message: 'Membership unfrozen successfully', member });
   } catch (error: any) {
@@ -752,6 +894,8 @@ export const updateMemberProfile = async (req: Request, res: Response) => {
       },
     });
 
+    await invalidateMemberCaches(reqUser);
+
     return res.status(200).json({ message: 'Profile updated successfully', member: updatedMember });
   } catch (error: any) {
     console.error('Update member profile error:', error);
@@ -763,9 +907,15 @@ export const upgradeDowngradeSubscription = async (req: Request, res: Response) 
   try {
     const { id: memberId } = req.params;
     const { planId } = req.body;
+    const reqUser = (req as any).user;
 
     if (!planId) {
       return res.status(400).json({ error: 'New planId is required' });
+    }
+
+    const access = await checkMemberAccess(reqUser, memberId);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
     }
 
     const plan = await prisma.membershipPlan.findUnique({ where: { id: planId } });
@@ -814,6 +964,8 @@ export const upgradeDowngradeSubscription = async (req: Request, res: Response) 
       return { subscription, payment };
     });
 
+    await invalidateMemberCaches(reqUser);
+
     return res.status(200).json({
       message: 'Plan changed successfully',
       subscription: result.subscription,
@@ -828,19 +980,18 @@ export const upgradeDowngradeSubscription = async (req: Request, res: Response) 
 export const deleteMember = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
     const reqUser = (req as any).user;
+
     if (reqUser?.role !== 'ADMIN' && reqUser?.role !== 'STAFF') {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const member = await prisma.member.findUnique({
-      where: { id },
-    });
-
-    if (!member) {
-      return res.status(404).json({ error: 'Member not found' });
+    const access = await checkMemberAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
     }
+
+    const member = access.member!;
 
     const userRecord = await prisma.user.findUnique({
       where: { id: member.userId },
@@ -855,9 +1006,49 @@ export const deleteMember = async (req: Request, res: Response) => {
       where: { id: member.userId },
     });
 
+    await invalidateMemberCaches(reqUser);
+
     return res.status(200).json({ message: 'Member deleted successfully' });
   } catch (error: any) {
-    console.error('Delete member error:', error);
+    logger.error('Delete member error', { error: error.message });
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// ──────────────────────────────────────────────
+// Profile Photo Upload (Cloudinary)
+// ──────────────────────────────────────────────
+export const uploadMemberPhoto = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const file = (req as any).file;
+    const reqUser = (req as any).user;
+
+    if (!file) {
+      return res.status(400).json({ error: 'No photo file provided' });
+    }
+
+    const access = await checkMemberAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
+    }
+
+    // Cloudinary URL is in file.path (set by multer-storage-cloudinary)
+    // For memoryStorage fallback, file.path may be undefined
+    const photoUrl = file.path || file.secure_url || null;
+    if (!photoUrl) {
+      return res.status(400).json({ error: 'Cloudinary not configured. Set CLOUDINARY_CLOUD_NAME to enable photo uploads.' });
+    }
+
+    await prisma.member.update({
+      where: { id },
+      data: { profilePhoto: photoUrl },
+    });
+
+    logger.info('Member photo uploaded', { memberId: id, photoUrl });
+    return res.status(200).json({ message: 'Profile photo updated', photoUrl });
+  } catch (error: any) {
+    logger.error('Upload member photo error', { error: error.message });
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

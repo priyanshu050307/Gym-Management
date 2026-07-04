@@ -15,6 +15,15 @@ export const getSupplements = async (req: Request, res: Response) => {
     const whereClause: any = {};
     if (resolvedBranchId) {
       whereClause.branchId = resolvedBranchId;
+    } else {
+      // Find all branches owned by this admin
+      const ownedBranches = await prisma.branch.findMany({
+        where: reqUser.email === 'admin@gym.com' ? {
+          OR: [{ ownerId: reqUser.id }, { ownerId: null }]
+        } : { ownerId: reqUser.id },
+        select: { id: true }
+      });
+      whereClause.branchId = { in: ownedBranches.map(b => b.id) };
     }
 
     const supplements = await prisma.supplement.findMany({

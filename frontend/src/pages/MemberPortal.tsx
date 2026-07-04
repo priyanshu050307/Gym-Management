@@ -284,6 +284,10 @@ export const MemberPortal: React.FC = () => {
       alert("Please select a membership plan.");
       return;
     }
+    if (emergencyContact && !/^\d{10}$/.test(emergencyContact)) {
+      alert('Emergency contact must be exactly 10 digits.');
+      return;
+    }
 
     try {
       setPaymentLoading(true);
@@ -330,6 +334,11 @@ export const MemberPortal: React.FC = () => {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!memberId) return;
+
+    if (emergencyContact && !/^\d{10}$/.test(emergencyContact)) {
+      alert('Emergency contact must be exactly 10 digits.');
+      return;
+    }
 
     setUpdatingProfile(true);
     setProfileSuccessMsg('');

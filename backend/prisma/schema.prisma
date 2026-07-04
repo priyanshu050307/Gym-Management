@@ -45,7 +45,9 @@ enum PaymentMethod {
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
-  passwordHash String
+  passwordHash String?
+  phoneNumber  String?  @unique
+  googleId     String?  @unique
   firstName    String
   lastName     String
   role         UserRole @default(MEMBER)
@@ -57,6 +59,7 @@ model User {
   trainer      Trainer?
   notifications Notification[]
   forgotTokens  ForgotPasswordToken[]
+  saaSSubscription SaaSSubscription?
 }
 
 model Member {
@@ -89,8 +92,11 @@ model MembershipPlan {
   durationMonths Int
   description    String?
   isActive       Boolean        @default(true)
+  ownerId        String?
   createdAt      DateTime       @default(now())
   subscriptions  Subscription[]
+
+  @@index([ownerId])
 }
 
 model Subscription {
@@ -196,12 +202,15 @@ model Branch {
   address     String?
   phone       String?
   gstNo       String?
+  ownerId     String?
   users       User[]
   equipments      Equipment[]
   supplements     Supplement[]
   supplementSales SupplementSale[]
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
+
+  @@index([ownerId])
 }
 
 model ForgotPasswordToken {
@@ -363,4 +372,21 @@ model SupplementSale {
   @@index([supplementId])
   @@index([memberId])
   @@index([branchId])
+}
+
+model SaaSSubscription {
+  id              String   @id @default(uuid())
+  ownerId         String   @unique
+  owner           User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status          String   @default("TRIAL_ACTIVE") // TRIAL_ACTIVE, TRIAL_EXPIRED, SUBSCRIBED_ACTIVE, SUBSCRIBED_EXPIRED
+  planName        String   @default("Starter")      // Starter, Professional, Enterprise
+  trialEndDate    DateTime
+  subscriptionEnd DateTime?
+  billingCycle    String   @default("MONTHLY")      // MONTHLY, YEARLY
+  cardBrand       String?
+  cardLast4       String?
+  gstin           String?
+  billingAddress  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

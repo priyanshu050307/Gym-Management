@@ -71,6 +71,17 @@ export const MemberRegister: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (emergencyContact && !/^\d{10}$/.test(emergencyContact)) {
+      setError('Emergency contact must be exactly 10 digits.');
+      return;
+    }
+
+    if (email && !email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setLoadingSubmit(true);
 
     try {

@@ -71,6 +71,19 @@ export const getClasses = async (req: AuthRequest, res: Response) => {
           branchId: resolvedBranchId,
         },
       };
+    } else {
+      // Find all branches owned by this admin
+      const ownedBranches = await prisma.branch.findMany({
+        where: req.user?.email === 'admin@gym.com' ? {
+          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        } : { ownerId: req.user?.id || '' },
+        select: { id: true }
+      });
+      whereClause.trainer = {
+        user: {
+          branchId: { in: ownedBranches.map(b => b.id) }
+        }
+      };
     }
 
     const classes = await prisma.groupClass.findMany({

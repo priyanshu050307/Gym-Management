@@ -4,6 +4,47 @@ import prisma from '../config/prisma.js';
 import bcrypt from 'bcryptjs';
 import { UserRole } from '@prisma/client';
 
+const checkTrainerAccess = async (reqUser: any, trainerId: string) => {
+  if (!reqUser) {
+    return { errorStatus: 401, error: 'Unauthorized', trainer: null };
+  }
+
+  const trainer = await prisma.trainer.findUnique({
+    where: { id: trainerId },
+    include: { user: true },
+  });
+
+  if (!trainer) {
+    return { errorStatus: 404, error: 'Trainer not found', trainer: null };
+  }
+
+  // 1. Global Admin admin@gym.com bypasses all checks
+  if (reqUser.email === 'admin@gym.com') {
+    return { trainer };
+  }
+
+  // 2. Tenant owner (ADMIN role) checks
+  if (reqUser.role === 'ADMIN') {
+    if (trainer.user?.branchId) {
+      const branch = await prisma.branch.findUnique({
+        where: { id: trainer.user.branchId },
+        select: { ownerId: true },
+      });
+      if (branch && branch.ownerId !== reqUser.id) {
+        return { errorStatus: 403, error: 'Access Denied: You do not own the branch this trainer belongs to.', trainer: null };
+      }
+    }
+    return { trainer };
+  }
+
+  // 3. Trainer & Staff roles checks
+  if (trainer.user?.branchId !== reqUser.branchId) {
+    return { errorStatus: 403, error: 'Access Denied: You can only access trainers belonging to your own branch.', trainer: null };
+  }
+
+  return { trainer };
+};
+
 export const createTrainer = async (req: AuthRequest, res: Response) => {
   try {
     const { firstName, lastName, specialty, email, phone, branchId } = req.body;
@@ -69,6 +110,16 @@ export const getTrainers = async (req: AuthRequest, res: Response) => {
       whereClause.user = {
         branchId: resolvedBranchId,
       };
+    } else {
+      const ownedBranches = await prisma.branch.findMany({
+        where: req.user?.email === 'admin@gym.com' ? {
+          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        } : { ownerId: req.user?.id || '' },
+        select: { id: true }
+      });
+      whereClause.user = {
+        branchId: { in: ownedBranches.map(b => b.id) }
+      };
     }
 
     const trainers = await prisma.trainer.findMany({
@@ -118,22 +169,14 @@ export const getTrainers = async (req: AuthRequest, res: Response) => {
 export const getTrainerById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const trainer = await prisma.trainer.findUnique({
-      where: { id },
-      include: {
-        user: {
-          select: {
-            branchId: true,
-          },
-        },
-      },
-    });
+    const reqUser = (req as any).user;
 
-    if (!trainer) {
-      return res.status(404).json({ error: 'Trainer not found' });
+    const access = await checkTrainerAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
     }
 
-    return res.status(200).json({ trainer });
+    return res.status(200).json({ trainer: access.trainer });
   } catch (error: any) {
     console.error('Fetch trainer error:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -144,13 +187,14 @@ export const updateTrainer = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { firstName, lastName, specialty, email, phone, isActive, branchId } = req.body;
+    const reqUser = req.user;
 
-    const trainer = await prisma.trainer.findUnique({
-      where: { id },
-    });
-    if (!trainer) {
-      return res.status(404).json({ error: 'Trainer not found' });
+    const access = await checkTrainerAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
     }
+
+    const trainer = access.trainer!;
 
     const data: any = {};
     if (firstName !== undefined) data.firstName = firstName;
@@ -189,6 +233,12 @@ export const updateTrainer = async (req: AuthRequest, res: Response) => {
 export const deleteTrainer = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const reqUser = (req as any).user;
+
+    const access = await checkTrainerAccess(reqUser, id);
+    if (access.error) {
+      return res.status(access.errorStatus!).json({ error: access.error });
+    }
 
     const trainer = await prisma.trainer.findUnique({
       where: { id },
@@ -198,6 +248,7 @@ export const deleteTrainer = async (req: Request, res: Response) => {
         },
       },
     });
+
     if (!trainer) {
       return res.status(404).json({ error: 'Trainer not found' });
     }

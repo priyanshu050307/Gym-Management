@@ -68,6 +68,26 @@ async function main() {
   });
   console.log('Admin account created: admin@gym.com');
 
+  // Set all seeded branches as owned by the default admin
+  await prisma.branch.updateMany({
+    where: { ownerId: null },
+    data: { ownerId: adminUser.id },
+  });
+
+  // Create SaaS trial subscription for the default admin
+  const adminTrialEnd = new Date();
+  adminTrialEnd.setDate(adminTrialEnd.getDate() + 30);
+  await prisma.saaSSubscription.create({
+    data: {
+      ownerId: adminUser.id,
+      status: 'TRIAL_ACTIVE',
+      planName: 'Starter',
+      trialEndDate: adminTrialEnd,
+      billingCycle: 'MONTHLY',
+    },
+  });
+  console.log('SaaS trial subscription created for admin.');
+
   // 4. Create 10 Staff Users
   console.log('Creating 10 staff members...');
   const staffList = [];

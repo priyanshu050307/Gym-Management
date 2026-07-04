@@ -10,6 +10,8 @@ import {
 } from '../controllers/trainer.controller.js';
 import { getTrainerFeedback } from '../controllers/feedback.controller.js';
 import { authenticateToken, requireRoles } from '../middleware/auth.js';
+import { validate } from '../middleware/validate.js';
+import { createTrainerSchema, updateTrainerSchema } from '../schemas/trainer.schema.js';
 import { UserRole } from '@prisma/client';
 
 const router = Router();
@@ -24,8 +26,8 @@ router.get('/', getTrainers);
 router.get('/:id', getTrainerById);
 router.get('/:id/feedback', getTrainerFeedback as any);
 
-router.post('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, createTrainer);
-router.put('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, updateTrainer);
+router.post('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, validate(createTrainerSchema), createTrainer);
+router.put('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, validate(updateTrainerSchema), updateTrainer);
 router.delete('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]) as any, deleteTrainer);
 
 export default router;

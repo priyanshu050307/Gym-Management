@@ -6,6 +6,9 @@ import crypto from 'crypto';
 import { PaymentStatus, PaymentMethod, SubscriptionStatus, MemberStatus } from '@prisma/client';
 import { createNotification } from './notification.controller.js';
 import { activateSubscriptionAfterPayment } from '../utils/subscription.js';
+import logger from '../config/logger.js';
+import { emitPaymentReceived } from '../config/socket.js';
+import { sendPaymentReceiptEmail } from '../config/email.js';
 
 // Initialize Razorpay client
 const getRazorpayInstance = () => {
@@ -130,7 +133,8 @@ export const verifyRazorpayPayment = async (req: AuthRequest, res: Response) => 
       include: {
         subscription: {
           include: {
-            member: true
+            member: true,
+            plan: true
           }
         }
       }
@@ -170,12 +174,38 @@ export const verifyRazorpayPayment = async (req: AuthRequest, res: Response) => 
       'BILLING'
     );
 
+    // Get the owning admin for this branch
+    const memberUser = await prisma.user.findUnique({
+      where: { id: payment.subscription.member.userId },
+      include: { branch: true },
+    });
+    const ownerBranch = await prisma.branch.findUnique({
+      where: { id: memberUser?.branchId || '' },
+      select: { ownerId: true, name: true },
+    });
+    if (ownerBranch?.ownerId) {
+      emitPaymentReceived(ownerBranch.ownerId, {
+        memberName: `${memberUser?.firstName} ${memberUser?.lastName}`,
+        amount: payment.amount,
+        planName: payment.subscription?.plan?.name || 'Membership',
+      });
+    }
+
+    // Send email receipt (non-blocking)
+    sendPaymentReceiptEmail(
+      memberUser?.email || '',
+      `${memberUser?.firstName} ${memberUser?.lastName}`,
+      payment.subscription?.plan?.name || 'Membership',
+      payment.amount,
+      razorpay_payment_id
+    ).catch((e) => logger.error('Failed to send receipt email', { error: e.message }));
+
     return res.status(200).json({
       message: 'Payment verified and subscription activated successfully',
       payment: result
     });
   } catch (error: any) {
-    console.error('Razorpay verification error:', error);
+    logger.error('Razorpay verification error', { error: error.message });
     return res.status(500).json({ error: error.message || 'Internal payment verification error' });
   }
 };

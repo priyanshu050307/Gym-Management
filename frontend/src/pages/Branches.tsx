@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../utils/api.js';
-import { MapPin, Phone, FileText, Plus, Edit2, Trash2, X } from 'lucide-react';
+import { MapPin, Phone, FileText, Plus, Edit2, Trash2, X, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.js';
 
 interface Branch {
@@ -31,6 +31,116 @@ export const Branches: React.FC = () => {
   const [staffPassword, setStaffPassword] = useState('');
   const [staffFirstName, setStaffFirstName] = useState('');
   const [staffLastName, setStaffLastName] = useState('');
+
+  // Staff Portal States
+  const [staffModalOpen, setStaffModalOpen] = useState(false);
+  const [selectedBranchForStaff, setSelectedBranchForStaff] = useState<Branch | null>(null);
+  const [staffList, setStaffList] = useState<any[]>([]);
+  const [staffLoading, setStaffLoading] = useState(false);
+  const [staffError, setStaffError] = useState('');
+  const [staffFormOpen, setStaffFormOpen] = useState(false);
+  const [editingStaff, setEditingStaff] = useState<any | null>(null);
+  const [newStaffEmail, setNewStaffEmail] = useState('');
+  const [newStaffPassword, setNewStaffPassword] = useState('');
+  const [newStaffFirstName, setNewStaffFirstName] = useState('');
+  const [newStaffLastName, setNewStaffLastName] = useState('');
+
+  const fetchBranchStaff = async (branchId: string) => {
+    try {
+      setStaffLoading(true);
+      setStaffError('');
+      const data = await apiFetch<{ staff: any[] }>(`/branches/${branchId}/staff`);
+      setStaffList(data.staff);
+    } catch (err: any) {
+      setStaffError(err.message || 'Failed to fetch staff members');
+    } finally {
+      setStaffLoading(false);
+    }
+  };
+
+  const openStaffModal = (branch: Branch) => {
+    setSelectedBranchForStaff(branch);
+    setStaffModalOpen(true);
+    setStaffFormOpen(false);
+    setEditingStaff(null);
+    clearStaffForm();
+    fetchBranchStaff(branch.id);
+  };
+
+  const clearStaffForm = () => {
+    setNewStaffEmail('');
+    setNewStaffPassword('');
+    setNewStaffFirstName('');
+    setNewStaffLastName('');
+  };
+
+  const handleStaffSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedBranchForStaff) return;
+    if (!newStaffEmail || !newStaffFirstName || !newStaffLastName || (!editingStaff && !newStaffPassword)) {
+      setStaffError('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      setStaffLoading(true);
+      if (editingStaff) {
+        await apiFetch(`/branches/${selectedBranchForStaff.id}/staff/${editingStaff.id}`, {
+          method: 'PUT',
+          body: {
+            email: newStaffEmail,
+            password: newStaffPassword || undefined,
+            firstName: newStaffFirstName,
+            lastName: newStaffLastName,
+          },
+        });
+      } else {
+        await apiFetch(`/branches/${selectedBranchForStaff.id}/staff`, {
+          method: 'POST',
+          body: {
+            email: newStaffEmail,
+            password: newStaffPassword,
+            firstName: newStaffFirstName,
+            lastName: newStaffLastName,
+          },
+        });
+      }
+      setStaffFormOpen(false);
+      setEditingStaff(null);
+      clearStaffForm();
+      fetchBranchStaff(selectedBranchForStaff.id);
+    } catch (err: any) {
+      setStaffError(err.message || 'Staff operation failed');
+    } finally {
+      setStaffLoading(false);
+    }
+  };
+
+  const handleStaffDelete = async (staffId: string) => {
+    if (!selectedBranchForStaff) return;
+    if (!window.confirm('Are you sure you want to remove this staff member?')) return;
+
+    try {
+      setStaffLoading(true);
+      await apiFetch(`/branches/${selectedBranchForStaff.id}/staff/${staffId}`, {
+        method: 'DELETE',
+      });
+      fetchBranchStaff(selectedBranchForStaff.id);
+    } catch (err: any) {
+      setStaffError(err.message || 'Failed to delete staff member');
+    } finally {
+      setStaffLoading(false);
+    }
+  };
+
+  const openEditStaffForm = (staff: any) => {
+    setEditingStaff(staff);
+    setNewStaffEmail(staff.email);
+    setNewStaffFirstName(staff.firstName);
+    setNewStaffLastName(staff.lastName);
+    setNewStaffPassword('');
+    setStaffFormOpen(true);
+  };
 
   const fetchBranches = async () => {
     try {
@@ -80,9 +190,18 @@ export const Branches: React.FC = () => {
       return;
     }
 
+    if (phone && !/^\d{10}$/.test(phone)) {
+      setError('Phone number must be exactly 10 digits.');
+      return;
+    }
+
     if (!editingBranch && createStaff) {
       if (!staffEmail || !staffPassword || !staffFirstName || !staffLastName) {
         setError('Please fill in all staff details.');
+        return;
+      }
+      if (!staffEmail.includes('@')) {
+        setError('Please enter a valid staff email address.');
         return;
       }
     }
@@ -186,6 +305,13 @@ export const Branches: React.FC = () => {
                     </h3>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => openStaffModal(branch)}
+                      className="p-2 hover:bg-slate-100 text-gym-muted hover:text-gym-text rounded-lg transition-all"
+                      title="Manage Staff"
+                    >
+                      <Users className="h-4 w-4 text-gym-primary" />
+                    </button>
                     <button
                       onClick={() => openEditModal(branch)}
                       className="p-2 hover:bg-slate-100 text-gym-muted hover:text-gym-text rounded-lg transition-all"
@@ -399,6 +525,183 @@ export const Branches: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Staff Management Modal */}
+      {staffModalOpen && selectedBranchForStaff && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="glass-card w-full max-w-2xl border border-slate-100/10 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100/10 shrink-0">
+              <div>
+                <h2 className="text-xl font-bold text-gym-text">
+                  Manage Staff
+                </h2>
+                <p className="text-xs text-gym-muted mt-0.5">
+                  Branch: <span className="text-gym-primary font-semibold">{selectedBranchForStaff.name}</span>
+                </p>
+              </div>
+              <button
+                onClick={() => setStaffModalOpen(false)}
+                className="p-1.5 hover:bg-slate-100 rounded-lg text-gym-muted hover:text-gym-text transition-all"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              {staffError && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+                  {staffError}
+                </div>
+              )}
+
+              {/* Add/Edit Staff Form Toggle Button */}
+              {!staffFormOpen ? (
+                <button
+                  onClick={() => {
+                    setEditingStaff(null);
+                    clearStaffForm();
+                    setStaffFormOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-gym-primary/10 text-gym-primary hover:bg-gym-primary/20 font-semibold rounded-xl text-sm transition-all"
+                >
+                  <Plus className="h-4 w-4" /> Add Staff Member
+                </button>
+              ) : (
+                <form onSubmit={handleStaffSubmit} className="p-4 bg-slate-900/50 border border-slate-800/80 rounded-xl space-y-4 animate-fade-in">
+                  <h3 className="text-sm font-bold text-gym-text">
+                    {editingStaff ? 'Edit Staff Details' : 'Add New Staff Member'}
+                  </h3>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-gym-muted uppercase mb-1">First Name *</label>
+                      <input
+                        type="text"
+                        value={newStaffFirstName}
+                        onChange={(e) => setNewStaffFirstName(e.target.value)}
+                        placeholder="John"
+                        className="gym-input text-xs"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gym-muted uppercase mb-1">Last Name *</label>
+                      <input
+                        type="text"
+                        value={newStaffLastName}
+                        onChange={(e) => setNewStaffLastName(e.target.value)}
+                        placeholder="Doe"
+                        className="gym-input text-xs"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gym-muted uppercase mb-1">Email Address *</label>
+                    <input
+                      type="email"
+                      value={newStaffEmail}
+                      onChange={(e) => setNewStaffEmail(e.target.value)}
+                      placeholder="staff@mygym.com"
+                      className="gym-input text-xs"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gym-muted uppercase mb-1">
+                      Password {editingStaff ? '(Leave blank to keep unchanged)' : '*'}
+                    </label>
+                    <input
+                      type="password"
+                      value={newStaffPassword}
+                      onChange={(e) => setNewStaffPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="gym-input text-xs"
+                      required={!editingStaff}
+                    />
+                  </div>
+
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setStaffFormOpen(false)}
+                      className="px-3.5 py-1.5 text-xs font-semibold text-gym-muted hover:text-gym-text hover:bg-slate-100 rounded-lg transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={staffLoading}
+                      className="px-4 py-1.5 text-xs font-semibold bg-gym-primary hover:bg-gym-primary-hover text-black rounded-lg transition-all"
+                    >
+                      {editingStaff ? 'Save Changes' : 'Create Account'}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* Staff List */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-bold text-gym-muted uppercase tracking-wider">
+                  Active Branch Staff
+                </h3>
+
+                {staffLoading && staffList.length === 0 ? (
+                  <div className="py-8 text-center text-gym-muted text-sm">
+                    Loading staff records...
+                  </div>
+                ) : staffList.length === 0 ? (
+                  <div className="py-8 text-center text-gym-muted text-xs border border-dashed border-slate-800 rounded-xl">
+                    No staff accounts assigned to this branch yet.
+                  </div>
+                ) : (
+                  <div className="border border-slate-800/80 rounded-xl divide-y divide-slate-800 overflow-hidden">
+                    {staffList.map((staff) => (
+                      <div key={staff.id} className="p-4 flex items-center justify-between gap-4 hover:bg-slate-900/30 transition-colors">
+                        <div>
+                          <p className="font-semibold text-gym-text text-sm">
+                            {staff.firstName} {staff.lastName}
+                          </p>
+                          <p className="text-xs text-gym-muted font-mono mt-0.5">
+                            {staff.email}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => openEditStaffForm(staff)}
+                            className="p-1.5 hover:bg-slate-800 text-gym-muted hover:text-gym-text rounded-lg transition-all"
+                            title="Edit Staff Info"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleStaffDelete(staff.id)}
+                            className="p-1.5 hover:bg-red-500/10 text-gym-muted hover:text-red-400 rounded-lg transition-all"
+                            title="Remove Staff"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="px-6 py-4 bg-slate-900/20 border-t border-slate-100/10 shrink-0 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setStaffModalOpen(false)}
+                className="px-4 py-2 text-sm font-semibold text-gym-text hover:bg-slate-100 rounded-xl transition-all"
+              >
+                Close Portal
+              </button>
+            </div>
           </div>
         </div>
       )}

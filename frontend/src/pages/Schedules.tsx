@@ -205,6 +205,16 @@ export const Schedules: React.FC = () => {
     e.preventDefault();
     if (!trainerForm.firstName || !trainerForm.lastName || !trainerForm.specialty) return;
 
+    if (trainerForm.phone && !/^\d{10}$/.test(trainerForm.phone)) {
+      alert('Trainer phone number must be exactly 10 digits.');
+      return;
+    }
+
+    if (trainerForm.email && !trainerForm.email.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
     setTrainerFormSubmitting(true);
     try {
       if (editingTrainer) {

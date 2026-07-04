@@ -75,10 +75,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setActiveBranchIdState(null);
   };
 
+  const branchesFetchedRef = React.useRef(false);
+
+  const fetchBranches = async (currentUser: typeof user) => {
+    if (!currentUser || !['ADMIN', 'STAFF', 'TRAINER'].includes(currentUser.role)) return;
+    try {
+      const data = await apiFetch<{ branches: any[] }>('/branches');
+      setBranches(data.branches);
+      if (currentUser.role !== 'ADMIN') {
+        if (currentUser.branchId) {
+          setActiveBranchId(currentUser.branchId);
+        }
+      } else {
+        // Auto-select first branch if nothing is stored
+        const storedId = localStorage.getItem('activeBranchId');
+        if (!storedId && currentUser.branchId) {
+          setActiveBranchId(currentUser.branchId);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch branches:', err);
+    }
+  };
+
   const refreshProfile = async () => {
     try {
       const data = await apiFetch<{ user: UserProfile }>('/auth/me');
       setUser(data.user);
+      branchesFetchedRef.current = true;
+      await fetchBranches(data.user);
     } catch (err) {
       console.error('Failed to refresh profile:', err);
       logout();
@@ -96,27 +121,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   useEffect(() => {
-    const fetchBranches = async () => {
-      if (user && (user.role === 'ADMIN' || user.role === 'STAFF' || user.role === 'TRAINER')) {
-        try {
-          const data = await apiFetch<{ branches: any[] }>('/branches');
-          setBranches(data.branches);
-          if (user.role !== 'ADMIN') {
-            if (user.branchId && activeBranchId !== user.branchId) {
-              setActiveBranchId(user.branchId);
-            }
-          } else {
-            // If no activeBranchId is set yet, default to user's branch
-            if (!activeBranchId && user.branchId) {
-              setActiveBranchId(user.branchId);
-            }
-          }
-        } catch (err) {
-          console.error('Failed to fetch branches:', err);
-        }
-      }
-    };
-    fetchBranches();
+    if (user && !branchesFetchedRef.current) {
+      fetchBranches(user);
+    }
+    branchesFetchedRef.current = false;
   }, [user]);
 
   return (

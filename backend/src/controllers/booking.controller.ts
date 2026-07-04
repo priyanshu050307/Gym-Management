@@ -193,6 +193,16 @@ export const getMemberBookings = async (req: Request, res: Response) => {
       }
     }
 
+    if (reqUser && reqUser.role !== 'ADMIN' && reqUser.role !== 'MEMBER') {
+      const member = await prisma.member.findUnique({
+        where: { id: memberId },
+        include: { user: true },
+      });
+      if (!member || member.user.branchId !== reqUser.branchId) {
+        return res.status(403).json({ error: 'Access Denied: You can only view bookings for members in your own branch.' });
+      }
+    }
+
     const bookings = await prisma.classBooking.findMany({
       where: { memberId, status: BookingStatus.CONFIRMED },
       include: {

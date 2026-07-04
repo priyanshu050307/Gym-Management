@@ -4,6 +4,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma.js';
 import { UserRole, MemberStatus } from '@prisma/client';
+import logger from '../config/logger.js';
+import { sendWelcomeEmail } from '../config/email.js';
+import { verifyFirebaseToken } from '../config/firebase.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key-replace-this-in-production';
 
@@ -51,6 +54,36 @@ export const register = async (req: Request, res: Response) => {
         return { user, member };
       }
 
+      if (userRole === UserRole.ADMIN) {
+        // Initialize or reset SaaS trial for 30 days
+        const trialEndDate = new Date();
+        trialEndDate.setDate(trialEndDate.getDate() + 30);
+
+        const existingSub = await tx.saaSSubscription.findUnique({
+          where: { ownerId: user.id },
+        });
+        if (existingSub) {
+          await tx.saaSSubscription.update({
+            where: { id: existingSub.id },
+            data: {
+              status: 'TRIAL_ACTIVE',
+              planName: 'Starter',
+              trialEndDate,
+              subscriptionEnd: null,
+            },
+          });
+        } else {
+          await tx.saaSSubscription.create({
+            data: {
+              ownerId: user.id,
+              status: 'TRIAL_ACTIVE',
+              planName: 'Starter',
+              trialEndDate,
+            },
+          });
+        }
+      }
+
       return { user };
     });
 
@@ -62,13 +95,20 @@ export const register = async (req: Request, res: Response) => {
 
     const { passwordHash: _, ...userWithoutPassword } = result.user;
 
+    // Send welcome email (non-blocking)
+    if (userRole === UserRole.ADMIN) {
+      sendWelcomeEmail(result.user.email, result.user.firstName, 30).catch((e) =>
+        logger.error('Failed to send welcome email', { error: e.message })
+      );
+    }
+
     return res.status(201).json({
       message: 'User registered successfully',
       user: userWithoutPassword,
       token,
     });
   } catch (error: any) {
-    console.error('Registration error:', error);
+    logger.error('Registration error', { error: error.message });
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -88,6 +128,10 @@ export const login = async (req: Request, res: Response) => {
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    if (!user.passwordHash) {
+      return res.status(400).json({ error: 'This account uses Google or Phone OTP login. Please use the social login options.' });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.passwordHash);
@@ -234,5 +278,141 @@ export const resetPassword = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Reset password error:', error);
     return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const firebaseLogin = async (req: Request, res: Response) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) {
+      return res.status(400).json({ error: 'Firebase ID token is required' });
+    }
+
+    // Verify token
+    const decodedToken = await verifyFirebaseToken(idToken);
+    const { email, phone_number, name, uid, firebase } = decodedToken;
+    const provider = firebase?.sign_in_provider;
+
+    let user = null;
+
+    // 1. Try to find user
+    if (provider === 'google.com' && email) {
+      user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { googleId: uid },
+            { email: email }
+          ]
+        }
+      });
+    } else if (provider === 'phone' && phone_number) {
+      user = await prisma.user.findFirst({
+        where: { phoneNumber: phone_number }
+      });
+    } else if (email) {
+      user = await prisma.user.findUnique({ where: { email } });
+    }
+
+    // 2. If user doesn't exist, register them as a new owner ADMIN
+    if (!user) {
+      const displayName = name || 'Gym Owner';
+      const [firstName, ...lastNameParts] = displayName.split(' ');
+      const lastName = lastNameParts.join(' ') || 'Admin';
+      const finalEmail = email || `owner_${uid.substring(0, 8)}@gymos.com`;
+
+      user = await prisma.$transaction(async (tx) => {
+        const newUser = await tx.user.create({
+          data: {
+            email: finalEmail,
+            phoneNumber: phone_number || null,
+            googleId: provider === 'google.com' ? uid : null,
+            firstName,
+            lastName,
+            role: UserRole.ADMIN,
+            branchId: null,
+          },
+        });
+
+        // Create SaaS trial subscription for 30 days
+        const trialEndDate = new Date();
+        trialEndDate.setDate(trialEndDate.getDate() + 30);
+        await tx.saaSSubscription.create({
+          data: {
+            ownerId: newUser.id,
+            status: 'TRIAL_ACTIVE',
+            planName: 'Starter',
+            trialEndDate,
+          },
+        });
+
+        return newUser;
+      });
+
+      // Send welcome email if they have a real email
+      if (email && !email.endsWith('@gymos.com')) {
+        sendWelcomeEmail(email, firstName).catch((err) =>
+          logger.error('Error sending welcome email on social register', { error: err.message })
+        );
+      }
+
+      logger.info('New social user registered successfully', {
+        userId: user.id,
+        email: user.email,
+        provider,
+      });
+    } else {
+      // User exists, update social keys if missing
+      const updateData: any = {};
+      if (provider === 'google.com' && !user.googleId) {
+        updateData.googleId = uid;
+      }
+      if (phone_number && !user.phoneNumber) {
+        updateData.phoneNumber = phone_number;
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: updateData,
+        });
+      }
+
+      logger.info('Social user logged in successfully', {
+        userId: user.id,
+        email: user.email,
+        provider,
+      });
+    }
+
+    // 3. Issue local JWT token
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        branchId: user.branchId,
+      },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    return res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        branchId: user.branchId,
+      },
+    });
+  } catch (error: any) {
+    logger.error('Firebase authentication failure', {
+      error: error.message,
+      stack: error.stack,
+    });
+    return res.status(401).json({ error: error.message || 'Firebase authentication failed' });
   }
 };

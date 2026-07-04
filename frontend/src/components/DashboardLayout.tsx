@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { NotificationPopup } from './NotificationPopup.js';
+import { apiFetch } from '../utils/api.js';
+import { useSocket } from '../hooks/useSocket.js';
 import {
   LayoutDashboard,
   Users,
@@ -15,14 +17,49 @@ import {
   Dumbbell,
   User as UserIcon,
   MapPin,
-  ShoppingBag
+  ShoppingBag,
+  Sparkles,
+  Clock,
+  Lock
 } from 'lucide-react';
 
 export const DashboardLayout: React.FC = () => {
   const { user, logout, activeBranchId, setActiveBranchId, branches } = useAuth();
+  const { notifications, dismissNotification } = useSocket();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // SaaS states
+  const [saasSub, setSaasSub] = useState<any>(null);
+  const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
+
+  const fetchSaaSStatus = async () => {
+    try {
+      const data = await apiFetch<{ subscription: any }>('/saas/status');
+      setSaasSub(data.subscription);
+      
+      // Show welcome modal if new trial is active and not shown yet
+      if (
+        data.subscription.status === 'TRIAL_ACTIVE' &&
+        !localStorage.getItem('gymos_welcome_shown') &&
+        user?.role === 'ADMIN'
+      ) {
+        setWelcomeModalOpen(true);
+      }
+    } catch (err) {
+      console.error('Failed to load SaaS subscription:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSaaSStatus();
+  }, [location.pathname]); // Refetch on navigation to stay updated
+
+  const handleDismissWelcome = () => {
+    localStorage.setItem('gymos_welcome_shown', 'true');
+    setWelcomeModalOpen(false);
+  };
 
   const navigationItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'STAFF'] },
@@ -35,6 +72,7 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Equipment', path: '/equipment', icon: Dumbbell, roles: ['ADMIN', 'STAFF'] },
     { name: 'Supplements Inventory', path: '/supplements', icon: ShoppingBag, roles: ['ADMIN', 'STAFF'] },
     { name: 'Branches', path: '/branches', icon: MapPin, roles: ['ADMIN'] },
+    { name: 'SaaS Subscription', path: '/subscription', icon: Sparkles, roles: ['ADMIN'] },
     { name: 'My Portal', path: '/portal', icon: LayoutDashboard, roles: ['MEMBER'] },
   ];
 
@@ -46,6 +84,19 @@ export const DashboardLayout: React.FC = () => {
     logout();
     navigate('/login');
   };
+
+  const daysRemaining = saasSub
+    ? Math.max(0, Math.ceil((new Date(saasSub.trialEndDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))
+    : 0;
+
+  const isLocked = saasSub && (saasSub.status === 'TRIAL_EXPIRED' || saasSub.status === 'SUBSCRIBED_EXPIRED');
+  const isBillingPage = location.pathname === '/subscription';
+
+  useEffect(() => {
+    if (isLocked) {
+      navigate('/', { state: { fromExpired: true } });
+    }
+  }, [isLocked]);
 
   return (
     <div className="min-h-screen bg-gym-darker flex">
@@ -204,9 +255,137 @@ export const DashboardLayout: React.FC = () => {
         )}
 
         {/* Main Content Area */}
-        <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
-          <Outlet />
-        </main>
+        <div className="flex-1 flex flex-col">
+          {/* Top Trial Banner */}
+          {saasSub && saasSub.status === 'TRIAL_ACTIVE' && (
+            <div className={`w-full py-3 px-6 text-center text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+              daysRemaining <= 2
+                ? 'bg-red-500 text-white shadow-lg shadow-red-500/10'
+                : daysRemaining <= 7
+                ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/10'
+                : 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/10'
+            }`}>
+              <Clock className="h-4 w-4 shrink-0" />
+              <span>
+                {daysRemaining <= 2
+                  ? `🔴 Trial Action Required — ${daysRemaining} Day${daysRemaining === 1 ? '' : 's'} Remaining`
+                  : daysRemaining <= 7
+                  ? `🟠 Trial Expiring Soon — ${daysRemaining} Days Remaining`
+                  : `🟢 Trial Active — ${daysRemaining} Days Remaining`
+                }
+              </span>
+              <button
+                onClick={() => navigate('/subscription')}
+                className={`ml-3 px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition-all hover:scale-105 ${
+                  daysRemaining <= 2
+                    ? 'bg-white text-red-600 hover:bg-slate-100'
+                    : 'bg-black text-white hover:bg-slate-900'
+                }`}
+              >
+                Upgrade Now
+              </button>
+            </div>
+          )}
+
+          <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+
+      {/* Welcome Modal */}
+      {welcomeModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="glass-card max-w-md w-full p-8 rounded-3xl border border-slate-100/10 space-y-6 text-center animate-fade-in bg-slate-900">
+            <div className="h-16 w-16 bg-gym-primary/10 rounded-2xl flex items-center justify-center text-gym-primary border border-gym-primary/20 mx-auto">
+              <Sparkles className="h-8 w-8 animate-pulse" />
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold text-gym-text">Welcome to GymOS!</h3>
+              <p className="text-sm text-gym-muted">
+                Your 30-day free trial has officially started. Experience fitness management built for modern scale.
+              </p>
+            </div>
+
+            <div className="bg-slate-950/40 p-4.5 rounded-2xl border border-slate-800 space-y-1">
+              <span className="text-[10px] text-gym-muted uppercase font-bold tracking-wider">Remaining Access</span>
+              <h4 className="text-2xl font-extrabold text-gym-primary">{daysRemaining} Days Left</h4>
+            </div>
+
+            <button
+              onClick={handleDismissWelcome}
+              className="w-full py-3.5 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl shadow-lg shadow-gym-primary/20 transition-all text-sm"
+            >
+              Start Exploring
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Expiry lock overlay */}
+      {isLocked && !isBillingPage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gym-darker/70 backdrop-blur-md p-4">
+          <div className="glass-card max-w-lg w-full p-8 rounded-3xl border border-red-500/20 space-y-6 text-center shadow-2xl shadow-red-500/5 bg-slate-900">
+            <div className="h-16 w-16 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-500 border border-red-500/20 mx-auto">
+              <Lock className="h-8 w-8" />
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold text-gym-text">Your GymOS Trial Has Ended</h3>
+              <p className="text-sm text-gym-muted">
+                All your gym branches, trainer data, check-ins, and configurations are securely saved. Choose a subscription to resume business operations.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                onClick={() => navigate('/subscription')}
+                className="flex-1 py-3.5 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl shadow-lg shadow-gym-primary/10 transition-all text-sm flex items-center justify-center gap-2"
+              >
+                View Plans
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex-1 py-3.5 bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800 font-bold rounded-xl transition-all text-sm text-white"
+              >
+                Logout
+              </button>
+            </div>
+            <a href="mailto:support@gymos.com" className="text-xs text-gym-muted hover:text-gym-primary transition-colors block">
+              Contact Support & Sales
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Real-time Toast Notifications */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none">
+        {notifications.map((n) => (
+          <div
+            key={n.id}
+            className="pointer-events-auto bg-slate-900/90 backdrop-blur-md border border-slate-800 p-4.5 rounded-2xl shadow-2xl flex gap-3 items-start animate-in slide-in-from-bottom duration-300 relative overflow-hidden"
+          >
+            {/* Left Accent indicator */}
+            <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${
+              n.type === 'checkin' ? 'bg-green-500' :
+              n.type === 'payment' ? 'bg-amber-500' :
+              n.type === 'member' ? 'bg-blue-500' : 'bg-purple-500'
+            }`} />
+            
+            <div className="flex-1 pl-1">
+              <h4 className="text-xs font-bold text-white tracking-wide uppercase">{n.title}</h4>
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">{n.message}</p>
+            </div>
+            
+            <button
+              onClick={() => dismissNotification(n.id)}
+              className="text-slate-400 hover:text-white transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

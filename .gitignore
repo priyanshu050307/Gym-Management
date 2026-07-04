@@ -46,3 +46,6 @@ logs/
 # Database files
 *.db
 *.db-journal
+
+# Firebase private credentials
+backend/firebase-service-account.json
