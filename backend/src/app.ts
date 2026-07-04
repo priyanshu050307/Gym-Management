@@ -17,6 +17,7 @@ import equipmentRoutes from './routes/equipment.routes.js';
 import supplementRoutes from './routes/supplement.routes.js';
 import saleRoutes from './routes/sale.routes.js';
 import saasRoutes from './routes/saas.routes.js';
+import syncRoutes from './routes/sync.routes.js';
 
 import { initCronJobs } from './config/cron.js';
 import prisma from './config/prisma.js';
@@ -189,6 +190,7 @@ app.use('/api/equipments', equipmentRoutes);
 app.use('/api/supplements', supplementRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/saas', saasRoutes);
+app.use('/api/sync', syncRoutes);
 
 // ──────────────────────────────────────────────
 // 404 Handler
