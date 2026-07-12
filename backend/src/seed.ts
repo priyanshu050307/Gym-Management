@@ -206,7 +206,11 @@ async function main() {
     const plan = plans[i % plans.length];
     const startDate = new Date();
     const endDate = new Date();
-    endDate.setMonth(startDate.getMonth() + plan.durationMonths);
+    if (plan.durationMonths === 0) {
+      endDate.setDate(startDate.getDate() + 1);
+    } else {
+      endDate.setMonth(startDate.getMonth() + plan.durationMonths);
+    }
 
     const sub = await prisma.subscription.create({
       data: {

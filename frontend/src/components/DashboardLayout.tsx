@@ -93,10 +93,10 @@ export const DashboardLayout: React.FC = () => {
   const isBillingPage = location.pathname === '/subscription';
 
   useEffect(() => {
-    if (isLocked) {
-      navigate('/', { state: { fromExpired: true } });
+    if (isLocked && !isBillingPage) {
+      navigate('/subscription', { state: { fromExpired: true } });
     }
-  }, [isLocked]);
+  }, [isLocked, isBillingPage]);
 
   return (
     <div className="min-h-screen bg-gym-darker flex">

@@ -234,7 +234,7 @@ export const MemberRegister: React.FC = () => {
                 <option value="">No Active Plan (Register Only)</option>
                 {plans.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths} {p.durationMonths === 1 ? 'Month' : 'Months'})
+                    {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths === 0 ? '1 Day Trial' : `${p.durationMonths} ${p.durationMonths === 1 ? 'Month' : 'Months'}`})
                   </option>
                 ))}
               </select>

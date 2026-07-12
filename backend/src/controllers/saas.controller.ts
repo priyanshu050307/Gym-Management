@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/prisma.js';
+import Razorpay from 'razorpay';
+import crypto from 'crypto';
 
 // Helper to find owner user ID for current request user
 const getOwnerIdForUser = async (user: any) => {
@@ -84,7 +86,7 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
-    if (!planName || !['Starter', 'Professional', 'Enterprise'].includes(planName)) {
+    if (!planName || !['Premium', 'Starter', 'Professional', 'Enterprise'].includes(planName)) {
       return res.status(400).json({ error: 'Invalid plan selected.' });
     }
 
@@ -92,8 +94,11 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
     const sub = await getOrCreateSaaSSubscription(ownerId);
     const now = new Date();
     const subscriptionEnd = new Date();
+    
     if (billingCycle === 'YEARLY') {
       subscriptionEnd.setFullYear(now.getFullYear() + 1);
+    } else if (billingCycle === 'HALF_YEARLY') {
+      subscriptionEnd.setMonth(now.getMonth() + 6);
     } else {
       subscriptionEnd.setMonth(now.getMonth() + 1);
     }
@@ -175,5 +180,118 @@ export const resetSaaSState = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Reset SaaS state error:', error);
     return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const getRazorpayInstance = () => {
+  const key_id = process.env.RAZORPAY_KEY_ID;
+  const key_secret = process.env.RAZORPAY_KEY_SECRET;
+  if (!key_id || !key_secret) {
+    throw new Error('Razorpay API keys are not configured in environment variables.');
+  }
+  return new Razorpay({
+    key_id,
+    key_secret,
+  });
+};
+
+export const createSaaSOrder = async (req: Request, res: Response) => {
+  try {
+    const { planName, billingCycle } = req.body;
+    const reqUser = (req as any).user;
+    if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
+
+    if (!planName || !['Premium', 'Starter', 'Professional', 'Enterprise'].includes(planName)) {
+      return res.status(400).json({ error: 'Invalid plan selected.' });
+    }
+
+    let price = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+    const razorpay = getRazorpayInstance();
+    const amountInPaise = Math.round(price * 100);
+
+    const options = {
+      amount: amountInPaise,
+      currency: 'INR',
+      receipt: `saas_${Date.now()}_${reqUser.id.substring(0, 8)}`,
+      notes: {
+        userId: reqUser.id,
+        planName,
+        billingCycle,
+      }
+    };
+
+    const order = await razorpay.orders.create(options);
+    return res.status(200).json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.RAZORPAY_KEY_ID,
+      user: {
+        name: `${reqUser.firstName} ${reqUser.lastName}`,
+        email: reqUser.email,
+      }
+    });
+  } catch (error: any) {
+    console.error('Razorpay SaaS Order Creation Error:', error);
+    return res.status(500).json({ error: error.message || 'Failed to create SaaS order.' });
+  }
+};
+
+export const verifySaaSPayment = async (req: Request, res: Response) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName, billingCycle, cardBrand, cardLast4, gstin, billingAddress } = req.body;
+    const reqUser = (req as any).user;
+    if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ error: 'Incomplete transaction verification parameters' });
+    }
+
+    const key_secret = process.env.RAZORPAY_KEY_SECRET;
+    if (!key_secret) {
+      return res.status(500).json({ error: 'Razorpay keys not configured on server' });
+    }
+
+    // Verify signature
+    const generated_signature = crypto
+      .createHmac('sha256', key_secret)
+      .update(razorpay_order_id + '|' + razorpay_payment_id)
+      .digest('hex');
+
+    if (generated_signature !== razorpay_signature) {
+      return res.status(400).json({ error: 'Secure payment signature mismatch. Transaction not verified.' });
+    }
+
+    const ownerId = await getOwnerIdForUser(reqUser);
+    const sub = await getOrCreateSaaSSubscription(ownerId);
+    const now = new Date();
+    const subscriptionEnd = new Date();
+    
+    if (billingCycle === 'YEARLY') {
+      subscriptionEnd.setFullYear(now.getFullYear() + 1);
+    } else if (billingCycle === 'HALF_YEARLY') {
+      subscriptionEnd.setMonth(now.getMonth() + 6);
+    } else {
+      subscriptionEnd.setMonth(now.getMonth() + 1);
+    }
+
+    const updated = await prisma.saaSSubscription.update({
+      where: { id: sub.id },
+      data: {
+        status: 'SUBSCRIBED_ACTIVE',
+        planName: planName || 'Premium',
+        billingCycle: billingCycle || 'MONTHLY',
+        subscriptionEnd,
+        cardBrand: cardBrand || 'Visa',
+        cardLast4: cardLast4 || '4242',
+        gstin: gstin || null,
+        billingAddress: billingAddress || null,
+      },
+    });
+
+    return res.status(200).json({ message: 'Subscribed successfully', subscription: updated });
+  } catch (error: any) {
+    console.error('Razorpay SaaS verification error', { error: error.message });
+    return res.status(500).json({ error: error.message || 'Internal payment verification error' });
   }
 };

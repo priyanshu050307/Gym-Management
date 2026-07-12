@@ -768,7 +768,7 @@ export const MemberDetails: React.FC = () => {
                       >
                         {plans.map((p) => (
                           <option key={p.id} value={p.id}>
-                            {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths} {p.durationMonths === 1 ? 'Month' : 'Months'})
+                            {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths === 0 ? '1 Day Trial' : `${p.durationMonths} ${p.durationMonths === 1 ? 'Month' : 'Months'}`})
                           </option>
                         ))}
                       </select>
@@ -1380,7 +1380,7 @@ export const MemberDetails: React.FC = () => {
                 >
                   {plans.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths} months)
+                      {p.name} - ₹{p.price.toFixed(2)} ({p.durationMonths === 0 ? '1 Day Trial' : `${p.durationMonths} months`})
                     </option>
                   ))}
                 </select>
@@ -1467,16 +1467,6 @@ export const MemberDetails: React.FC = () => {
                   <option value="CARD">Card</option>
                   <option value="UPI">UPI</option>
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gym-muted mb-1.5">Discount Given (₹)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={manualPayDiscount}
-                  onChange={(e) => setManualPayDiscount(e.target.value)}
-                  className="gym-input font-mono"
-                />
               </div>
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
                 <button

@@ -129,7 +129,11 @@ export const registerMember = async (req: AuthRequest, res: Response) => {
 
         const startDate = new Date();
         const endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+        if (plan.durationMonths === 0) {
+          endDate.setDate(endDate.getDate() + 1); // 1 Day Trial!
+        } else {
+          endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+        }
 
         const subscription = await tx.subscription.create({
           data: {
@@ -364,7 +368,11 @@ export const addSubscriptionToMember = async (req: Request, res: Response) => {
       // 1. Create new subscription as PENDING (will be activated and date-calculated on successful payment)
       const startDate = new Date();
       const endDate = new Date();
-      endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+      if (plan.durationMonths === 0) {
+        endDate.setDate(endDate.getDate() + 1); // 1 Day Trial!
+      } else {
+        endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+      }
 
       const subscription = await tx.subscription.create({
         data: { memberId, planId, startDate, endDate, status: SubscriptionStatus.PENDING },
@@ -378,6 +386,12 @@ export const addSubscriptionToMember = async (req: Request, res: Response) => {
           status: PaymentStatus.PENDING,
           method: PaymentMethod.CASH,
         },
+      });
+
+      // 3. Update member status to INACTIVE until payment is received
+      await tx.member.update({
+        where: { id: memberId },
+        data: { status: MemberStatus.INACTIVE },
       });
 
       return { subscription, payment };
@@ -936,10 +950,14 @@ export const upgradeDowngradeSubscription = async (req: Request, res: Response) 
         },
       });
 
-      // 2. Create new subscription starting today
+      // 2. Create new subscription starting today (Starts as PENDING)
       const startDate = new Date();
       const endDate = new Date();
-      endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+      if (plan.durationMonths === 0) {
+        endDate.setDate(endDate.getDate() + 1); // 1 Day Trial!
+      } else {
+        endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+      }
 
       const subscription = await tx.subscription.create({
         data: {
@@ -947,7 +965,7 @@ export const upgradeDowngradeSubscription = async (req: Request, res: Response) 
           planId,
           startDate,
           endDate,
-          status: SubscriptionStatus.ACTIVE,
+          status: SubscriptionStatus.PENDING,
         },
       });
 
@@ -959,6 +977,12 @@ export const upgradeDowngradeSubscription = async (req: Request, res: Response) 
           status: PaymentStatus.PENDING,
           method: PaymentMethod.CASH,
         },
+      });
+
+      // 4. Update member status to INACTIVE until payment is received
+      await tx.member.update({
+        where: { id: memberId },
+        data: { status: MemberStatus.INACTIVE },
       });
 
       return { subscription, payment };

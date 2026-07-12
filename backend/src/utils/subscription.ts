@@ -29,7 +29,11 @@ export const activateSubscriptionAfterPayment = async (tx: any, payment: any) =>
   }
 
   const endDate = new Date(startDate);
-  endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+  if (plan.durationMonths === 0) {
+    endDate.setDate(endDate.getDate() + 1); // 1 Day Trial!
+  } else {
+    endDate.setMonth(endDate.getMonth() + plan.durationMonths);
+  }
 
   // 3. Update the subscription with active status and recalculated dates
   const updatedSubscription = await tx.subscription.update({

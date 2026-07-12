@@ -537,6 +537,99 @@ export const MemberPortal: React.FC = () => {
     }
   }, [activePlan, availablePlans]);
 
+  if (memberStatus === 'INACTIVE') {
+    const pendingSubscription = user?.member?.subscriptions?.find((sub: any) => sub.status === 'PENDING') 
+      || user?.member?.subscriptions?.[0];
+    const pendingPayment = pendingSubscription?.payments?.find((pay: any) => pay.status === 'PENDING') 
+      || pendingSubscription?.payments?.[0];
+    
+    return (
+      <div className="flex items-center justify-center min-h-[80vh] p-4">
+        <div className="glass-card rounded-3xl p-8 max-w-lg w-full border border-slate-100/10 text-center relative overflow-hidden shadow-2xl space-y-6">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gym-primary/10 rounded-bl-full -z-10" />
+          
+          <div className="w-16 h-16 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+            <ShieldAlert className="h-8 w-8 text-amber-500" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-extrabold text-gym-text">Account Inactive</h2>
+            <p className="text-gym-muted text-xs leading-relaxed max-w-sm mx-auto">
+              Welcome back, {user?.firstName}! Your account has been registered, but it is currently inactive. Please complete the subscription payment below to activate your portal.
+            </p>
+          </div>
+
+          {pendingSubscription && pendingSubscription.plan ? (
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 text-left space-y-4">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-gym-muted font-semibold uppercase tracking-wider">Membership Plan:</span>
+                <span className="font-extrabold text-gym-primary">{pendingSubscription.plan.name}</span>
+              </div>
+              <div className="flex justify-between items-center border-t border-slate-800/80 pt-3.5 text-xs">
+                <span className="text-gym-muted font-semibold uppercase tracking-wider">Duration:</span>
+                <span className="font-bold text-gym-text">{pendingSubscription.plan.durationMonths === 0 ? '1 Day Trial' : `${pendingSubscription.plan.durationMonths} Month(s)`}</span>
+              </div>
+              <div className="flex justify-between items-center border-t border-slate-800/80 pt-3.5 text-xs">
+                <span className="text-gym-muted font-semibold uppercase tracking-wider">Amount Due:</span>
+                <span className="font-black text-gym-primary text-base">₹{pendingPayment?.amount?.toLocaleString() || pendingSubscription.plan.price.toLocaleString()}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 text-left space-y-4">
+              <p className="text-xs text-gym-muted text-center font-medium">No pending plan assigned. Please select a plan to activate:</p>
+              <select
+                required
+                value={selectedPlanId}
+                onChange={(e) => setSelectedPlanId(e.target.value)}
+                className="gym-input text-xs"
+              >
+                <option value="">Choose a Plan...</option>
+                {availablePlans.map((plan) => (
+                  <option key={plan.id} value={plan.id} className="text-slate-955">
+                    {plan.name} ({plan.durationMonths === 0 ? '1 Day Trial' : `${plan.durationMonths} Mo`}) — ₹{plan.price.toLocaleString()}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div className="pt-2">
+            <button
+              onClick={async () => {
+                if (pendingSubscription && pendingPayment) {
+                  setPaymentLoading(true);
+                  await handleRazorpayPayment(pendingPayment.id, pendingSubscription.plan.name);
+                } else if (selectedPlanId) {
+                  try {
+                    setPaymentLoading(true);
+                    const subRes = await apiFetch<any>(`/members/${memberId}/subscription`, {
+                      method: 'POST',
+                      body: { planId: selectedPlanId },
+                    });
+                    const plan = availablePlans.find((p) => p.id === selectedPlanId);
+                    await handleRazorpayPayment(subRes.payment.id, plan?.name || 'Standard Plan');
+                  } catch (err: any) {
+                    alert(err.message || 'Failed to initiate payment.');
+                    setPaymentLoading(false);
+                  }
+                } else {
+                  alert("Please select a plan first.");
+                }
+              }}
+              disabled={paymentLoading || (!pendingSubscription && !selectedPlanId)}
+              className="w-full py-3.5 rounded-xl bg-gym-primary hover:bg-gym-primary/95 text-black font-extrabold transition-all shadow-lg shadow-gym-primary/10 disabled:opacity-50 text-xs uppercase tracking-wider"
+            >
+              {paymentLoading ? 'Processing Checkout...' : 'Pay Online with Razorpay'}
+            </button>
+            <p className="text-[10px] text-gym-muted mt-4 font-medium leading-relaxed">
+              If you have already paid via Cash, please contact the gym reception staff to activate your account.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
@@ -549,7 +642,7 @@ export const MemberPortal: React.FC = () => {
         </p>
       </div>
 
-      {daysRemaining !== null && daysRemaining <= 2 && (
+      {daysRemaining !== null && daysRemaining <= 5 && (
         <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${
           daysRemaining < 0 
             ? 'bg-red-500/10 border-red-500/20 text-red-400' 
@@ -745,7 +838,7 @@ export const MemberPortal: React.FC = () => {
                       >
                         {availablePlans.map((plan) => (
                           <option key={plan.id} value={plan.id} className="text-slate-900">
-                            {plan.name} ({plan.durationMonths} Month{plan.durationMonths > 1 ? 's' : ''}) — ₹{plan.price.toLocaleString()}
+                            {plan.name} ({plan.durationMonths === 0 ? '1 Day Trial' : `${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''}`}) — ₹{plan.price.toLocaleString()}
                           </option>
                         ))}
                       </select>
@@ -796,7 +889,7 @@ export const MemberPortal: React.FC = () => {
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-gym-muted">Billing Cycle:</span>
                         <span className="font-medium text-gym-text">
-                          {activePlan.durationMonths} Month(s)
+                          {activePlan.durationMonths === 0 ? '1 Day Trial' : `${activePlan.durationMonths} Month(s)`}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
@@ -816,12 +909,14 @@ export const MemberPortal: React.FC = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => setShowSubscribeForm(true)}
-                    className="w-full py-2 bg-gym-primary hover:bg-gym-primary/80 text-white rounded-xl text-xs font-bold transition-all"
-                  >
-                    Change / Upgrade Plan
-                  </button>
+                  {daysRemaining !== null && daysRemaining <= 5 && (
+                    <button
+                      onClick={() => setShowSubscribeForm(true)}
+                      className="w-full py-2 bg-gym-primary hover:bg-gym-primary/80 text-white rounded-xl text-xs font-bold transition-all"
+                    >
+                      Renew Membership Plan
+                    </button>
+                  )}
                 </div>
               )}
             </div>

@@ -178,12 +178,13 @@ export const Plans: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gym-text/80 mb-2">Duration (Months)</label>
+                <label className="block text-sm font-medium text-gym-text/80 mb-2">Duration</label>
                 <select
                   value={durationMonths}
                   onChange={(e) => setDurationMonths(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-gym-text focus:border-gym-primary focus:outline-none transition-all"
                 >
+                  <option value="0">1 Day Trial</option>
                   <option value="1">1 Month</option>
                   <option value="3">3 Months</option>
                   <option value="6">6 Months</option>
@@ -256,7 +257,7 @@ export const Plans: React.FC = () => {
                       {plan.name}
                     </h3>
                     <span className="inline-block text-xs font-semibold text-gym-muted uppercase mt-1">
-                      {plan.durationMonths} {plan.durationMonths === 1 ? 'Month' : 'Months'} Validity
+                      {plan.durationMonths === 0 ? '1 Day Trial' : `${plan.durationMonths} ${plan.durationMonths === 1 ? 'Month' : 'Months'} Validity`}
                     </span>
                   </div>
                   {!plan.isActive && (

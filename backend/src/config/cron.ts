@@ -64,16 +64,16 @@ export const checkExpiredSubscriptions = async () => {
       });
     }
 
-    // 2. Find subscriptions expiring within 3 days to send alerts
-    const threeDaysLater = new Date();
-    threeDaysLater.setDate(threeDaysLater.getDate() + 3);
+    // 2. Find subscriptions expiring within 5 days to send alerts
+    const fiveDaysLater = new Date();
+    fiveDaysLater.setDate(fiveDaysLater.getDate() + 5);
 
     const expiringSoonSubs = await prisma.subscription.findMany({
       where: {
         status: SubscriptionStatus.ACTIVE,
         endDate: {
           gt: now,
-          lte: threeDaysLater,
+          lte: fiveDaysLater,
         },
       },
       include: {
@@ -91,7 +91,7 @@ export const checkExpiredSubscriptions = async () => {
       await createNotification(
         sub.member.userId,
         'Subscription Renewal Reminder',
-        `Your subscription to plan "${sub.plan.name}" expires in less than 3 days (on ${new Date(sub.endDate).toLocaleDateString()}). Please renew soon.`,
+        `Your subscription to plan "${sub.plan.name}" expires in less than 5 days (on ${new Date(sub.endDate).toLocaleDateString()}). Please renew soon.`,
         'ALERT'
       );
     }

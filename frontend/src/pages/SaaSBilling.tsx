@@ -26,7 +26,6 @@ export const SaaSBilling: React.FC = () => {
   const [sub, setSub] = useState<SaasSubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -60,38 +59,81 @@ export const SaaSBilling: React.FC = () => {
     fetchSaaSStatus();
   }, []);
 
-  const handleSubscribe = async (planName: string) => {
+  const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY') => {
+    const loaded = await new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+
+    if (!loaded) {
+      alert('Razorpay SDK failed to load. Are you offline?');
+      return;
+    }
+
     try {
       setActionLoading(true);
       setError(null);
       setSuccess(null);
 
-      let finalPrice = planName === 'Starter' ? 1499 : planName === 'Professional' ? 3499 : 7999;
-      if (billingCycle === 'YEARLY') {
-        finalPrice = finalPrice * 10; // 2 months discount
-      }
-      if (couponApplied) {
-        finalPrice = Math.round(finalPrice * 0.7); // 30% FITJULY30 discount
-      }
-
-      const res = await apiFetch<any>('/saas/subscribe', {
+      // 1. Create Order
+      const orderData = await apiFetch<any>('/saas/create-order', {
         method: 'POST',
-        body: {
-          planName,
-          billingCycle,
-          cardBrand: 'Visa',
-          cardLast4: '4242',
-          gstin,
-          billingAddress,
-        },
+        body: { planName, billingCycle: cycle },
       });
 
-      setSub(res.subscription);
-      setSuccess(`Successfully subscribed to GymOS ${planName} (${billingCycle})!`);
-      // Reload page to reflect SaaS state changes in context
-      setTimeout(() => window.location.reload(), 1500);
+      // 2. Open Razorpay checkout
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Gymflow SaaS Platform',
+        description: `Gymflow Premium SaaS Subscription - ${cycle}`,
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          try {
+            setActionLoading(true);
+            // 3. Verify Payment on Backend
+            const res = await apiFetch<any>('/saas/verify-payment', {
+              method: 'POST',
+              body: {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                planName,
+                billingCycle: cycle,
+                cardBrand: 'Visa',
+                cardLast4: '4242',
+                gstin,
+                billingAddress,
+              },
+            });
+
+            setSub(res.subscription);
+            setSuccess(`Successfully subscribed to GymOS Premium (${cycle})!`);
+            // Reload page to reflect SaaS state changes in context
+            setTimeout(() => window.location.reload(), 1500);
+          } catch (err: any) {
+            setError(err.message || 'SaaS payment verification failed.');
+          } finally {
+            setActionLoading(false);
+          }
+        },
+        prefill: {
+          name: orderData.user.name,
+          email: orderData.user.email,
+        },
+        theme: {
+          color: '#8b5cf6',
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
     } catch (err: any) {
-      setError(err.message || 'Failed to complete subscription.');
+      setError(err.message || 'Failed to initiate SaaS payment.');
     } finally {
       setActionLoading(false);
     }
@@ -160,23 +202,29 @@ export const SaaSBilling: React.FC = () => {
 
   const planOptions = [
     {
-      name: 'Starter',
-      price: billingCycle === 'YEARLY' ? '₹14,990' : '₹1,499',
+      name: 'Monthly Plan',
+      cycle: 'MONTHLY' as const,
+      price: '₹500',
+      periodText: 'mo',
       features: ['1 Branch Location', 'Up to 200 Gym Members', 'Check-In Kiosk Scanner', 'Basic Revenue Reports', 'SMS Alerts & Notifications'],
-      badge: 'Solopreneurs'
+      badge: 'Starter Plan'
     },
     {
-      name: 'Professional',
-      price: billingCycle === 'YEARLY' ? '₹34,990' : '₹3,499',
+      name: '6-Month Plan',
+      cycle: 'HALF_YEARLY' as const,
+      price: '₹2,800',
+      periodText: '6 mos',
       features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk + Self-Service Portal', 'Class Schedules & Booking', 'Supplement Inventory POS', 'Multi-staff Access Control'],
-      badge: 'Popular choice',
+      badge: 'Best Value',
       popular: true
     },
     {
-      name: 'Enterprise',
-      price: billingCycle === 'YEARLY' ? '₹79,990' : '₹7,999',
+      name: 'Yearly Plan',
+      cycle: 'YEARLY' as const,
+      price: '₹5,500',
+      periodText: 'yr',
       features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom API access', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
-      badge: 'Large chains'
+      badge: 'Enterprise Level'
     }
   ];
 
@@ -242,26 +290,7 @@ export const SaaSBilling: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100/10 pb-4">
           <div>
             <h3 className="text-xl font-bold text-gym-text">Upgrade or Change Subscription</h3>
-            <p className="text-xs text-gym-muted">Select the plan that matches your business size. Save 20% with yearly payments.</p>
-          </div>
-
-          <div className="flex items-center gap-3 bg-slate-950/40 p-1.5 rounded-xl border border-slate-800">
-            <button
-              onClick={() => setBillingCycle('MONTHLY')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                billingCycle === 'MONTHLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
-              }`}
-            >
-              Monthly Billing
-            </button>
-            <button
-              onClick={() => setBillingCycle('YEARLY')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                billingCycle === 'YEARLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
-              }`}
-            >
-              Yearly (2 Months Free)
-            </button>
+            <p className="text-xs text-gym-muted">Select the duration plan that matches your gym operations budget.</p>
           </div>
         </div>
 
@@ -290,7 +319,7 @@ export const SaaSBilling: React.FC = () => {
 
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-extrabold text-gym-primary">{opt.price}</span>
-                  <span className="text-xs text-gym-muted">/{billingCycle === 'YEARLY' ? 'yr' : 'mo'}</span>
+                  <span className="text-xs text-gym-muted">/{opt.periodText}</span>
                 </div>
 
                 <ul className="space-y-3 text-xs text-gym-muted border-t border-slate-100/10 pt-4">
@@ -305,7 +334,7 @@ export const SaaSBilling: React.FC = () => {
 
               <div className="mt-8 pt-4">
                 <button
-                  onClick={() => handleSubscribe(opt.name)}
+                  onClick={() => handleSubscribe('Premium', opt.cycle)}
                   disabled={actionLoading}
                   className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all shadow-md ${
                     opt.popular
@@ -313,7 +342,7 @@ export const SaaSBilling: React.FC = () => {
                       : 'bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800'
                   }`}
                 >
-                  {sub?.planName === opt.name && sub?.status.includes('ACTIVE') 
+                  {sub?.billingCycle === opt.cycle && sub?.status.includes('ACTIVE') 
                     ? 'Current Plan' 
                     : `Subscribe ${opt.name}`}
                 </button>

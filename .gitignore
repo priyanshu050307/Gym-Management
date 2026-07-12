@@ -49,3 +49,10 @@ logs/
 
 # Firebase private credentials
 backend/firebase-service-account.json
+
+# Python / GymSyncAgent
+GymSyncAgent/venv/
+GymSyncAgent/.env
+GymSyncAgent/config.json
+**/__pycache__/
+*.pyc

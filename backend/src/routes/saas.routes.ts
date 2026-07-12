@@ -4,6 +4,8 @@ import {
   subscribeToPlan,
   updateBillingProfile,
   resetSaaSState,
+  createSaaSOrder,
+  verifySaaSPayment,
 } from '../controllers/saas.controller.js';
 import { authenticateToken } from '../middleware/auth.js';
 
@@ -15,6 +17,8 @@ router.get('/status', authenticateToken as any, getSaaSSubscriptionStatus);
 // Secure mutating actions
 router.use(authenticateToken as any);
 router.post('/subscribe', subscribeToPlan);
+router.post('/create-order', createSaaSOrder);
+router.post('/verify-payment', verifySaaSPayment);
 router.put('/billing', updateBillingProfile);
 router.post('/reset', resetSaaSState);
 

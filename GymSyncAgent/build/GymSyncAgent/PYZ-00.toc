@@ -1,0 +1,3981 @@
+('C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+ 'projects\\GYM\\GymSyncAgent\\build\\GymSyncAgent\\PYZ-00.pyz',
+ [('PySide6',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\PySide6\\__init__.py',
+   'PYMODULE'),
+  ('PySide6.support',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\PySide6\\support\\__init__.py',
+   'PYMODULE'),
+  ('PySide6.support.deprecated',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\PySide6\\support\\deprecated.py',
+   'PYMODULE'),
+  ('__future__',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\__future__.py',
+   'PYMODULE'),
+  ('_aix_support',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_aix_support.py',
+   'PYMODULE'),
+  ('_compat_pickle',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_compat_pickle.py',
+   'PYMODULE'),
+  ('_compression',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_compression.py',
+   'PYMODULE'),
+  ('_distutils_hack',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\_distutils_hack\\__init__.py',
+   'PYMODULE'),
+  ('_distutils_hack.override',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\_distutils_hack\\override.py',
+   'PYMODULE'),
+  ('_py_abc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_py_abc.py',
+   'PYMODULE'),
+  ('_pydatetime',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_pydatetime.py',
+   'PYMODULE'),
+  ('_pydecimal',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_pydecimal.py',
+   'PYMODULE'),
+  ('_pyi_rth_utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\PyInstaller\\fake-modules\\_pyi_rth_utils\\__init__.py',
+   'PYMODULE'),
+  ('_pyi_rth_utils.qt',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\PyInstaller\\fake-modules\\_pyi_rth_utils\\qt.py',
+   'PYMODULE'),
+  ('_sitebuiltins',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_sitebuiltins.py',
+   'PYMODULE'),
+  ('_strptime',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_strptime.py',
+   'PYMODULE'),
+  ('_threading_local',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\_threading_local.py',
+   'PYMODULE'),
+  ('annotated_doc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\annotated_doc\\__init__.py',
+   'PYMODULE'),
+  ('annotated_doc.main',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\annotated_doc\\main.py',
+   'PYMODULE'),
+  ('annotated_types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\annotated_types\\__init__.py',
+   'PYMODULE'),
+  ('anyio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\__init__.py',
+   'PYMODULE'),
+  ('anyio._backends',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_backends\\__init__.py',
+   'PYMODULE'),
+  ('anyio._backends._asyncio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_backends\\_asyncio.py',
+   'PYMODULE'),
+  ('anyio._backends._trio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_backends\\_trio.py',
+   'PYMODULE'),
+  ('anyio._core',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\__init__.py',
+   'PYMODULE'),
+  ('anyio._core._asyncio_selector_thread',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_asyncio_selector_thread.py',
+   'PYMODULE'),
+  ('anyio._core._contextmanagers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_contextmanagers.py',
+   'PYMODULE'),
+  ('anyio._core._eventloop',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_eventloop.py',
+   'PYMODULE'),
+  ('anyio._core._exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_exceptions.py',
+   'PYMODULE'),
+  ('anyio._core._fileio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_fileio.py',
+   'PYMODULE'),
+  ('anyio._core._resources',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_resources.py',
+   'PYMODULE'),
+  ('anyio._core._signals',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_signals.py',
+   'PYMODULE'),
+  ('anyio._core._sockets',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_sockets.py',
+   'PYMODULE'),
+  ('anyio._core._streams',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_streams.py',
+   'PYMODULE'),
+  ('anyio._core._subprocesses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_subprocesses.py',
+   'PYMODULE'),
+  ('anyio._core._synchronization',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_synchronization.py',
+   'PYMODULE'),
+  ('anyio._core._tasks',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_tasks.py',
+   'PYMODULE'),
+  ('anyio._core._tempfile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_tempfile.py',
+   'PYMODULE'),
+  ('anyio._core._testing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_testing.py',
+   'PYMODULE'),
+  ('anyio._core._typedattr',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\_core\\_typedattr.py',
+   'PYMODULE'),
+  ('anyio.abc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\__init__.py',
+   'PYMODULE'),
+  ('anyio.abc._eventloop',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_eventloop.py',
+   'PYMODULE'),
+  ('anyio.abc._resources',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_resources.py',
+   'PYMODULE'),
+  ('anyio.abc._sockets',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_sockets.py',
+   'PYMODULE'),
+  ('anyio.abc._streams',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_streams.py',
+   'PYMODULE'),
+  ('anyio.abc._subprocesses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_subprocesses.py',
+   'PYMODULE'),
+  ('anyio.abc._tasks',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_tasks.py',
+   'PYMODULE'),
+  ('anyio.abc._testing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\abc\\_testing.py',
+   'PYMODULE'),
+  ('anyio.from_thread',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\from_thread.py',
+   'PYMODULE'),
+  ('anyio.lowlevel',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\lowlevel.py',
+   'PYMODULE'),
+  ('anyio.streams',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\streams\\__init__.py',
+   'PYMODULE'),
+  ('anyio.streams.memory',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\streams\\memory.py',
+   'PYMODULE'),
+  ('anyio.streams.stapled',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\streams\\stapled.py',
+   'PYMODULE'),
+  ('anyio.streams.tls',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\streams\\tls.py',
+   'PYMODULE'),
+  ('anyio.to_thread',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\anyio\\to_thread.py',
+   'PYMODULE'),
+  ('app', '-', 'PYMODULE'),
+  ('app.core', '-', 'PYMODULE'),
+  ('app.core.config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\core\\config.py',
+   'PYMODULE'),
+  ('app.core.security',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\core\\security.py',
+   'PYMODULE'),
+  ('app.database', '-', 'PYMODULE'),
+  ('app.database.db',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\database\\db.py',
+   'PYMODULE'),
+  ('app.models',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\models\\__init__.py',
+   'PYMODULE'),
+  ('app.models.command',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\models\\command.py',
+   'PYMODULE'),
+  ('app.models.device',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\models\\device.py',
+   'PYMODULE'),
+  ('app.models.log_queue',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\models\\log_queue.py',
+   'PYMODULE'),
+  ('app.models.sync_history',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\models\\sync_history.py',
+   'PYMODULE'),
+  ('app.models.user',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\models\\user.py',
+   'PYMODULE'),
+  ('app.repositories',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\repositories\\__init__.py',
+   'PYMODULE'),
+  ('app.repositories.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\repositories\\base.py',
+   'PYMODULE'),
+  ('app.repositories.command_repo',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\repositories\\command_repo.py',
+   'PYMODULE'),
+  ('app.repositories.device_repo',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\repositories\\device_repo.py',
+   'PYMODULE'),
+  ('app.repositories.log_repo',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\repositories\\log_repo.py',
+   'PYMODULE'),
+  ('app.scheduler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\scheduler\\__init__.py',
+   'PYMODULE'),
+  ('app.scheduler.runner',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\scheduler\\runner.py',
+   'PYMODULE'),
+  ('app.server',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\server.py',
+   'PYMODULE'),
+  ('app.services', '-', 'PYMODULE'),
+  ('app.services.cloud',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\cloud\\__init__.py',
+   'PYMODULE'),
+  ('app.services.cloud.client',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\cloud\\client.py',
+   'PYMODULE'),
+  ('app.services.device',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\device\\__init__.py',
+   'PYMODULE'),
+  ('app.services.device.adapter',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\device\\adapter.py',
+   'PYMODULE'),
+  ('app.services.device.discovery',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\device\\discovery.py',
+   'PYMODULE'),
+  ('app.services.device.essl_adapter',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\device\\essl_adapter.py',
+   'PYMODULE'),
+  ('app.services.device.mock_adapter',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\device\\mock_adapter.py',
+   'PYMODULE'),
+  ('app.services.device.zk_adapter',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\device\\zk_adapter.py',
+   'PYMODULE'),
+  ('app.services.sync_service',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\services\\sync_service.py',
+   'PYMODULE'),
+  ('app.ui',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\ui\\__init__.py',
+   'PYMODULE'),
+  ('app.ui.main_window',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\ui\\main_window.py',
+   'PYMODULE'),
+  ('app.utils', '-', 'PYMODULE'),
+  ('app.utils.logger',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\app\\utils\\logger.py',
+   'PYMODULE'),
+  ('apscheduler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\__init__.py',
+   'PYMODULE'),
+  ('apscheduler.events',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\events.py',
+   'PYMODULE'),
+  ('apscheduler.executors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\__init__.py',
+   'PYMODULE'),
+  ('apscheduler.executors.asyncio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\asyncio.py',
+   'PYMODULE'),
+  ('apscheduler.executors.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\base.py',
+   'PYMODULE'),
+  ('apscheduler.executors.debug',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\debug.py',
+   'PYMODULE'),
+  ('apscheduler.executors.gevent',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\gevent.py',
+   'PYMODULE'),
+  ('apscheduler.executors.pool',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\pool.py',
+   'PYMODULE'),
+  ('apscheduler.executors.tornado',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\tornado.py',
+   'PYMODULE'),
+  ('apscheduler.executors.twisted',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\executors\\twisted.py',
+   'PYMODULE'),
+  ('apscheduler.job',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\job.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\__init__.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\base.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.etcd',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\etcd.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.memory',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\memory.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.mongodb',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\mongodb.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.redis',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\redis.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.rethinkdb',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\rethinkdb.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.sqlalchemy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\sqlalchemy.py',
+   'PYMODULE'),
+  ('apscheduler.jobstores.zookeeper',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\jobstores\\zookeeper.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\__init__.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.asyncio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\asyncio.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.background',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\background.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\base.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.blocking',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\blocking.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.gevent',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\gevent.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.qt',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\qt.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.tornado',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\tornado.py',
+   'PYMODULE'),
+  ('apscheduler.schedulers.twisted',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\schedulers\\twisted.py',
+   'PYMODULE'),
+  ('apscheduler.triggers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\__init__.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\base.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.calendarinterval',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\calendarinterval.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.combining',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\combining.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.cron',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\cron\\__init__.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.cron.expressions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\cron\\expressions.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.cron.fields',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\cron\\fields.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.date',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\date.py',
+   'PYMODULE'),
+  ('apscheduler.triggers.interval',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\triggers\\interval.py',
+   'PYMODULE'),
+  ('apscheduler.util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\apscheduler\\util.py',
+   'PYMODULE'),
+  ('argparse',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\argparse.py',
+   'PYMODULE'),
+  ('ast',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ast.py',
+   'PYMODULE'),
+  ('asyncio',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\__init__.py',
+   'PYMODULE'),
+  ('asyncio.base_events',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_events.py',
+   'PYMODULE'),
+  ('asyncio.base_futures',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_futures.py',
+   'PYMODULE'),
+  ('asyncio.base_subprocess',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_subprocess.py',
+   'PYMODULE'),
+  ('asyncio.base_tasks',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_tasks.py',
+   'PYMODULE'),
+  ('asyncio.constants',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\constants.py',
+   'PYMODULE'),
+  ('asyncio.coroutines',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\coroutines.py',
+   'PYMODULE'),
+  ('asyncio.events',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\events.py',
+   'PYMODULE'),
+  ('asyncio.exceptions',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\exceptions.py',
+   'PYMODULE'),
+  ('asyncio.format_helpers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\format_helpers.py',
+   'PYMODULE'),
+  ('asyncio.futures',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\futures.py',
+   'PYMODULE'),
+  ('asyncio.locks',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\locks.py',
+   'PYMODULE'),
+  ('asyncio.log',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\log.py',
+   'PYMODULE'),
+  ('asyncio.mixins',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\mixins.py',
+   'PYMODULE'),
+  ('asyncio.proactor_events',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\proactor_events.py',
+   'PYMODULE'),
+  ('asyncio.protocols',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\protocols.py',
+   'PYMODULE'),
+  ('asyncio.queues',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\queues.py',
+   'PYMODULE'),
+  ('asyncio.runners',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\runners.py',
+   'PYMODULE'),
+  ('asyncio.selector_events',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\selector_events.py',
+   'PYMODULE'),
+  ('asyncio.sslproto',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\sslproto.py',
+   'PYMODULE'),
+  ('asyncio.staggered',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\staggered.py',
+   'PYMODULE'),
+  ('asyncio.streams',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\streams.py',
+   'PYMODULE'),
+  ('asyncio.subprocess',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\subprocess.py',
+   'PYMODULE'),
+  ('asyncio.taskgroups',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\taskgroups.py',
+   'PYMODULE'),
+  ('asyncio.tasks',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\tasks.py',
+   'PYMODULE'),
+  ('asyncio.threads',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\threads.py',
+   'PYMODULE'),
+  ('asyncio.timeouts',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\timeouts.py',
+   'PYMODULE'),
+  ('asyncio.transports',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\transports.py',
+   'PYMODULE'),
+  ('asyncio.trsock',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\trsock.py',
+   'PYMODULE'),
+  ('asyncio.unix_events',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\unix_events.py',
+   'PYMODULE'),
+  ('asyncio.windows_events',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\windows_events.py',
+   'PYMODULE'),
+  ('asyncio.windows_utils',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\windows_utils.py',
+   'PYMODULE'),
+  ('base64',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\base64.py',
+   'PYMODULE'),
+  ('bisect',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\bisect.py',
+   'PYMODULE'),
+  ('bz2',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\bz2.py',
+   'PYMODULE'),
+  ('calendar',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\calendar.py',
+   'PYMODULE'),
+  ('certifi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\certifi\\__init__.py',
+   'PYMODULE'),
+  ('certifi.core',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\certifi\\core.py',
+   'PYMODULE'),
+  ('click',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\__init__.py',
+   'PYMODULE'),
+  ('click._compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\_compat.py',
+   'PYMODULE'),
+  ('click._termui_impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\_termui_impl.py',
+   'PYMODULE'),
+  ('click._textwrap',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\_textwrap.py',
+   'PYMODULE'),
+  ('click._utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\_utils.py',
+   'PYMODULE'),
+  ('click._winconsole',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\_winconsole.py',
+   'PYMODULE'),
+  ('click.core',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\core.py',
+   'PYMODULE'),
+  ('click.decorators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\decorators.py',
+   'PYMODULE'),
+  ('click.exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\exceptions.py',
+   'PYMODULE'),
+  ('click.formatting',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\formatting.py',
+   'PYMODULE'),
+  ('click.globals',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\globals.py',
+   'PYMODULE'),
+  ('click.parser',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\parser.py',
+   'PYMODULE'),
+  ('click.shell_completion',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\shell_completion.py',
+   'PYMODULE'),
+  ('click.termui',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\termui.py',
+   'PYMODULE'),
+  ('click.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\types.py',
+   'PYMODULE'),
+  ('click.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\click\\utils.py',
+   'PYMODULE'),
+  ('code',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\code.py',
+   'PYMODULE'),
+  ('codeop',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\codeop.py',
+   'PYMODULE'),
+  ('colorama',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\colorama\\__init__.py',
+   'PYMODULE'),
+  ('colorama.ansi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\colorama\\ansi.py',
+   'PYMODULE'),
+  ('colorama.ansitowin32',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\colorama\\ansitowin32.py',
+   'PYMODULE'),
+  ('colorama.initialise',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\colorama\\initialise.py',
+   'PYMODULE'),
+  ('colorama.win32',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\colorama\\win32.py',
+   'PYMODULE'),
+  ('colorama.winterm',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\colorama\\winterm.py',
+   'PYMODULE'),
+  ('colorsys',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\colorsys.py',
+   'PYMODULE'),
+  ('concurrent',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\__init__.py',
+   'PYMODULE'),
+  ('concurrent.futures',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\__init__.py',
+   'PYMODULE'),
+  ('concurrent.futures._base',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\_base.py',
+   'PYMODULE'),
+  ('concurrent.futures.process',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\process.py',
+   'PYMODULE'),
+  ('concurrent.futures.thread',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\thread.py',
+   'PYMODULE'),
+  ('configparser',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\configparser.py',
+   'PYMODULE'),
+  ('contextlib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\contextlib.py',
+   'PYMODULE'),
+  ('contextvars',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\contextvars.py',
+   'PYMODULE'),
+  ('copy',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\copy.py',
+   'PYMODULE'),
+  ('csv',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\csv.py',
+   'PYMODULE'),
+  ('ctypes',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ctypes\\__init__.py',
+   'PYMODULE'),
+  ('ctypes._endian',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ctypes\\_endian.py',
+   'PYMODULE'),
+  ('ctypes.wintypes',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ctypes\\wintypes.py',
+   'PYMODULE'),
+  ('dataclasses',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\dataclasses.py',
+   'PYMODULE'),
+  ('datetime',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\datetime.py',
+   'PYMODULE'),
+  ('decimal',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\decimal.py',
+   'PYMODULE'),
+  ('difflib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\difflib.py',
+   'PYMODULE'),
+  ('dis',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\dis.py',
+   'PYMODULE'),
+  ('dotenv',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\dotenv\\__init__.py',
+   'PYMODULE'),
+  ('dotenv.ipython',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\dotenv\\ipython.py',
+   'PYMODULE'),
+  ('dotenv.main',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\dotenv\\main.py',
+   'PYMODULE'),
+  ('dotenv.parser',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\dotenv\\parser.py',
+   'PYMODULE'),
+  ('dotenv.variables',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\dotenv\\variables.py',
+   'PYMODULE'),
+  ('email',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\__init__.py',
+   'PYMODULE'),
+  ('email._encoded_words',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\_encoded_words.py',
+   'PYMODULE'),
+  ('email._header_value_parser',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\_header_value_parser.py',
+   'PYMODULE'),
+  ('email._parseaddr',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\_parseaddr.py',
+   'PYMODULE'),
+  ('email._policybase',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\_policybase.py',
+   'PYMODULE'),
+  ('email.base64mime',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\base64mime.py',
+   'PYMODULE'),
+  ('email.charset',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\charset.py',
+   'PYMODULE'),
+  ('email.contentmanager',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\contentmanager.py',
+   'PYMODULE'),
+  ('email.encoders',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\encoders.py',
+   'PYMODULE'),
+  ('email.errors',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\errors.py',
+   'PYMODULE'),
+  ('email.feedparser',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\feedparser.py',
+   'PYMODULE'),
+  ('email.generator',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\generator.py',
+   'PYMODULE'),
+  ('email.header',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\header.py',
+   'PYMODULE'),
+  ('email.headerregistry',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\headerregistry.py',
+   'PYMODULE'),
+  ('email.iterators',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\iterators.py',
+   'PYMODULE'),
+  ('email.message',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\message.py',
+   'PYMODULE'),
+  ('email.parser',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\parser.py',
+   'PYMODULE'),
+  ('email.policy',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\policy.py',
+   'PYMODULE'),
+  ('email.quoprimime',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\quoprimime.py',
+   'PYMODULE'),
+  ('email.utils',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\email\\utils.py',
+   'PYMODULE'),
+  ('fastapi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\__init__.py',
+   'PYMODULE'),
+  ('fastapi._compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\_compat\\__init__.py',
+   'PYMODULE'),
+  ('fastapi._compat.shared',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\_compat\\shared.py',
+   'PYMODULE'),
+  ('fastapi._compat.v2',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\_compat\\v2.py',
+   'PYMODULE'),
+  ('fastapi.applications',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\applications.py',
+   'PYMODULE'),
+  ('fastapi.background',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\background.py',
+   'PYMODULE'),
+  ('fastapi.concurrency',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\concurrency.py',
+   'PYMODULE'),
+  ('fastapi.datastructures',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\datastructures.py',
+   'PYMODULE'),
+  ('fastapi.dependencies',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\dependencies\\__init__.py',
+   'PYMODULE'),
+  ('fastapi.dependencies.models',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\dependencies\\models.py',
+   'PYMODULE'),
+  ('fastapi.dependencies.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\dependencies\\utils.py',
+   'PYMODULE'),
+  ('fastapi.encoders',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\encoders.py',
+   'PYMODULE'),
+  ('fastapi.exception_handlers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\exception_handlers.py',
+   'PYMODULE'),
+  ('fastapi.exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\exceptions.py',
+   'PYMODULE'),
+  ('fastapi.logger',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\logger.py',
+   'PYMODULE'),
+  ('fastapi.middleware',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\middleware\\__init__.py',
+   'PYMODULE'),
+  ('fastapi.middleware.asyncexitstack',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\middleware\\asyncexitstack.py',
+   'PYMODULE'),
+  ('fastapi.middleware.cors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\middleware\\cors.py',
+   'PYMODULE'),
+  ('fastapi.openapi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\openapi\\__init__.py',
+   'PYMODULE'),
+  ('fastapi.openapi.constants',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\openapi\\constants.py',
+   'PYMODULE'),
+  ('fastapi.openapi.docs',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\openapi\\docs.py',
+   'PYMODULE'),
+  ('fastapi.openapi.models',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\openapi\\models.py',
+   'PYMODULE'),
+  ('fastapi.openapi.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\openapi\\utils.py',
+   'PYMODULE'),
+  ('fastapi.param_functions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\param_functions.py',
+   'PYMODULE'),
+  ('fastapi.params',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\params.py',
+   'PYMODULE'),
+  ('fastapi.requests',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\requests.py',
+   'PYMODULE'),
+  ('fastapi.responses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\responses.py',
+   'PYMODULE'),
+  ('fastapi.routing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\routing.py',
+   'PYMODULE'),
+  ('fastapi.security',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\__init__.py',
+   'PYMODULE'),
+  ('fastapi.security.api_key',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\api_key.py',
+   'PYMODULE'),
+  ('fastapi.security.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\base.py',
+   'PYMODULE'),
+  ('fastapi.security.http',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\http.py',
+   'PYMODULE'),
+  ('fastapi.security.oauth2',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\oauth2.py',
+   'PYMODULE'),
+  ('fastapi.security.open_id_connect_url',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\open_id_connect_url.py',
+   'PYMODULE'),
+  ('fastapi.security.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\security\\utils.py',
+   'PYMODULE'),
+  ('fastapi.sse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\sse.py',
+   'PYMODULE'),
+  ('fastapi.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\types.py',
+   'PYMODULE'),
+  ('fastapi.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\utils.py',
+   'PYMODULE'),
+  ('fastapi.websockets',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\fastapi\\websockets.py',
+   'PYMODULE'),
+  ('fnmatch',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\fnmatch.py',
+   'PYMODULE'),
+  ('fractions',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\fractions.py',
+   'PYMODULE'),
+  ('ftplib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ftplib.py',
+   'PYMODULE'),
+  ('getopt',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\getopt.py',
+   'PYMODULE'),
+  ('getpass',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\getpass.py',
+   'PYMODULE'),
+  ('gettext',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\gettext.py',
+   'PYMODULE'),
+  ('glob',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\glob.py',
+   'PYMODULE'),
+  ('greenlet',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\greenlet\\__init__.py',
+   'PYMODULE'),
+  ('gzip',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\gzip.py',
+   'PYMODULE'),
+  ('h11',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\__init__.py',
+   'PYMODULE'),
+  ('h11._abnf',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_abnf.py',
+   'PYMODULE'),
+  ('h11._connection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_connection.py',
+   'PYMODULE'),
+  ('h11._events',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_events.py',
+   'PYMODULE'),
+  ('h11._headers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_headers.py',
+   'PYMODULE'),
+  ('h11._readers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_readers.py',
+   'PYMODULE'),
+  ('h11._receivebuffer',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_receivebuffer.py',
+   'PYMODULE'),
+  ('h11._state',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_state.py',
+   'PYMODULE'),
+  ('h11._util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_util.py',
+   'PYMODULE'),
+  ('h11._version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_version.py',
+   'PYMODULE'),
+  ('h11._writers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\h11\\_writers.py',
+   'PYMODULE'),
+  ('hashlib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\hashlib.py',
+   'PYMODULE'),
+  ('hmac',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\hmac.py',
+   'PYMODULE'),
+  ('html',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\html\\__init__.py',
+   'PYMODULE'),
+  ('html.entities',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\html\\entities.py',
+   'PYMODULE'),
+  ('http',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\__init__.py',
+   'PYMODULE'),
+  ('http.client',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\client.py',
+   'PYMODULE'),
+  ('http.cookiejar',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\cookiejar.py',
+   'PYMODULE'),
+  ('http.cookies',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\cookies.py',
+   'PYMODULE'),
+  ('http.server',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\http\\server.py',
+   'PYMODULE'),
+  ('httpcore',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\__init__.py',
+   'PYMODULE'),
+  ('httpcore._api',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_api.py',
+   'PYMODULE'),
+  ('httpcore._async',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\__init__.py',
+   'PYMODULE'),
+  ('httpcore._async.connection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\connection.py',
+   'PYMODULE'),
+  ('httpcore._async.connection_pool',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\connection_pool.py',
+   'PYMODULE'),
+  ('httpcore._async.http11',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\http11.py',
+   'PYMODULE'),
+  ('httpcore._async.http2',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\http2.py',
+   'PYMODULE'),
+  ('httpcore._async.http_proxy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\http_proxy.py',
+   'PYMODULE'),
+  ('httpcore._async.interfaces',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\interfaces.py',
+   'PYMODULE'),
+  ('httpcore._async.socks_proxy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_async\\socks_proxy.py',
+   'PYMODULE'),
+  ('httpcore._backends',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\__init__.py',
+   'PYMODULE'),
+  ('httpcore._backends.anyio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\anyio.py',
+   'PYMODULE'),
+  ('httpcore._backends.auto',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\auto.py',
+   'PYMODULE'),
+  ('httpcore._backends.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\base.py',
+   'PYMODULE'),
+  ('httpcore._backends.mock',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\mock.py',
+   'PYMODULE'),
+  ('httpcore._backends.sync',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\sync.py',
+   'PYMODULE'),
+  ('httpcore._backends.trio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_backends\\trio.py',
+   'PYMODULE'),
+  ('httpcore._exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_exceptions.py',
+   'PYMODULE'),
+  ('httpcore._models',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_models.py',
+   'PYMODULE'),
+  ('httpcore._ssl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_ssl.py',
+   'PYMODULE'),
+  ('httpcore._sync',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\__init__.py',
+   'PYMODULE'),
+  ('httpcore._sync.connection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\connection.py',
+   'PYMODULE'),
+  ('httpcore._sync.connection_pool',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\connection_pool.py',
+   'PYMODULE'),
+  ('httpcore._sync.http11',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\http11.py',
+   'PYMODULE'),
+  ('httpcore._sync.http2',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\http2.py',
+   'PYMODULE'),
+  ('httpcore._sync.http_proxy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\http_proxy.py',
+   'PYMODULE'),
+  ('httpcore._sync.interfaces',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\interfaces.py',
+   'PYMODULE'),
+  ('httpcore._sync.socks_proxy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_sync\\socks_proxy.py',
+   'PYMODULE'),
+  ('httpcore._synchronization',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_synchronization.py',
+   'PYMODULE'),
+  ('httpcore._trace',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_trace.py',
+   'PYMODULE'),
+  ('httpcore._utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpcore\\_utils.py',
+   'PYMODULE'),
+  ('httpx',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\__init__.py',
+   'PYMODULE'),
+  ('httpx.__version__',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\__version__.py',
+   'PYMODULE'),
+  ('httpx._api',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_api.py',
+   'PYMODULE'),
+  ('httpx._auth',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_auth.py',
+   'PYMODULE'),
+  ('httpx._client',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_client.py',
+   'PYMODULE'),
+  ('httpx._config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_config.py',
+   'PYMODULE'),
+  ('httpx._content',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_content.py',
+   'PYMODULE'),
+  ('httpx._decoders',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_decoders.py',
+   'PYMODULE'),
+  ('httpx._exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_exceptions.py',
+   'PYMODULE'),
+  ('httpx._main',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_main.py',
+   'PYMODULE'),
+  ('httpx._models',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_models.py',
+   'PYMODULE'),
+  ('httpx._multipart',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_multipart.py',
+   'PYMODULE'),
+  ('httpx._status_codes',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_status_codes.py',
+   'PYMODULE'),
+  ('httpx._transports',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_transports\\__init__.py',
+   'PYMODULE'),
+  ('httpx._transports.asgi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_transports\\asgi.py',
+   'PYMODULE'),
+  ('httpx._transports.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_transports\\base.py',
+   'PYMODULE'),
+  ('httpx._transports.default',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_transports\\default.py',
+   'PYMODULE'),
+  ('httpx._transports.mock',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_transports\\mock.py',
+   'PYMODULE'),
+  ('httpx._transports.wsgi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_transports\\wsgi.py',
+   'PYMODULE'),
+  ('httpx._types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_types.py',
+   'PYMODULE'),
+  ('httpx._urlparse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_urlparse.py',
+   'PYMODULE'),
+  ('httpx._urls',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_urls.py',
+   'PYMODULE'),
+  ('httpx._utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\httpx\\_utils.py',
+   'PYMODULE'),
+  ('idna',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\idna\\__init__.py',
+   'PYMODULE'),
+  ('idna.core',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\idna\\core.py',
+   'PYMODULE'),
+  ('idna.idnadata',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\idna\\idnadata.py',
+   'PYMODULE'),
+  ('idna.intranges',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\idna\\intranges.py',
+   'PYMODULE'),
+  ('idna.package_data',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\idna\\package_data.py',
+   'PYMODULE'),
+  ('idna.uts46data',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\idna\\uts46data.py',
+   'PYMODULE'),
+  ('importlib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\__init__.py',
+   'PYMODULE'),
+  ('importlib._abc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\_abc.py',
+   'PYMODULE'),
+  ('importlib._bootstrap',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\_bootstrap.py',
+   'PYMODULE'),
+  ('importlib._bootstrap_external',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\_bootstrap_external.py',
+   'PYMODULE'),
+  ('importlib.abc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\abc.py',
+   'PYMODULE'),
+  ('importlib.machinery',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\machinery.py',
+   'PYMODULE'),
+  ('importlib.metadata',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\__init__.py',
+   'PYMODULE'),
+  ('importlib.metadata._adapters',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\_adapters.py',
+   'PYMODULE'),
+  ('importlib.metadata._collections',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\_collections.py',
+   'PYMODULE'),
+  ('importlib.metadata._functools',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\_functools.py',
+   'PYMODULE'),
+  ('importlib.metadata._itertools',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\_itertools.py',
+   'PYMODULE'),
+  ('importlib.metadata._meta',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\_meta.py',
+   'PYMODULE'),
+  ('importlib.metadata._text',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\metadata\\_text.py',
+   'PYMODULE'),
+  ('importlib.readers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\readers.py',
+   'PYMODULE'),
+  ('importlib.resources',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\__init__.py',
+   'PYMODULE'),
+  ('importlib.resources._adapters',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\_adapters.py',
+   'PYMODULE'),
+  ('importlib.resources._common',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\_common.py',
+   'PYMODULE'),
+  ('importlib.resources._itertools',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\_itertools.py',
+   'PYMODULE'),
+  ('importlib.resources._legacy',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\_legacy.py',
+   'PYMODULE'),
+  ('importlib.resources.abc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\abc.py',
+   'PYMODULE'),
+  ('importlib.resources.readers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\resources\\readers.py',
+   'PYMODULE'),
+  ('importlib.util',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\importlib\\util.py',
+   'PYMODULE'),
+  ('inspect',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\inspect.py',
+   'PYMODULE'),
+  ('ipaddress',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ipaddress.py',
+   'PYMODULE'),
+  ('json',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\json\\__init__.py',
+   'PYMODULE'),
+  ('json.decoder',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\json\\decoder.py',
+   'PYMODULE'),
+  ('json.encoder',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\json\\encoder.py',
+   'PYMODULE'),
+  ('json.scanner',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\json\\scanner.py',
+   'PYMODULE'),
+  ('logging',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\logging\\__init__.py',
+   'PYMODULE'),
+  ('logging.config',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\logging\\config.py',
+   'PYMODULE'),
+  ('logging.handlers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\logging\\handlers.py',
+   'PYMODULE'),
+  ('lzma',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\lzma.py',
+   'PYMODULE'),
+  ('mimetypes',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\mimetypes.py',
+   'PYMODULE'),
+  ('multiprocessing',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\__init__.py',
+   'PYMODULE'),
+  ('multiprocessing.connection',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\connection.py',
+   'PYMODULE'),
+  ('multiprocessing.context',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\context.py',
+   'PYMODULE'),
+  ('multiprocessing.dummy',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\dummy\\__init__.py',
+   'PYMODULE'),
+  ('multiprocessing.dummy.connection',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\dummy\\connection.py',
+   'PYMODULE'),
+  ('multiprocessing.forkserver',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\forkserver.py',
+   'PYMODULE'),
+  ('multiprocessing.heap',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\heap.py',
+   'PYMODULE'),
+  ('multiprocessing.managers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\managers.py',
+   'PYMODULE'),
+  ('multiprocessing.pool',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\pool.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_fork',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\popen_fork.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_forkserver',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\popen_forkserver.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_spawn_posix',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\popen_spawn_posix.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_spawn_win32',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\popen_spawn_win32.py',
+   'PYMODULE'),
+  ('multiprocessing.process',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\process.py',
+   'PYMODULE'),
+  ('multiprocessing.queues',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\queues.py',
+   'PYMODULE'),
+  ('multiprocessing.reduction',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\reduction.py',
+   'PYMODULE'),
+  ('multiprocessing.resource_sharer',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\resource_sharer.py',
+   'PYMODULE'),
+  ('multiprocessing.resource_tracker',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\resource_tracker.py',
+   'PYMODULE'),
+  ('multiprocessing.shared_memory',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\shared_memory.py',
+   'PYMODULE'),
+  ('multiprocessing.sharedctypes',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\sharedctypes.py',
+   'PYMODULE'),
+  ('multiprocessing.spawn',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\spawn.py',
+   'PYMODULE'),
+  ('multiprocessing.synchronize',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\synchronize.py',
+   'PYMODULE'),
+  ('multiprocessing.util',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\multiprocessing\\util.py',
+   'PYMODULE'),
+  ('netrc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\netrc.py',
+   'PYMODULE'),
+  ('nturl2path',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\nturl2path.py',
+   'PYMODULE'),
+  ('numbers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\numbers.py',
+   'PYMODULE'),
+  ('opcode',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\opcode.py',
+   'PYMODULE'),
+  ('packaging',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\__init__.py',
+   'PYMODULE'),
+  ('packaging._elffile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\_elffile.py',
+   'PYMODULE'),
+  ('packaging._manylinux',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\_manylinux.py',
+   'PYMODULE'),
+  ('packaging._musllinux',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\_musllinux.py',
+   'PYMODULE'),
+  ('packaging._parser',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\_parser.py',
+   'PYMODULE'),
+  ('packaging._tokenizer',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\_tokenizer.py',
+   'PYMODULE'),
+  ('packaging.licenses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\licenses\\__init__.py',
+   'PYMODULE'),
+  ('packaging.licenses._spdx',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\licenses\\_spdx.py',
+   'PYMODULE'),
+  ('packaging.markers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\markers.py',
+   'PYMODULE'),
+  ('packaging.requirements',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\requirements.py',
+   'PYMODULE'),
+  ('packaging.specifiers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\specifiers.py',
+   'PYMODULE'),
+  ('packaging.tags',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\tags.py',
+   'PYMODULE'),
+  ('packaging.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\utils.py',
+   'PYMODULE'),
+  ('packaging.version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\packaging\\version.py',
+   'PYMODULE'),
+  ('pathlib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pathlib.py',
+   'PYMODULE'),
+  ('pickle',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pickle.py',
+   'PYMODULE'),
+  ('pkgutil',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pkgutil.py',
+   'PYMODULE'),
+  ('platform',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\platform.py',
+   'PYMODULE'),
+  ('pprint',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pprint.py',
+   'PYMODULE'),
+  ('psutil',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\psutil\\__init__.py',
+   'PYMODULE'),
+  ('psutil._common',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\psutil\\_common.py',
+   'PYMODULE'),
+  ('psutil._ntuples',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\psutil\\_ntuples.py',
+   'PYMODULE'),
+  ('psutil._pswindows',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\psutil\\_pswindows.py',
+   'PYMODULE'),
+  ('py_compile',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\py_compile.py',
+   'PYMODULE'),
+  ('pydantic',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\__init__.py',
+   'PYMODULE'),
+  ('pydantic._internal',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\__init__.py',
+   'PYMODULE'),
+  ('pydantic._internal._config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_config.py',
+   'PYMODULE'),
+  ('pydantic._internal._core_metadata',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_core_metadata.py',
+   'PYMODULE'),
+  ('pydantic._internal._core_utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_core_utils.py',
+   'PYMODULE'),
+  ('pydantic._internal._dataclasses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_dataclasses.py',
+   'PYMODULE'),
+  ('pydantic._internal._decorators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_decorators.py',
+   'PYMODULE'),
+  ('pydantic._internal._decorators_v1',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_decorators_v1.py',
+   'PYMODULE'),
+  ('pydantic._internal._discriminated_union',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_discriminated_union.py',
+   'PYMODULE'),
+  ('pydantic._internal._docs_extraction',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_docs_extraction.py',
+   'PYMODULE'),
+  ('pydantic._internal._fields',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_fields.py',
+   'PYMODULE'),
+  ('pydantic._internal._forward_ref',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_forward_ref.py',
+   'PYMODULE'),
+  ('pydantic._internal._generate_schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_generate_schema.py',
+   'PYMODULE'),
+  ('pydantic._internal._generics',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_generics.py',
+   'PYMODULE'),
+  ('pydantic._internal._git',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_git.py',
+   'PYMODULE'),
+  ('pydantic._internal._import_utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_import_utils.py',
+   'PYMODULE'),
+  ('pydantic._internal._internal_dataclass',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_internal_dataclass.py',
+   'PYMODULE'),
+  ('pydantic._internal._known_annotated_metadata',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_known_annotated_metadata.py',
+   'PYMODULE'),
+  ('pydantic._internal._mock_val_ser',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_mock_val_ser.py',
+   'PYMODULE'),
+  ('pydantic._internal._model_construction',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_model_construction.py',
+   'PYMODULE'),
+  ('pydantic._internal._namespace_utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_namespace_utils.py',
+   'PYMODULE'),
+  ('pydantic._internal._repr',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_repr.py',
+   'PYMODULE'),
+  ('pydantic._internal._schema_gather',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_schema_gather.py',
+   'PYMODULE'),
+  ('pydantic._internal._schema_generation_shared',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_schema_generation_shared.py',
+   'PYMODULE'),
+  ('pydantic._internal._serializers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_serializers.py',
+   'PYMODULE'),
+  ('pydantic._internal._signature',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_signature.py',
+   'PYMODULE'),
+  ('pydantic._internal._typing_extra',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_typing_extra.py',
+   'PYMODULE'),
+  ('pydantic._internal._utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_utils.py',
+   'PYMODULE'),
+  ('pydantic._internal._validate_call',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_validate_call.py',
+   'PYMODULE'),
+  ('pydantic._internal._validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_internal\\_validators.py',
+   'PYMODULE'),
+  ('pydantic._migration',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\_migration.py',
+   'PYMODULE'),
+  ('pydantic.alias_generators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\alias_generators.py',
+   'PYMODULE'),
+  ('pydantic.aliases',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\aliases.py',
+   'PYMODULE'),
+  ('pydantic.annotated_handlers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\annotated_handlers.py',
+   'PYMODULE'),
+  ('pydantic.class_validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\class_validators.py',
+   'PYMODULE'),
+  ('pydantic.color',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\color.py',
+   'PYMODULE'),
+  ('pydantic.config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\config.py',
+   'PYMODULE'),
+  ('pydantic.dataclasses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\dataclasses.py',
+   'PYMODULE'),
+  ('pydantic.datetime_parse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\datetime_parse.py',
+   'PYMODULE'),
+  ('pydantic.decorator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\decorator.py',
+   'PYMODULE'),
+  ('pydantic.deprecated',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\__init__.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.class_validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\class_validators.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\config.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.copy_internals',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\copy_internals.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.decorator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\decorator.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\json.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.parse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\parse.py',
+   'PYMODULE'),
+  ('pydantic.deprecated.tools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\deprecated\\tools.py',
+   'PYMODULE'),
+  ('pydantic.env_settings',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\env_settings.py',
+   'PYMODULE'),
+  ('pydantic.error_wrappers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\error_wrappers.py',
+   'PYMODULE'),
+  ('pydantic.errors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\errors.py',
+   'PYMODULE'),
+  ('pydantic.experimental',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\experimental\\__init__.py',
+   'PYMODULE'),
+  ('pydantic.experimental.arguments_schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\experimental\\arguments_schema.py',
+   'PYMODULE'),
+  ('pydantic.experimental.missing_sentinel',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\experimental\\missing_sentinel.py',
+   'PYMODULE'),
+  ('pydantic.experimental.pipeline',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\experimental\\pipeline.py',
+   'PYMODULE'),
+  ('pydantic.fields',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\fields.py',
+   'PYMODULE'),
+  ('pydantic.functional_serializers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\functional_serializers.py',
+   'PYMODULE'),
+  ('pydantic.functional_validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\functional_validators.py',
+   'PYMODULE'),
+  ('pydantic.generics',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\generics.py',
+   'PYMODULE'),
+  ('pydantic.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\json.py',
+   'PYMODULE'),
+  ('pydantic.json_schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\json_schema.py',
+   'PYMODULE'),
+  ('pydantic.main',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\main.py',
+   'PYMODULE'),
+  ('pydantic.mypy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\mypy.py',
+   'PYMODULE'),
+  ('pydantic.networks',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\networks.py',
+   'PYMODULE'),
+  ('pydantic.parse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\parse.py',
+   'PYMODULE'),
+  ('pydantic.plugin',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\plugin\\__init__.py',
+   'PYMODULE'),
+  ('pydantic.plugin._loader',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\plugin\\_loader.py',
+   'PYMODULE'),
+  ('pydantic.plugin._schema_validator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\plugin\\_schema_validator.py',
+   'PYMODULE'),
+  ('pydantic.root_model',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\root_model.py',
+   'PYMODULE'),
+  ('pydantic.schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\schema.py',
+   'PYMODULE'),
+  ('pydantic.tools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\tools.py',
+   'PYMODULE'),
+  ('pydantic.type_adapter',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\type_adapter.py',
+   'PYMODULE'),
+  ('pydantic.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\types.py',
+   'PYMODULE'),
+  ('pydantic.typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\typing.py',
+   'PYMODULE'),
+  ('pydantic.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\utils.py',
+   'PYMODULE'),
+  ('pydantic.v1',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\__init__.py',
+   'PYMODULE'),
+  ('pydantic.v1._hypothesis_plugin',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\_hypothesis_plugin.py',
+   'PYMODULE'),
+  ('pydantic.v1.annotated_types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\annotated_types.py',
+   'PYMODULE'),
+  ('pydantic.v1.class_validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\class_validators.py',
+   'PYMODULE'),
+  ('pydantic.v1.color',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\color.py',
+   'PYMODULE'),
+  ('pydantic.v1.config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\config.py',
+   'PYMODULE'),
+  ('pydantic.v1.dataclasses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\dataclasses.py',
+   'PYMODULE'),
+  ('pydantic.v1.datetime_parse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\datetime_parse.py',
+   'PYMODULE'),
+  ('pydantic.v1.decorator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\decorator.py',
+   'PYMODULE'),
+  ('pydantic.v1.env_settings',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\env_settings.py',
+   'PYMODULE'),
+  ('pydantic.v1.error_wrappers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\error_wrappers.py',
+   'PYMODULE'),
+  ('pydantic.v1.errors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\errors.py',
+   'PYMODULE'),
+  ('pydantic.v1.fields',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\fields.py',
+   'PYMODULE'),
+  ('pydantic.v1.generics',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\generics.py',
+   'PYMODULE'),
+  ('pydantic.v1.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\json.py',
+   'PYMODULE'),
+  ('pydantic.v1.main',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\main.py',
+   'PYMODULE'),
+  ('pydantic.v1.mypy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\mypy.py',
+   'PYMODULE'),
+  ('pydantic.v1.networks',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\networks.py',
+   'PYMODULE'),
+  ('pydantic.v1.parse',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\parse.py',
+   'PYMODULE'),
+  ('pydantic.v1.schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\schema.py',
+   'PYMODULE'),
+  ('pydantic.v1.tools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\tools.py',
+   'PYMODULE'),
+  ('pydantic.v1.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\types.py',
+   'PYMODULE'),
+  ('pydantic.v1.typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\typing.py',
+   'PYMODULE'),
+  ('pydantic.v1.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\utils.py',
+   'PYMODULE'),
+  ('pydantic.v1.validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\validators.py',
+   'PYMODULE'),
+  ('pydantic.v1.version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\v1\\version.py',
+   'PYMODULE'),
+  ('pydantic.validate_call_decorator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\validate_call_decorator.py',
+   'PYMODULE'),
+  ('pydantic.validators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\validators.py',
+   'PYMODULE'),
+  ('pydantic.version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\version.py',
+   'PYMODULE'),
+  ('pydantic.warnings',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic\\warnings.py',
+   'PYMODULE'),
+  ('pydantic_core',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic_core\\__init__.py',
+   'PYMODULE'),
+  ('pydantic_core.core_schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\pydantic_core\\core_schema.py',
+   'PYMODULE'),
+  ('pydoc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pydoc.py',
+   'PYMODULE'),
+  ('pydoc_data',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pydoc_data\\__init__.py',
+   'PYMODULE'),
+  ('pydoc_data.topics',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\pydoc_data\\topics.py',
+   'PYMODULE'),
+  ('queue',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\queue.py',
+   'PYMODULE'),
+  ('quopri',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\quopri.py',
+   'PYMODULE'),
+  ('random',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\random.py',
+   'PYMODULE'),
+  ('rlcompleter',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\rlcompleter.py',
+   'PYMODULE'),
+  ('runpy',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\runpy.py',
+   'PYMODULE'),
+  ('secrets',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\secrets.py',
+   'PYMODULE'),
+  ('selectors',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\selectors.py',
+   'PYMODULE'),
+  ('setuptools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._core_metadata',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_core_metadata.py',
+   'PYMODULE'),
+  ('setuptools._discovery',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_discovery.py',
+   'PYMODULE'),
+  ('setuptools._distutils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._distutils._log',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\_log.py',
+   'PYMODULE'),
+  ('setuptools._distutils._modified',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\_modified.py',
+   'PYMODULE'),
+  ('setuptools._distutils._msvccompiler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\_msvccompiler.py',
+   'PYMODULE'),
+  ('setuptools._distutils.archive_util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\archive_util.py',
+   'PYMODULE'),
+  ('setuptools._distutils.ccompiler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\ccompiler.py',
+   'PYMODULE'),
+  ('setuptools._distutils.cmd',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\cmd.py',
+   'PYMODULE'),
+  ('setuptools._distutils.command',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._distutils.command.bdist',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\bdist.py',
+   'PYMODULE'),
+  ('setuptools._distutils.command.build',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build.py',
+   'PYMODULE'),
+  ('setuptools._distutils.command.build_ext',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build_ext.py',
+   'PYMODULE'),
+  ('setuptools._distutils.command.sdist',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\sdist.py',
+   'PYMODULE'),
+  ('setuptools._distutils.compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\compat\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._distutils.compat.numpy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\compat\\numpy.py',
+   'PYMODULE'),
+  ('setuptools._distutils.compat.py39',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\compat\\py39.py',
+   'PYMODULE'),
+  ('setuptools._distutils.compilers', '-', 'PYMODULE'),
+  ('setuptools._distutils.compilers.C', '-', 'PYMODULE'),
+  ('setuptools._distutils.compilers.C.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\compilers\\C\\base.py',
+   'PYMODULE'),
+  ('setuptools._distutils.compilers.C.errors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\compilers\\C\\errors.py',
+   'PYMODULE'),
+  ('setuptools._distutils.compilers.C.msvc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\compilers\\C\\msvc.py',
+   'PYMODULE'),
+  ('setuptools._distutils.core',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\core.py',
+   'PYMODULE'),
+  ('setuptools._distutils.debug',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\debug.py',
+   'PYMODULE'),
+  ('setuptools._distutils.dir_util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\dir_util.py',
+   'PYMODULE'),
+  ('setuptools._distutils.dist',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\dist.py',
+   'PYMODULE'),
+  ('setuptools._distutils.errors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\errors.py',
+   'PYMODULE'),
+  ('setuptools._distutils.extension',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\extension.py',
+   'PYMODULE'),
+  ('setuptools._distutils.fancy_getopt',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\fancy_getopt.py',
+   'PYMODULE'),
+  ('setuptools._distutils.file_util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\file_util.py',
+   'PYMODULE'),
+  ('setuptools._distutils.filelist',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\filelist.py',
+   'PYMODULE'),
+  ('setuptools._distutils.log',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\log.py',
+   'PYMODULE'),
+  ('setuptools._distutils.spawn',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\spawn.py',
+   'PYMODULE'),
+  ('setuptools._distutils.sysconfig',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\sysconfig.py',
+   'PYMODULE'),
+  ('setuptools._distutils.text_file',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\text_file.py',
+   'PYMODULE'),
+  ('setuptools._distutils.util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\util.py',
+   'PYMODULE'),
+  ('setuptools._distutils.version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\version.py',
+   'PYMODULE'),
+  ('setuptools._distutils.versionpredicate',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_distutils\\versionpredicate.py',
+   'PYMODULE'),
+  ('setuptools._entry_points',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_entry_points.py',
+   'PYMODULE'),
+  ('setuptools._imp',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_imp.py',
+   'PYMODULE'),
+  ('setuptools._importlib',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_importlib.py',
+   'PYMODULE'),
+  ('setuptools._itertools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_itertools.py',
+   'PYMODULE'),
+  ('setuptools._normalization',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_normalization.py',
+   'PYMODULE'),
+  ('setuptools._path',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_path.py',
+   'PYMODULE'),
+  ('setuptools._reqs',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_reqs.py',
+   'PYMODULE'),
+  ('setuptools._shutil',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_shutil.py',
+   'PYMODULE'),
+  ('setuptools._static',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_static.py',
+   'PYMODULE'),
+  ('setuptools._vendor', '-', 'PYMODULE'),
+  ('setuptools._vendor.backports',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\backports\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.backports.tarfile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\backports\\tarfile\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.backports.tarfile.compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\backports\\tarfile\\compat\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.backports.tarfile.compat.py38',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\backports\\tarfile\\compat\\py38.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._adapters',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_adapters.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._collections',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_collections.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_compat.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._functools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_functools.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._itertools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_itertools.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._meta',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_meta.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._text',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_text.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata._typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_typing.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata.compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\compat\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata.compat.py311',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\compat\\py311.py',
+   'PYMODULE'),
+  ('setuptools._vendor.importlib_metadata.compat.py39',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\compat\\py39.py',
+   'PYMODULE'),
+  ('setuptools._vendor.jaraco', '-', 'PYMODULE'),
+  ('setuptools._vendor.jaraco.context',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\context\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.jaraco.functools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\functools\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.jaraco.text',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\text\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.more_itertools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\more_itertools\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.more_itertools.more',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\more_itertools\\more.py',
+   'PYMODULE'),
+  ('setuptools._vendor.more_itertools.recipes',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\more_itertools\\recipes.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging._elffile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_elffile.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging._manylinux',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_manylinux.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging._musllinux',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_musllinux.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging._parser',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_parser.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging._structures',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_structures.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging._tokenizer',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_tokenizer.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging.markers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\markers.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging.requirements',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\requirements.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging.specifiers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\specifiers.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging.tags',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\tags.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\utils.py',
+   'PYMODULE'),
+  ('setuptools._vendor.packaging.version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\version.py',
+   'PYMODULE'),
+  ('setuptools._vendor.tomli',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.tomli._parser',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_parser.py',
+   'PYMODULE'),
+  ('setuptools._vendor.tomli._re',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_re.py',
+   'PYMODULE'),
+  ('setuptools._vendor.tomli._types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_types.py',
+   'PYMODULE'),
+  ('setuptools._vendor.wheel',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\wheel\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.wheel.macosx_libfile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\wheel\\macosx_libfile.py',
+   'PYMODULE'),
+  ('setuptools._vendor.wheel.wheelfile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\wheel\\wheelfile.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp._functools',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\_functools.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp.compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\compat\\__init__.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp.compat.overlay',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\compat\\overlay.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp.compat.py310',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\compat\\py310.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp.compat.py313',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\compat\\py313.py',
+   'PYMODULE'),
+  ('setuptools._vendor.zipp.glob',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\glob.py',
+   'PYMODULE'),
+  ('setuptools.archive_util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\archive_util.py',
+   'PYMODULE'),
+  ('setuptools.command',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\__init__.py',
+   'PYMODULE'),
+  ('setuptools.command._requirestxt',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\_requirestxt.py',
+   'PYMODULE'),
+  ('setuptools.command.bdist_egg',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\bdist_egg.py',
+   'PYMODULE'),
+  ('setuptools.command.bdist_wheel',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\bdist_wheel.py',
+   'PYMODULE'),
+  ('setuptools.command.build',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\build.py',
+   'PYMODULE'),
+  ('setuptools.command.egg_info',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\egg_info.py',
+   'PYMODULE'),
+  ('setuptools.command.sdist',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\sdist.py',
+   'PYMODULE'),
+  ('setuptools.command.setopt',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\command\\setopt.py',
+   'PYMODULE'),
+  ('setuptools.compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\compat\\__init__.py',
+   'PYMODULE'),
+  ('setuptools.compat.py310',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\compat\\py310.py',
+   'PYMODULE'),
+  ('setuptools.compat.py311',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\compat\\py311.py',
+   'PYMODULE'),
+  ('setuptools.compat.py39',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\compat\\py39.py',
+   'PYMODULE'),
+  ('setuptools.config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\__init__.py',
+   'PYMODULE'),
+  ('setuptools.config._apply_pyprojecttoml',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_apply_pyprojecttoml.py',
+   'PYMODULE'),
+  ('setuptools.config._validate_pyproject',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\__init__.py',
+   'PYMODULE'),
+  ('setuptools.config._validate_pyproject.error_reporting',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\error_reporting.py',
+   'PYMODULE'),
+  ('setuptools.config._validate_pyproject.extra_validations',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\extra_validations.py',
+   'PYMODULE'),
+  ('setuptools.config._validate_pyproject.fastjsonschema_exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\fastjsonschema_exceptions.py',
+   'PYMODULE'),
+  ('setuptools.config._validate_pyproject.fastjsonschema_validations',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\fastjsonschema_validations.py',
+   'PYMODULE'),
+  ('setuptools.config._validate_pyproject.formats',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\formats.py',
+   'PYMODULE'),
+  ('setuptools.config.expand',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\expand.py',
+   'PYMODULE'),
+  ('setuptools.config.pyprojecttoml',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\pyprojecttoml.py',
+   'PYMODULE'),
+  ('setuptools.config.setupcfg',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\config\\setupcfg.py',
+   'PYMODULE'),
+  ('setuptools.depends',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\depends.py',
+   'PYMODULE'),
+  ('setuptools.discovery',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\discovery.py',
+   'PYMODULE'),
+  ('setuptools.dist',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\dist.py',
+   'PYMODULE'),
+  ('setuptools.errors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\errors.py',
+   'PYMODULE'),
+  ('setuptools.extension',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\extension.py',
+   'PYMODULE'),
+  ('setuptools.glob',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\glob.py',
+   'PYMODULE'),
+  ('setuptools.installer',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\installer.py',
+   'PYMODULE'),
+  ('setuptools.logging',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\logging.py',
+   'PYMODULE'),
+  ('setuptools.monkey',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\monkey.py',
+   'PYMODULE'),
+  ('setuptools.msvc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\msvc.py',
+   'PYMODULE'),
+  ('setuptools.unicode_utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\unicode_utils.py',
+   'PYMODULE'),
+  ('setuptools.version',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\version.py',
+   'PYMODULE'),
+  ('setuptools.warnings',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\warnings.py',
+   'PYMODULE'),
+  ('setuptools.wheel',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\wheel.py',
+   'PYMODULE'),
+  ('setuptools.windows_support',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\setuptools\\windows_support.py',
+   'PYMODULE'),
+  ('shiboken6',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\shiboken6\\__init__.py',
+   'PYMODULE'),
+  ('shlex',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\shlex.py',
+   'PYMODULE'),
+  ('shutil',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\shutil.py',
+   'PYMODULE'),
+  ('signal',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\signal.py',
+   'PYMODULE'),
+  ('site',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site.py',
+   'PYMODULE'),
+  ('smtplib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\smtplib.py',
+   'PYMODULE'),
+  ('socket',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\socket.py',
+   'PYMODULE'),
+  ('socketserver',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\socketserver.py',
+   'PYMODULE'),
+  ('sqlalchemy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.connectors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\connectors\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.connectors.aioodbc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\connectors\\aioodbc.py',
+   'PYMODULE'),
+  ('sqlalchemy.connectors.asyncio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\connectors\\asyncio.py',
+   'PYMODULE'),
+  ('sqlalchemy.connectors.pyodbc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\connectors\\pyodbc.py',
+   'PYMODULE'),
+  ('sqlalchemy.cyextension',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\cyextension\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects._typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\_typing.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql.aioodbc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\aioodbc.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql.information_schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\information_schema.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\json.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql.pymssql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\pymssql.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mssql.pyodbc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\pyodbc.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.aiomysql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\aiomysql.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.asyncmy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\asyncmy.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.cymysql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\cymysql.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.dml',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\dml.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.enumerated',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\enumerated.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.expression',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\expression.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\json.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.mariadb',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mariadb.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.mariadbconnector',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mariadbconnector.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.mysqlconnector',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mysqlconnector.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.mysqldb',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mysqldb.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.pymysql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\pymysql.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.pyodbc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\pyodbc.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.reflection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\reflection.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.reserved_words',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\reserved_words.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.mysql.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\types.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle.cx_oracle',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\cx_oracle.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle.dictionary',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\dictionary.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle.oracledb',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\oracledb.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\types.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.oracle.vector',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\vector.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql._psycopg_common',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\_psycopg_common.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.array',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\array.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.asyncpg',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\asyncpg.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.dml',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\dml.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.ext',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\ext.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.hstore',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\hstore.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\json.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.named_types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\named_types.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.operators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\operators.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.pg8000',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\pg8000.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.pg_catalog',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\pg_catalog.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.psycopg',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\psycopg.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.psycopg2',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\psycopg2.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.psycopg2cffi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\psycopg2cffi.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.ranges',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\ranges.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.postgresql.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\types.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite.aiosqlite',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\aiosqlite.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite.dml',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\dml.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite.json',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\json.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite.pysqlcipher',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\pysqlcipher.py',
+   'PYMODULE'),
+  ('sqlalchemy.dialects.sqlite.pysqlite',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\pysqlite.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine._py_processors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\_py_processors.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine._py_row',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\_py_row.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine._py_util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\_py_util.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.characteristics',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\characteristics.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.create',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\create.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.cursor',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\cursor.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.default',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\default.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.events',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\events.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.interfaces',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\interfaces.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.mock',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\mock.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.processors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\processors.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.reflection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\reflection.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.result',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\result.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.row',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\row.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.url',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\url.py',
+   'PYMODULE'),
+  ('sqlalchemy.engine.util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\engine\\util.py',
+   'PYMODULE'),
+  ('sqlalchemy.event',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\event\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.event.api',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\event\\api.py',
+   'PYMODULE'),
+  ('sqlalchemy.event.attr',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\event\\attr.py',
+   'PYMODULE'),
+  ('sqlalchemy.event.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\event\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.event.legacy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\event\\legacy.py',
+   'PYMODULE'),
+  ('sqlalchemy.event.registry',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\event\\registry.py',
+   'PYMODULE'),
+  ('sqlalchemy.exc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\exc.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio.engine',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\engine.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio.exc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\exc.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio.result',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\result.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio.scoping',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\scoping.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.asyncio.session',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\session.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.baked',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\baked.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.compiler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\compiler.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.declarative',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\declarative\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.ext.declarative.extensions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\ext\\declarative\\extensions.py',
+   'PYMODULE'),
+  ('sqlalchemy.future',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\future\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.future.engine',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\future\\engine.py',
+   'PYMODULE'),
+  ('sqlalchemy.inspection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\inspection.py',
+   'PYMODULE'),
+  ('sqlalchemy.log',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\log.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm._orm_constructors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\_orm_constructors.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm._typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\_typing.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.attributes',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\attributes.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.bulk_persistence',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\bulk_persistence.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.clsregistry',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\clsregistry.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.collections',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\collections.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.context',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\context.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.decl_api',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\decl_api.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.decl_base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\decl_base.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.dependency',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\dependency.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.descriptor_props',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\descriptor_props.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.dynamic',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\dynamic.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.evaluator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\evaluator.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.events',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\events.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.exc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\exc.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.identity',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\identity.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.instrumentation',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\instrumentation.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.interfaces',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\interfaces.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.loading',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\loading.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.mapped_collection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\mapped_collection.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.mapper',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\mapper.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.path_registry',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\path_registry.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.persistence',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\persistence.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.properties',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\properties.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.query',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\query.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.relationships',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\relationships.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.scoping',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\scoping.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.session',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\session.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.state',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\state.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.state_changes',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\state_changes.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.strategies',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\strategies.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.strategy_options',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\strategy_options.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.sync',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\sync.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.unitofwork',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\unitofwork.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\util.py',
+   'PYMODULE'),
+  ('sqlalchemy.orm.writeonly',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\orm\\writeonly.py',
+   'PYMODULE'),
+  ('sqlalchemy.pool',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\pool\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.pool.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\pool\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.pool.events',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\pool\\events.py',
+   'PYMODULE'),
+  ('sqlalchemy.pool.impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\pool\\impl.py',
+   'PYMODULE'),
+  ('sqlalchemy.schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\schema.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql._dml_constructors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\_dml_constructors.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql._elements_constructors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\_elements_constructors.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql._orm_types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\_orm_types.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql._py_util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\_py_util.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql._selectable_constructors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\_selectable_constructors.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql._typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\_typing.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.annotation',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\annotation.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\base.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.cache_key',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\cache_key.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.coercions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\coercions.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.compiler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\compiler.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.crud',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\crud.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.ddl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\ddl.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.default_comparator',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\default_comparator.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.dml',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\dml.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.elements',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\elements.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.events',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\events.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.expression',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\expression.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.functions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\functions.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.lambdas',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\lambdas.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.naming',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\naming.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.operators',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\operators.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.roles',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\roles.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.schema',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\schema.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.selectable',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\selectable.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.sqltypes',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\sqltypes.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.traversals',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\traversals.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.type_api',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\type_api.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\util.py',
+   'PYMODULE'),
+  ('sqlalchemy.sql.visitors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\sql\\visitors.py',
+   'PYMODULE'),
+  ('sqlalchemy.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\types.py',
+   'PYMODULE'),
+  ('sqlalchemy.util',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\__init__.py',
+   'PYMODULE'),
+  ('sqlalchemy.util._collections',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\_collections.py',
+   'PYMODULE'),
+  ('sqlalchemy.util._concurrency_py3k',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\_concurrency_py3k.py',
+   'PYMODULE'),
+  ('sqlalchemy.util._has_cy',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\_has_cy.py',
+   'PYMODULE'),
+  ('sqlalchemy.util._py_collections',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\_py_collections.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\compat.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.concurrency',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\concurrency.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.deprecations',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\deprecations.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.langhelpers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\langhelpers.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.preloaded',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\preloaded.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.queue',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\queue.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.topological',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\topological.py',
+   'PYMODULE'),
+  ('sqlalchemy.util.typing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\sqlalchemy\\util\\typing.py',
+   'PYMODULE'),
+  ('sqlite3',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\sqlite3\\__init__.py',
+   'PYMODULE'),
+  ('sqlite3.__main__',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\sqlite3\\__main__.py',
+   'PYMODULE'),
+  ('sqlite3.dbapi2',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\sqlite3\\dbapi2.py',
+   'PYMODULE'),
+  ('sqlite3.dump',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\sqlite3\\dump.py',
+   'PYMODULE'),
+  ('ssl',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ssl.py',
+   'PYMODULE'),
+  ('starlette',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\__init__.py',
+   'PYMODULE'),
+  ('starlette._exception_handler',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\_exception_handler.py',
+   'PYMODULE'),
+  ('starlette._utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\_utils.py',
+   'PYMODULE'),
+  ('starlette.applications',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\applications.py',
+   'PYMODULE'),
+  ('starlette.background',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\background.py',
+   'PYMODULE'),
+  ('starlette.concurrency',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\concurrency.py',
+   'PYMODULE'),
+  ('starlette.convertors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\convertors.py',
+   'PYMODULE'),
+  ('starlette.datastructures',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\datastructures.py',
+   'PYMODULE'),
+  ('starlette.exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\exceptions.py',
+   'PYMODULE'),
+  ('starlette.formparsers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\formparsers.py',
+   'PYMODULE'),
+  ('starlette.middleware',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\middleware\\__init__.py',
+   'PYMODULE'),
+  ('starlette.middleware.base',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\middleware\\base.py',
+   'PYMODULE'),
+  ('starlette.middleware.cors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\middleware\\cors.py',
+   'PYMODULE'),
+  ('starlette.middleware.errors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\middleware\\errors.py',
+   'PYMODULE'),
+  ('starlette.middleware.exceptions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\middleware\\exceptions.py',
+   'PYMODULE'),
+  ('starlette.middleware.sessions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\middleware\\sessions.py',
+   'PYMODULE'),
+  ('starlette.requests',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\requests.py',
+   'PYMODULE'),
+  ('starlette.responses',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\responses.py',
+   'PYMODULE'),
+  ('starlette.routing',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\routing.py',
+   'PYMODULE'),
+  ('starlette.staticfiles',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\staticfiles.py',
+   'PYMODULE'),
+  ('starlette.status',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\status.py',
+   'PYMODULE'),
+  ('starlette.types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\types.py',
+   'PYMODULE'),
+  ('starlette.websockets',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\starlette\\websockets.py',
+   'PYMODULE'),
+  ('statistics',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\statistics.py',
+   'PYMODULE'),
+  ('string',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\string.py',
+   'PYMODULE'),
+  ('stringprep',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\stringprep.py',
+   'PYMODULE'),
+  ('subprocess',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\subprocess.py',
+   'PYMODULE'),
+  ('sysconfig',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\sysconfig.py',
+   'PYMODULE'),
+  ('tarfile',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tarfile.py',
+   'PYMODULE'),
+  ('tempfile',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tempfile.py',
+   'PYMODULE'),
+  ('textwrap',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\textwrap.py',
+   'PYMODULE'),
+  ('threading',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\threading.py',
+   'PYMODULE'),
+  ('token',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\token.py',
+   'PYMODULE'),
+  ('tokenize',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tokenize.py',
+   'PYMODULE'),
+  ('tomllib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tomllib\\__init__.py',
+   'PYMODULE'),
+  ('tomllib._parser',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tomllib\\_parser.py',
+   'PYMODULE'),
+  ('tomllib._re',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tomllib\\_re.py',
+   'PYMODULE'),
+  ('tomllib._types',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tomllib\\_types.py',
+   'PYMODULE'),
+  ('tracemalloc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tracemalloc.py',
+   'PYMODULE'),
+  ('tty',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\tty.py',
+   'PYMODULE'),
+  ('typing',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\typing.py',
+   'PYMODULE'),
+  ('typing_extensions',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\typing_extensions.py',
+   'PYMODULE'),
+  ('typing_inspection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\typing_inspection\\__init__.py',
+   'PYMODULE'),
+  ('typing_inspection.introspection',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\typing_inspection\\introspection.py',
+   'PYMODULE'),
+  ('typing_inspection.typing_objects',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\typing_inspection\\typing_objects.py',
+   'PYMODULE'),
+  ('tzdata',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Africa',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Africa\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.America',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\America\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.America.Argentina',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\America\\Argentina\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.America.Indiana',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\America\\Indiana\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.America.Kentucky',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\America\\Kentucky\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.America.North_Dakota',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\America\\North_Dakota\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Antarctica',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Antarctica\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Arctic',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Arctic\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Asia',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Asia\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Atlantic',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Atlantic\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Australia',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Australia\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Brazil',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Brazil\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Canada',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Canada\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Chile',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Chile\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Etc',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Etc\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Europe',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Europe\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Indian',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Indian\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Mexico',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Mexico\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.Pacific',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\Pacific\\__init__.py',
+   'PYMODULE'),
+  ('tzdata.zoneinfo.US',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzdata\\zoneinfo\\US\\__init__.py',
+   'PYMODULE'),
+  ('tzlocal',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzlocal\\__init__.py',
+   'PYMODULE'),
+  ('tzlocal.unix',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzlocal\\unix.py',
+   'PYMODULE'),
+  ('tzlocal.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzlocal\\utils.py',
+   'PYMODULE'),
+  ('tzlocal.win32',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzlocal\\win32.py',
+   'PYMODULE'),
+  ('tzlocal.windows_tz',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\tzlocal\\windows_tz.py',
+   'PYMODULE'),
+  ('unittest',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\__init__.py',
+   'PYMODULE'),
+  ('unittest._log',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\_log.py',
+   'PYMODULE'),
+  ('unittest.async_case',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\async_case.py',
+   'PYMODULE'),
+  ('unittest.case',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\case.py',
+   'PYMODULE'),
+  ('unittest.loader',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\loader.py',
+   'PYMODULE'),
+  ('unittest.main',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\main.py',
+   'PYMODULE'),
+  ('unittest.mock',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\mock.py',
+   'PYMODULE'),
+  ('unittest.result',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\result.py',
+   'PYMODULE'),
+  ('unittest.runner',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\runner.py',
+   'PYMODULE'),
+  ('unittest.signals',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\signals.py',
+   'PYMODULE'),
+  ('unittest.suite',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\suite.py',
+   'PYMODULE'),
+  ('unittest.util',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\util.py',
+   'PYMODULE'),
+  ('urllib',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\__init__.py',
+   'PYMODULE'),
+  ('urllib.error',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\error.py',
+   'PYMODULE'),
+  ('urllib.parse',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\parse.py',
+   'PYMODULE'),
+  ('urllib.request',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\request.py',
+   'PYMODULE'),
+  ('urllib.response',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\urllib\\response.py',
+   'PYMODULE'),
+  ('uuid',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\uuid.py',
+   'PYMODULE'),
+  ('uvicorn',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.__main__',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\__main__.py',
+   'PYMODULE'),
+  ('uvicorn._ansi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\_ansi.py',
+   'PYMODULE'),
+  ('uvicorn._compat',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\_compat.py',
+   'PYMODULE'),
+  ('uvicorn._subprocess',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\_subprocess.py',
+   'PYMODULE'),
+  ('uvicorn._types',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\_types.py',
+   'PYMODULE'),
+  ('uvicorn.config',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\config.py',
+   'PYMODULE'),
+  ('uvicorn.importer',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\importer.py',
+   'PYMODULE'),
+  ('uvicorn.lifespan',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\lifespan\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.lifespan.off',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\lifespan\\off.py',
+   'PYMODULE'),
+  ('uvicorn.lifespan.on',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\lifespan\\on.py',
+   'PYMODULE'),
+  ('uvicorn.logging',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\logging.py',
+   'PYMODULE'),
+  ('uvicorn.loops',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\loops\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.loops.asyncio',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\loops\\asyncio.py',
+   'PYMODULE'),
+  ('uvicorn.loops.auto',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\loops\\auto.py',
+   'PYMODULE'),
+  ('uvicorn.loops.uvloop',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\loops\\uvloop.py',
+   'PYMODULE'),
+  ('uvicorn.main',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\main.py',
+   'PYMODULE'),
+  ('uvicorn.middleware',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\middleware\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.middleware.asgi2',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\middleware\\asgi2.py',
+   'PYMODULE'),
+  ('uvicorn.middleware.message_logger',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\middleware\\message_logger.py',
+   'PYMODULE'),
+  ('uvicorn.middleware.proxy_headers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\middleware\\proxy_headers.py',
+   'PYMODULE'),
+  ('uvicorn.middleware.wsgi',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\middleware\\wsgi.py',
+   'PYMODULE'),
+  ('uvicorn.protocols',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.http',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.http.auto',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\auto.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.http.flow_control',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\flow_control.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.http.h11_impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\h11_impl.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.http.httptools_impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\httptools_impl.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.utils',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\utils.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.websockets',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.websockets.auto',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\auto.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.websockets.websockets_impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_impl.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.websockets.websockets_sansio_impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_sansio_impl.py',
+   'PYMODULE'),
+  ('uvicorn.protocols.websockets.wsproto_impl',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\wsproto_impl.py',
+   'PYMODULE'),
+  ('uvicorn.server',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\server.py',
+   'PYMODULE'),
+  ('uvicorn.supervisors',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\__init__.py',
+   'PYMODULE'),
+  ('uvicorn.supervisors.basereload',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\basereload.py',
+   'PYMODULE'),
+  ('uvicorn.supervisors.multiprocess',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\multiprocess.py',
+   'PYMODULE'),
+  ('uvicorn.supervisors.statreload',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\statreload.py',
+   'PYMODULE'),
+  ('uvicorn.supervisors.watchfilesreload',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\watchfilesreload.py',
+   'PYMODULE'),
+  ('uvicorn.workers',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\uvicorn\\workers.py',
+   'PYMODULE'),
+  ('webbrowser',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\webbrowser.py',
+   'PYMODULE'),
+  ('win32con',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\win32\\lib\\win32con.py',
+   'PYMODULE'),
+  ('win32evtlogutil',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\win32\\lib\\win32evtlogutil.py',
+   'PYMODULE'),
+  ('winerror',
+   'C:\\G.E.N.I.U.S\\Internship PREP\\Websites\\Management '
+   'projects\\GYM\\GymSyncAgent\\venv\\Lib\\site-packages\\win32\\lib\\winerror.py',
+   'PYMODULE'),
+  ('xml',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\__init__.py',
+   'PYMODULE'),
+  ('xml.parsers',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\parsers\\__init__.py',
+   'PYMODULE'),
+  ('xml.parsers.expat',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\parsers\\expat.py',
+   'PYMODULE'),
+  ('xml.sax',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\sax\\__init__.py',
+   'PYMODULE'),
+  ('xml.sax._exceptions',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\sax\\_exceptions.py',
+   'PYMODULE'),
+  ('xml.sax.expatreader',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\sax\\expatreader.py',
+   'PYMODULE'),
+  ('xml.sax.handler',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\sax\\handler.py',
+   'PYMODULE'),
+  ('xml.sax.saxutils',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\sax\\saxutils.py',
+   'PYMODULE'),
+  ('xml.sax.xmlreader',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xml\\sax\\xmlreader.py',
+   'PYMODULE'),
+  ('xmlrpc',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xmlrpc\\__init__.py',
+   'PYMODULE'),
+  ('xmlrpc.client',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\xmlrpc\\client.py',
+   'PYMODULE'),
+  ('zipfile',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zipfile\\__init__.py',
+   'PYMODULE'),
+  ('zipfile._path',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zipfile\\_path\\__init__.py',
+   'PYMODULE'),
+  ('zipfile._path.glob',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zipfile\\_path\\glob.py',
+   'PYMODULE'),
+  ('zipimport',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zipimport.py',
+   'PYMODULE'),
+  ('zoneinfo',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zoneinfo\\__init__.py',
+   'PYMODULE'),
+  ('zoneinfo._common',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zoneinfo\\_common.py',
+   'PYMODULE'),
+  ('zoneinfo._tzpath',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zoneinfo\\_tzpath.py',
+   'PYMODULE'),
+  ('zoneinfo._zoneinfo',
+   'C:\\Users\\Hp\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zoneinfo\\_zoneinfo.py',
+   'PYMODULE')])
