@@ -75,6 +75,7 @@ export const DashboardLayout: React.FC = () => {
     { name: 'SaaS Subscription', path: '/subscription', icon: Sparkles, roles: ['ADMIN'] },
     { name: 'My Portal', path: '/portal', icon: LayoutDashboard, roles: ['MEMBER'] },
     { name: 'My Profile', path: '/profile', icon: UserIcon, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
+    { name: 'GymBot AI', path: '/gymbot', icon: Sparkles, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
   ];
 
   const filteredNavigation = navigationItems.filter(

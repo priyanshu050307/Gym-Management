@@ -1,0 +1,82 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["hi", "hello", "hey", "hola", "greetings", "is anyone there", "hello bot", "good morning", "good afternoon"],
+      "responses": ["Hello! Welcome to GymOS Support Assistant. How can I help you today?", "Hi there! How can I assist you with your fitness portal today?", "Greetings! I am GymBot AI, your personal fitness system assistant. What are we looking for?"],
+      "suggestions": ["View Membership Plans", "Group Class Schedules", "Biometric Check-in Help"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["bye", "goodbye", "see you later", "exit", "quit", "talk to you later", "have a good day"],
+      "responses": ["Goodbye! Stay fit, stay active!", "See you later! Don't forget your next workout!", "Bye! Have an energetic day ahead!"],
+      "suggestions": ["Restart Chat"]
+    },
+    {
+      "tag": "membership_plans",
+      "patterns": ["membership plans", "what plans do you have", "plans pricing", "pricing", "packages", "cost", "subscription price", "rates", "monthly fee", "yearly fee"],
+      "responses": ["We offer multiple flexible packages tailored to your schedule:\n\n* **Starter Plan**: ₹500/month (Basic access)\n* **Student Discount Pack**: ₹1,000/month (Requires Student ID)\n* **Pilates Core Focus**: ₹2,000/month (Specialist Pilates)\n* **Corporate Elite Pass**: ₹10,000/year (12 Months Elite access)\n\nYou can renew or upgrade your package directly from your member billing dashboard."],
+      "suggestions": ["1 Day Trial", "Renew Membership", "Billing & Invoices"]
+    },
+    {
+      "tag": "trial_period",
+      "patterns": ["trial", "free trial", "1 day trial", "one day trial", "do you have trial", "test period", "try for free", "trial pack"],
+      "responses": ["Yes! We support a **1 Day Trial** package for only ₹0! You can choose this plan during member registration or renewal to experience our state-of-the-art facilities before selecting a recurring billing interval."],
+      "suggestions": ["View Membership Plans", "Register a Member"]
+    },
+    {
+      "tag": "trainer_info",
+      "patterns": ["trainers", "personal trainer", "coaches", "specialty", "trainer schedule", "find a coach", "workout trainer", "who is the trainer"],
+      "responses": ["Our branches host certified fitness coaches specializing in Strength & Conditioning, Powerlifting, HIIT, and Yoga. Members can be assigned a personal trainer to design custom workout and diet plans in their portal profile."],
+      "suggestions": ["Group Class Schedules", "My Workout Plan"]
+    },
+    {
+      "tag": "class_schedule",
+      "patterns": ["group classes", "class schedule", "yoga class", "hiit class", "booking a class", "group training", "aerobics", "what classes are today", "calendar"],
+      "responses": ["We run group classes daily including Yoga, HIIT, and Power Weightlifting. You can view timings, trainer assignments, and book slot capacities in real-time under the **Classes & Bookings** panel."],
+      "suggestions": ["View Classes Bookings", "My Assigned Trainer"]
+    },
+    {
+      "tag": "branch_info",
+      "patterns": ["branches", "where is the gym", "locations", "gym branches", "active branch", "central headquarter", "address"],
+      "responses": ["GymOS supports multi-branch scaling! Admins can create and isolate branches. Currently, our main Central Headquarter Branch is located at Central Plaza, Suite 402, and operates from 6:00 AM to 10:00 PM."],
+      "suggestions": ["Opening Hours", "Manage Branches"]
+    },
+    {
+      "tag": "biometric_sync",
+      "patterns": ["biometric sync", "fingerprint", "checkin agent", "gymsyncagent", "how checkin works", "rfid", "device log", "attendance sync"],
+      "responses": ["Check-ins are automated via the **GymSyncAgent** desktop client. It interfaces with biometric hardware (ZKTeco/eSSL logs) and syncs logs locally and to the cloud. If offline, logs are safely cached in SQLite and retried upon reconnection."],
+      "suggestions": ["Biometric Agent Guide", "Check-In Kiosk"]
+    },
+    {
+      "tag": "profile_help",
+      "patterns": ["change password", "update profile", "profile photo", "upload picture", "avatar", "change phone number", "edit name"],
+      "responses": ["You can manage your identity in your **My Profile** tab. Here, you can edit your name, contact phone, update passwords, and upload custom profile pictures or select preset avatars."],
+      "suggestions": ["Go to My Profile", "View Membership Details"]
+    },
+    {
+      "tag": "billing_payments",
+      "patterns": ["how to pay", "razorpay", "cash payment", "billing receipts", "invoices", "refunds", "payment method", "tax invoice"],
+      "responses": ["We support secure payments via **Razorpay** (online UPI, Cards, NetBanking) and cash. All billing ledger records are logged, and invoices are generated with GST information for reconciliation."],
+      "suggestions": ["Membership Details", "View Invoices"]
+    },
+    {
+      "tag": "gym_rules",
+      "patterns": ["opening hours", "gym timing", "what time does the gym open", "rules", "guidelines", "dress code", "towels", "hours"],
+      "responses": ["Our facilities are open daily from **6:00 AM to 10:00 PM**. Please ensure you bring indoor athletic shoes, a sweat towel, and follow equipment sanitation guidelines after completing your sets."],
+      "suggestions": ["Gym Locations", "Group Class Schedules"]
+    },
+    {
+      "tag": "active_members",
+      "patterns": ["member count", "active members", "how many members", "members list", "enrolled members", "gym occupancy"],
+      "responses": ["For Admins, you can view the complete member registry, their active registration statuses, emergency contacts, and active plans under the **Members** section. The dashboard also aggregates real-time monthly check-ins and signups."],
+      "suggestions": ["Go to Dashboard", "View Members List"]
+    },
+    {
+      "tag": "help",
+      "patterns": ["help", "support", "what can you do", "bot functions", "commands", "menu"],
+      "responses": ["I can help you navigate GymOS! Ask me about:\n\n1. **Membership Plans & Rates**\n2. **Group Class Schedules & Bookings**\n3. **Updating Profile details & pictures**\n4. **Biometric agent check-ins**\n5. **Branch locations and timing**"],
+      "suggestions": ["View Membership Plans", "Group Class Schedules", "Opening Hours"]
+    }
+  ]
+}

@@ -23,6 +23,7 @@ const Supplements = lazy(() => import('./pages/Supplements.js').then(m => ({ def
 const SaaSBilling = lazy(() => import('./pages/SaaSBilling.js').then(m => ({ default: m.SaaSBilling })));
 const RegisterOwner = lazy(() => import('./pages/RegisterOwner.js').then(m => ({ default: m.RegisterOwner })));
 const Profile = lazy(() => import('./pages/Profile.js').then(m => ({ default: m.Profile })));
+const GymBot = lazy(() => import('./pages/GymBot.js').then(m => ({ default: m.GymBot })));
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
               <Route path="supplements" element={<Supplements />} />
               <Route path="subscription" element={<SaaSBilling />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="gymbot" element={<GymBot />} />
 
               {/* Member Self-Service Portal Route */}
               <Route path="portal" element={<MemberPortal />} />
