@@ -79,3 +79,65 @@ export const getTrainerFeedback = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const getBranchFeedbacks = async (req: any, res: Response) => {
+  try {
+    const reqUser = req.user;
+    if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
+
+    let branchFilter: any;
+    if (reqUser.role === 'ADMIN') {
+      if (reqUser.branchId) {
+        branchFilter = reqUser.branchId;
+      } else {
+        const branches = await prisma.branch.findMany({
+          where: { ownerId: reqUser.id },
+          select: { id: true }
+        });
+        branchFilter = { in: branches.map(b => b.id) };
+      }
+    } else {
+      branchFilter = reqUser.branchId;
+    }
+
+    if (!branchFilter) {
+      return res.status(200).json({ feedbacks: [] });
+    }
+
+    const feedbacks = await prisma.trainerFeedback.findMany({
+      where: {
+        trainer: {
+          user: {
+            branchId: branchFilter
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      include: {
+        member: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              }
+            }
+          }
+        },
+        trainer: {
+          select: {
+            firstName: true,
+            lastName: true,
+            specialty: true,
+          }
+        }
+      }
+    });
+
+    return res.status(200).json({ feedbacks });
+  } catch (error: any) {
+    console.error('Get branch feedbacks error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};

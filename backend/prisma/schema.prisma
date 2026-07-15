@@ -50,6 +50,7 @@ model User {
   googleId     String?  @unique
   firstName    String
   lastName     String
+  profilePhoto String?
   role         UserRole @default(MEMBER)
   branchId     String?
   branch       Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
@@ -73,6 +74,7 @@ model Member {
   profilePhoto     String?
   frozenStartDate  DateTime?
   frozenEndDate    DateTime?
+  expiryDate       DateTime?
   subscriptions    Subscription[]
   checkIns         CheckIn[]
   bookings         ClassBooking[]

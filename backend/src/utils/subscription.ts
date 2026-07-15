@@ -45,10 +45,13 @@ export const activateSubscriptionAfterPayment = async (tx: any, payment: any) =>
     },
   });
 
-  // 4. Update the member status to ACTIVE
+  // 4. Update the member status to ACTIVE and set expiryDate
   await tx.member.update({
     where: { id: memberId },
-    data: { status: MemberStatus.ACTIVE },
+    data: { 
+      status: MemberStatus.ACTIVE,
+      expiryDate: endDate,
+    },
   });
 
   return updatedSubscription;

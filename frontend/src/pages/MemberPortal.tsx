@@ -517,6 +517,12 @@ export const MemberPortal: React.FC = () => {
   ) || user?.member?.subscriptions?.find((sub: any) => sub.status === 'ACTIVE') || user?.member?.subscriptions?.[0];
   const activePlan = activeSubscription?.status === 'ACTIVE' ? activeSubscription?.plan : null;
   const payments = activeSubscription?.payments || [];
+  const paidPayments = payments.filter((p: any) => p.status === 'PAID');
+  const lastPayment = paidPayments.length > 0
+    ? paidPayments.reduce((prev: any, current: any) => 
+        new Date(prev.paymentDate).getTime() > new Date(current.paymentDate).getTime() ? prev : current
+      )
+    : null;
 
   const getRemainingDays = () => {
     if (!activeSubscription || !activeSubscription.endDate) return null;
@@ -878,7 +884,7 @@ export const MemberPortal: React.FC = () => {
                     <div className="space-y-3.5 pt-2">
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-gym-muted">Active Plan:</span>
-                        <span className="font-extrabold text-gym-text">{activePlan.name}</span>
+                        <span className="font-extrabold text-gym-text">{activePlan?.name || 'No Active Plan'}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-gym-muted">Expiry Date:</span>
@@ -887,9 +893,33 @@ export const MemberPortal: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Due Status:</span>
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                          daysRemaining === null ? 'bg-slate-800 text-slate-400' :
+                          daysRemaining < 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                          daysRemaining <= 5 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                          'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        }`}>
+                          {daysRemaining === null ? 'No Plan' :
+                           daysRemaining < 0 ? 'Expired' :
+                           daysRemaining <= 5 ? 'Due Soon' : 'Active'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gym-muted">Days Left:</span>
+                        <span className={`font-bold ${
+                          daysRemaining === null ? 'text-gym-text' :
+                          daysRemaining < 0 ? 'text-red-400' :
+                          daysRemaining <= 5 ? 'text-amber-400' : 'text-emerald-400'
+                        }`}>
+                          {daysRemaining === null ? 'N/A' :
+                           daysRemaining < 0 ? 'Expired' : `${daysRemaining} Days`}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
                         <span className="text-gym-muted">Billing Cycle:</span>
                         <span className="font-medium text-gym-text">
-                          {activePlan.durationMonths === 0 ? '1 Day Trial' : `${activePlan.durationMonths} Month(s)`}
+                          {activePlan?.durationMonths === 0 ? '1 Day Trial' : activePlan ? `${activePlan.durationMonths} Month(s)` : 'N/A'}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
@@ -906,6 +936,30 @@ export const MemberPortal: React.FC = () => {
                         <span className="text-gym-muted">Emergency Contact:</span>
                         <span className="font-medium text-gym-text">{user?.member?.emergencyContact || 'Not Set'}</span>
                       </div>
+
+                      {lastPayment && (
+                        <div className="mt-4 pt-4 border-t border-slate-800 space-y-2.5">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gym-secondary">Last Payment Reconciliation</span>
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="text-gym-muted">Paid Amount:</span>
+                            <span className="font-semibold text-gym-text">₹{lastPayment.amount}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="text-gym-muted">Method:</span>
+                            <span className="font-semibold text-gym-text uppercase">{lastPayment.method}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="text-gym-muted">Date:</span>
+                            <span className="font-semibold text-gym-text">{new Date(lastPayment.paymentDate).toLocaleDateString()}</span>
+                          </div>
+                          <div className="flex flex-col text-xs space-y-0.5 pt-0.5">
+                            <span className="text-gym-muted">Coverage Period:</span>
+                            <span className="font-semibold text-gym-text bg-slate-950/40 p-1.5 rounded border border-slate-800 text-[11px] font-mono text-center">
+                              {new Date(activeSubscription.startDate).toLocaleDateString()} - {new Date(activeSubscription.endDate).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 

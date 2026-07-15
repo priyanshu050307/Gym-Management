@@ -9,6 +9,9 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   role: UserRole;
+  profilePhoto?: string | null;
+  phoneNumber?: string | null;
+  createdAt?: string | null;
   branchId?: string | null;
   branch?: {
     id: string;

@@ -74,6 +74,7 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Branches', path: '/branches', icon: MapPin, roles: ['ADMIN'] },
     { name: 'SaaS Subscription', path: '/subscription', icon: Sparkles, roles: ['ADMIN'] },
     { name: 'My Portal', path: '/portal', icon: LayoutDashboard, roles: ['MEMBER'] },
+    { name: 'My Profile', path: '/profile', icon: UserIcon, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
   ];
 
   const filteredNavigation = navigationItems.filter(
@@ -155,8 +156,12 @@ export const DashboardLayout: React.FC = () => {
 
         <div className="p-4 border-t border-slate-100 space-y-4">
           <div className="flex items-center gap-3 px-4 py-2">
-            <div className="h-9 w-9 rounded-full bg-gym-primary/20 flex items-center justify-center border border-gym-primary/30">
-              <UserIcon className="h-5 w-5 text-gym-primary" />
+            <div className="h-9 w-9 rounded-full bg-gym-primary/20 flex items-center justify-center border border-gym-primary/30 overflow-hidden">
+              {user?.profilePhoto ? (
+                <img src={user.profilePhoto} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <UserIcon className="h-5 w-5 text-gym-primary" />
+              )}
             </div>
             <div className="overflow-hidden">
               <p className="text-sm font-semibold truncate">{user?.firstName} {user?.lastName}</p>
@@ -235,8 +240,12 @@ export const DashboardLayout: React.FC = () => {
             </nav>
             <div className="p-6 border-t border-slate-100 space-y-4">
               <div className="flex items-center gap-3 px-4">
-                <div className="h-10 w-10 rounded-full bg-gym-primary/20 flex items-center justify-center border border-gym-primary/30">
-                  <UserIcon className="h-6 w-6 text-gym-primary" />
+                <div className="h-10 w-10 rounded-full bg-gym-primary/20 flex items-center justify-center border border-gym-primary/30 overflow-hidden">
+                  {user?.profilePhoto ? (
+                    <img src={user.profilePhoto} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <UserIcon className="h-6 w-6 text-gym-primary" />
+                  )}
                 </div>
                 <div>
                   <p className="font-semibold">{user?.firstName} {user?.lastName}</p>

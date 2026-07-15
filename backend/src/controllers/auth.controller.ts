@@ -168,6 +168,8 @@ export const getProfile = async (req: any, res: Response) => {
         firstName: true,
         lastName: true,
         role: true,
+        profilePhoto: true,
+        phoneNumber: true,
         branchId: true,
         branch: true,
         createdAt: true,
@@ -202,6 +204,36 @@ export const getProfile = async (req: any, res: Response) => {
     return res.status(200).json({ user });
   } catch (error: any) {
     console.error('Profile fetch error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateProfile = async (req: any, res: Response) => {
+  try {
+    const { firstName, lastName, email, profilePhoto, phoneNumber } = req.body;
+    const userId = req.user.id;
+
+    if (email) {
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      if (existingUser && existingUser.id !== userId) {
+        return res.status(400).json({ error: 'Email is already in use by another account' });
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        firstName: firstName !== undefined ? firstName : undefined,
+        lastName: lastName !== undefined ? lastName : undefined,
+        email: email !== undefined ? email : undefined,
+        profilePhoto: profilePhoto !== undefined ? profilePhoto : undefined,
+        phoneNumber: phoneNumber !== undefined ? phoneNumber : undefined,
+      },
+    });
+
+    return res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
+  } catch (error: any) {
+    console.error('Profile update error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

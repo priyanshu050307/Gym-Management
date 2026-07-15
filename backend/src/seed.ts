@@ -221,6 +221,10 @@ async function main() {
         status: 'ACTIVE',
       },
     });
+    await prisma.member.update({
+      where: { id: member.id },
+      data: { expiryDate: endDate },
+    });
     subscriptions.push(sub);
   }
 
