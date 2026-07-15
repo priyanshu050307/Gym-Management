@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { apiFetch } from '../utils/api.js';
+import { GymBotWidget } from '../components/GymBotWidget.js';
 import { 
   Dumbbell, 
   Shield, 
@@ -622,6 +623,7 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </footer>
+      <GymBotWidget />
     </div>
   );
 };

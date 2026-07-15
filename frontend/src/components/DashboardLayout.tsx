@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
+import { GymBotWidget } from './GymBotWidget.js';
 import { NotificationPopup } from './NotificationPopup.js';
 import { apiFetch } from '../utils/api.js';
 import { useSocket } from '../hooks/useSocket.js';
@@ -397,6 +398,7 @@ export const DashboardLayout: React.FC = () => {
           </div>
         ))}
       </div>
+      <GymBotWidget />
     </div>
   );
 };

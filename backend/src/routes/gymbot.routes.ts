@@ -25,13 +25,13 @@ const getOrCreateSession = (sessionId: string): ChatSessionContext => {
 // POST /api/gymbot/message
 router.post('/message', (req: Request, res: Response) => {
   try {
-    const { message, sessionId } = req.body;
+    const { message, sessionId, role } = req.body;
     if (!message || !sessionId) {
       return res.status(400).json({ error: 'Message and sessionId are required.' });
     }
 
     const session = getOrCreateSession(sessionId);
-    const response = botEngine.handleMessage(message, session);
+    const response = botEngine.handleMessage(message, session, role);
     
     return res.status(200).json(response);
   } catch (error: any) {

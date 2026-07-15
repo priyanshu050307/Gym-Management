@@ -337,7 +337,7 @@ export class ChatbotEngine {
   }
 
   // Handle incoming message query
-  public handleMessage(message: string, context: ChatSessionContext) {
+  public handleMessage(message: string, context: ChatSessionContext, role?: string) {
     const stemmed = tokenizeAndStem(message);
     const entities = extractEntities(message);
 
@@ -375,22 +375,43 @@ export class ChatbotEngine {
       }
     }
 
+    // Role-based restrictions
+    let isRestricted = false;
+    let restrictionMessage = '';
+
+    if (prediction.tag === 'active_members' && role !== 'ADMIN' && role !== 'STAFF') {
+      isRestricted = true;
+      restrictionMessage = "I'm sorry, details regarding active members and occupied facilities are restricted to Administrator and Staff roles. If you are an Admin, please log in with your credentials to access this registry.";
+    } else if (prediction.tag === 'biometric_sync' && role !== 'ADMIN' && role !== 'STAFF') {
+      isRestricted = true;
+      restrictionMessage = "Biometric check-in configurations and local check-in agents are administrative tools. Members or external visitors do not have access to these settings.";
+    }
+
     // 3. Retrieve response template
-    const intent = this.intents.find(i => i.tag === prediction.tag) || this.intents[this.intents.length - 1];
-    let responseText = intent.responses[Math.floor(Math.random() * intent.responses.length)];
+    let responseText = '';
+    if (isRestricted) {
+      responseText = restrictionMessage;
+      prediction.tag = 'restricted_access';
+      prediction.confidence = 1.0;
+      method = 'Role-Based Access Control (RBAC)';
+    } else {
+      const intent = this.intents.find(i => i.tag === prediction.tag) || this.intents[this.intents.length - 1];
+      responseText = intent.responses[Math.floor(Math.random() * intent.responses.length)];
+    }
 
     // Dynamic response augmentation
-    if (entities.amount !== null) {
+    if (!isRestricted && entities.amount !== null) {
       responseText = `I notice you mentioned ₹${entities.amount.toLocaleString()}. ` + responseText;
-    } else if (context.lastMentionedAmount) {
+    } else if (!isRestricted && context.lastMentionedAmount) {
       responseText = responseText + ` *(Applying your previously mentioned budget: ₹${context.lastMentionedAmount.toLocaleString()})*`;
     }
 
-    if (entities.plan !== null) {
+    if (!isRestricted && entities.plan !== null) {
       responseText = `Checking availability for the **${entities.plan}** tier. ` + responseText;
     }
 
-    const suggestions = intent.suggestions || ["View Membership Plans", "Group Class Schedules"];
+    const intentForSuggestions = this.intents.find(i => i.tag === (isRestricted ? 'help' : prediction.tag)) || this.intents[this.intents.length - 1];
+    const suggestions = intentForSuggestions.suggestions || ["View Membership Plans", "Group Class Schedules"];
 
     // Return message metadata
     const botResponse = {
