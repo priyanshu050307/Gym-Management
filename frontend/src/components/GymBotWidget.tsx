@@ -179,7 +179,7 @@ export const GymBotWidget: React.FC = () => {
 
       {/* Sliding Chat Dialog Popup */}
       {isOpen && (
-        <div className="absolute bottom-18 right-0 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] bg-white/95 backdrop-blur border border-slate-200 shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-fade-in">
+        <div className="absolute bottom-20 right-0 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] bg-white/95 backdrop-blur border border-slate-200 shadow-2xl rounded-2xl flex flex-col overflow-hidden animate-fade-in">
           
           {/* Header */}
           <div className="px-4 py-3 bg-gradient-to-r from-gym-primary to-gym-secondary text-white flex justify-between items-center shrink-0">

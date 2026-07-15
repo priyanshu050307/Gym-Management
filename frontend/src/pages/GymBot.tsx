@@ -197,7 +197,7 @@ export const GymBot: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         
         {/* Chat Area Panel */}
-        <div className={`lg:col-span-${showMetadataPanel ? '3' : '4'} flex flex-col glass-card rounded-2xl border border-slate-100 h-[650px] relative overflow-hidden bg-white/70`}>
+        <div className={`flex flex-col glass-card rounded-2xl border border-slate-100 h-[650px] relative overflow-hidden bg-white/70 ${showMetadataPanel ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
           
           {/* Chat bubbles list */}
           <div className="flex-1 p-6 overflow-y-auto space-y-4">
@@ -299,7 +299,7 @@ export const GymBot: React.FC = () => {
 
         {/* Explainability metadata panel */}
         {showMetadataPanel && (
-          <div className="glass-card rounded-2xl border border-slate-100 p-6 space-y-6 flex flex-col justify-between bg-white/70">
+          <div className="lg:col-span-1 glass-card rounded-2xl border border-slate-100 p-6 space-y-6 flex flex-col justify-between bg-white/70">
             <div className="space-y-5">
               <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                 <Brain className="h-5 w-5 text-gym-primary animate-pulse" />
