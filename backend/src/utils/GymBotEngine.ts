@@ -5,13 +5,30 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const STOP_WORDS = new Set([
+  'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', 'as', 'at',
+  'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
+  'can', 'did', 'do', 'does', 'doing', 'down', 'during',
+  'each', 'few', 'for', 'from', 'further',
+  'had', 'has', 'have', 'having', 'he', 'her', 'here', 'hers', 'herself', 'him', 'himself', 'his', 'how',
+  'i', 'if', 'in', 'into', 'is', 'it', 'its', 'itself',
+  'me', 'more', 'most', 'my', 'myself',
+  'no', 'nor', 'not', 'of', 'off', 'on', 'once', 'only', 'or', 'other', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
+  'same', 'she', 'should', 'so', 'some', 'such',
+  'than', 'that', 'the', 'their', 'theirs', 'them', 'themselves', 'then', 'there', 'these', 'they', 'this', 'those', 'through', 'to', 'too', 'under', 'until', 'up', 'very',
+  'was', 'we', 'were', 'what', 'when', 'where', 'which', 'while', 'who', 'whom', 'why', 'with',
+  'you', 'your', 'yours', 'yourself', 'yourselves',
+  // generic query words
+  'tell', 'one', 'want', 'please', 'give', 'show', 'get', 'need', 'ask'
+]);
+
 // Simple tokenization and stemming helper
 export const tokenizeAndStem = (text: string): string[] => {
   return text
     .toLowerCase()
     .replace(/[^\w\s]/g, ' ') // replace punctuation with space
     .split(/\s+/)
-    .filter(word => word.length > 0)
+    .filter(word => word.length > 0 && !STOP_WORDS.has(word))
     .map(word => {
       // Basic stemming rules to reduce words to base form
       if (word.endsWith('s') && !word.endsWith('ss')) word = word.slice(0, -1);

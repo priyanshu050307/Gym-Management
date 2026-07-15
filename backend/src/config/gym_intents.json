@@ -19,6 +19,18 @@
       "suggestions": ["1 Day Trial", "Renew Membership", "Billing & Invoices"]
     },
     {
+      "tag": "costliest_plan",
+      "patterns": ["costliest", "most expensive", "highest price", "maximum cost", "expensive plan", "premium pricing", "costly one", "highest plan"],
+      "responses": ["Our premium and costliest package is the **Corporate Elite Pass** priced at **₹10,000/year** (or ₹34,990/year for multi-branch Professional access). It grants complete access to state-of-the-art facilities, trainer schedules, and supplement POS discounts."],
+      "suggestions": ["Starter Plan Price", "Group Class Schedules"]
+    },
+    {
+      "tag": "cheapest_plan",
+      "patterns": ["cheapest", "most basic", "lowest price", "minimum cost", "cheap plan", "starter pricing", "low cost", "cheapest plan", "least expensive"],
+      "responses": ["Our most affordable package is the **Starter Plan** at only **₹500/month**. We also offer a **1 Day Trial** for **₹0** if you want to try our facilities first!"],
+      "suggestions": ["1 Day Trial", "Corporate Elite Pass"]
+    },
+    {
       "tag": "trial_period",
       "patterns": ["trial", "free trial", "1 day trial", "one day trial", "do you have trial", "test period", "try for free", "trial pack"],
       "responses": ["Yes! We support a **1 Day Trial** package for only ₹0! You can choose this plan during member registration or renewal to experience our state-of-the-art facilities before selecting a recurring billing interval."],
