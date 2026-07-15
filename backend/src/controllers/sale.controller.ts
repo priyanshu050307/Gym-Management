@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/prisma.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 
 export const recordSupplementSale = async (req: Request, res: Response) => {
   try {
@@ -116,7 +117,7 @@ export const getSupplementSales = async (req: Request, res: Response) => {
     } else {
       // Find all branches owned by this admin
       const ownedBranches = await prisma.branch.findMany({
-        where: reqUser.email === 'admin@gym.com' ? {
+        where: isSuperAdmin(reqUser) ? {
           OR: [{ ownerId: reqUser.id }, { ownerId: null }]
         } : { ownerId: reqUser.id },
         select: { id: true }

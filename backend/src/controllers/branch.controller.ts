@@ -5,6 +5,7 @@ import prisma from '../config/prisma.js';
 import { AuthRequest } from '../middleware/auth.js';
 import logger from '../config/logger.js';
 import { cacheGet, cacheSet, cacheDel, CacheKeys } from '../config/cache.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 
 export const createBranch = async (req: AuthRequest, res: Response) => {
   try {
@@ -77,7 +78,7 @@ export const getAllBranches = async (req: AuthRequest, res: Response) => {
 
     let filter: any = {};
     if (req.user?.role === 'ADMIN') {
-      if (req.user.email === 'admin@gym.com') {
+      if (isSuperAdmin(req.user)) {
         filter = {
           OR: [
             { ownerId: req.user.id },
@@ -117,7 +118,7 @@ export const getBranchById = async (req: AuthRequest, res: Response) => {
 
     // Access control
     if (req.user?.role === 'ADMIN') {
-      if (req.user.email !== 'admin@gym.com' && branch.ownerId !== req.user.id) {
+      if (!isSuperAdmin(req.user) && branch.ownerId !== req.user.id) {
         return res.status(403).json({ error: 'Access Denied: You do not own this branch.' });
       }
     } else {
@@ -143,7 +144,7 @@ export const updateBranch = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Branch not found' });
     }
 
-    if (req.user?.role === 'ADMIN' && req.user.email !== 'admin@gym.com' && existingBranch.ownerId !== req.user.id) {
+    if (req.user?.role === 'ADMIN' && !isSuperAdmin(req.user) && existingBranch.ownerId !== req.user.id) {
       return res.status(403).json({ error: 'Access Denied: You do not own this branch.' });
     }
 
@@ -172,7 +173,7 @@ export const deleteBranch = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Branch not found' });
     }
 
-    if (req.user?.role === 'ADMIN' && req.user.email !== 'admin@gym.com' && existingBranch.ownerId !== req.user.id) {
+    if (req.user?.role === 'ADMIN' && !isSuperAdmin(req.user) && existingBranch.ownerId !== req.user.id) {
       return res.status(403).json({ error: 'Access Denied: You do not own this branch.' });
     }
 

@@ -28,6 +28,9 @@ import { cacheGet, cacheSet } from './config/cache.js';
 
 dotenv.config();
 
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  throw new Error("FATAL: JWT_SECRET environment variable is required in production mode.");
+}
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key-replace-this-in-production';
 
 // Initialize CRON scheduler

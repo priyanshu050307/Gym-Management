@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth.js';
 import prisma from '../config/prisma.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 import bcrypt from 'bcryptjs';
 import { UserRole } from '@prisma/client';
 
@@ -18,8 +19,8 @@ const checkTrainerAccess = async (reqUser: any, trainerId: string) => {
     return { errorStatus: 404, error: 'Trainer not found', trainer: null };
   }
 
-  // 1. Global Admin admin@gym.com bypasses all checks
-  if (reqUser.email === 'admin@gym.com') {
+  // 1. Global Admin isSuperAdmin bypasses all checks
+  if (isSuperAdmin(reqUser)) {
     return { trainer };
   }
 
@@ -112,8 +113,8 @@ export const getTrainers = async (req: AuthRequest, res: Response) => {
       };
     } else {
       const ownedBranches = await prisma.branch.findMany({
-        where: req.user?.email === 'admin@gym.com' ? {
-          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        where: isSuperAdmin(req.user) ? {
+          OR: [{ ownerId: req.user?.id || '' }, { ownerId: null }]
         } : { ownerId: req.user?.id || '' },
         select: { id: true }
       });

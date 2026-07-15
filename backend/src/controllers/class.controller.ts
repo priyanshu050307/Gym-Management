@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth.js';
 import prisma from '../config/prisma.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 
 export const createClass = async (req: Request, res: Response) => {
   try {
@@ -74,8 +75,8 @@ export const getClasses = async (req: AuthRequest, res: Response) => {
     } else {
       // Find all branches owned by this admin
       const ownedBranches = await prisma.branch.findMany({
-        where: req.user?.email === 'admin@gym.com' ? {
-          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        where: isSuperAdmin(req.user) ? {
+          OR: [{ ownerId: req.user?.id || '' }, { ownerId: null }]
         } : { ownerId: req.user?.id || '' },
         select: { id: true }
       });

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -118,13 +119,38 @@ export class ChatbotEngine {
       const data = fs.readFileSync(filePath, 'utf8');
       const parsed = JSON.parse(data);
       this.intents = parsed.intents;
-      this.trainEngine();
+
+      // Check if we have pre-trained cached weights
+      const weightsPath = path.resolve(__dirname, '../config/gym_bot_weights.json');
+      const currentHash = crypto.createHash('md5').update(data).digest('hex');
+
+      if (fs.existsSync(weightsPath)) {
+        try {
+          const cachedData = JSON.parse(fs.readFileSync(weightsPath, 'utf8'));
+          if (cachedData.intentsHash === currentHash && Array.isArray(cachedData.vocabulary)) {
+            this.vocabulary = cachedData.vocabulary;
+            this.idf = cachedData.idf;
+            this.tags = cachedData.tags;
+            this.w1 = cachedData.w1;
+            this.b1 = cachedData.b1;
+            this.w2 = cachedData.w2;
+            this.b2 = cachedData.b2;
+            this.isTrained = true;
+            console.log(`[Chatbot] GymBot NLP successfully loaded from cache (${this.vocabulary.length} words, ${this.tags.length} tags).`);
+            return;
+          }
+        } catch (e) {
+          console.warn('[Chatbot] Failed to load cached weights, retraining...', e);
+        }
+      }
+
+      this.trainEngine(currentHash);
     } catch (err) {
       console.error('Failed to load chatbot intents:', err);
     }
   }
 
-  private trainEngine() {
+  private trainEngine(intentsHash: string) {
     console.log('[Chatbot] Starting GymBot NLP compilation...');
 
     // 1. Build Vocabulary & Tags
@@ -255,6 +281,25 @@ export class ChatbotEngine {
 
     this.isTrained = true;
     console.log(`[Chatbot] GymBot NLP successfully compiled. Vocabulary Size: ${this.vocabulary.length}. Classes: ${this.tags.length}.`);
+
+    // Save weights cache
+    try {
+      const weightsPath = path.resolve(__dirname, '../config/gym_bot_weights.json');
+      const cachePayload = {
+        intentsHash,
+        vocabulary: this.vocabulary,
+        idf: this.idf,
+        tags: this.tags,
+        w1: this.w1,
+        b1: this.b1,
+        w2: this.w2,
+        b2: this.b2
+      };
+      fs.writeFileSync(weightsPath, JSON.stringify(cachePayload), 'utf8');
+      console.log('[Chatbot] Saved trained weights to cache.');
+    } catch (err) {
+      console.error('[Chatbot] Failed to save trained weights cache:', err);
+    }
   }
 
   // Convert tokenized words into standard TF-IDF input vector

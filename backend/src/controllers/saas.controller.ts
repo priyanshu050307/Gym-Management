@@ -19,7 +19,7 @@ const getOwnerIdForUser = async (user: any) => {
   }
   // Fallback to the seeded admin user
   const defaultAdmin = await prisma.user.findFirst({
-    where: { email: 'admin@gym.com' },
+    where: { email: process.env.SUPER_ADMIN_EMAIL || 'admin@gym.com' },
     select: { id: true }
   });
   return defaultAdmin?.id || user.id;

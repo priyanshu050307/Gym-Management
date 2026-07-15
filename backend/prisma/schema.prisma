@@ -85,6 +85,8 @@ model Member {
   trainerId        String?
   trainer          Trainer?       @relation("PersonalTrainer", fields: [trainerId], references: [id], onDelete: SetNull)
   supplementSales  SupplementSale[]
+
+  @@index([expiryDate])
 }
 
 model MembershipPlan {

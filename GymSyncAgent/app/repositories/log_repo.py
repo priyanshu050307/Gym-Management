@@ -21,12 +21,15 @@ class AttendanceQueueRepository(BaseRepository[AttendanceQueue]):
         )
         
     def check_duplicate(self, member_id: str, timestamp: datetime.datetime) -> bool:
-        """Verify if a log with the same user and timestamp exists."""
+        """Verify if a log with the same user exists within a 3-minute debounce window."""
+        start_window = timestamp - datetime.timedelta(minutes=3)
+        end_window = timestamp + datetime.timedelta(minutes=3)
         exists = (
             self.db.query(self.model)
             .filter(
                 self.model.member_id == member_id,
-                self.model.timestamp == timestamp
+                self.model.timestamp >= start_window,
+                self.model.timestamp <= end_window
             )
             .first()
         )

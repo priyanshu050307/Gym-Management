@@ -2,6 +2,7 @@ import { Response } from 'express';
 import prisma from '../config/prisma.js';
 import { AuthRequest } from '../middleware/auth.js';
 import { cacheGet, cacheSet, cacheDel, CacheKeys } from '../config/cache.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 
 export const createPlan = async (req: AuthRequest, res: Response) => {
   try {
@@ -38,7 +39,7 @@ export const getPlans = async (req: AuthRequest, res: Response) => {
     if (req.user) {
       if (req.user.role === 'ADMIN') {
         ownerId = req.user.id;
-        if (req.user.email === 'admin@gym.com') {
+        if (isSuperAdmin(req.user)) {
           filter.OR = [
             { ownerId: req.user.id },
             { ownerId: null }
@@ -95,7 +96,7 @@ export const getPlanById = async (req: AuthRequest, res: Response) => {
 
     // Access control
     if (req.user && req.user.role === 'ADMIN') {
-      if (req.user.email !== 'admin@gym.com' && plan.ownerId !== req.user.id) {
+      if (!isSuperAdmin(req.user) && plan.ownerId !== req.user.id) {
         return res.status(403).json({ error: 'Access Denied: You do not own this plan.' });
       }
     }
@@ -117,7 +118,7 @@ export const updatePlan = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Plan not found' });
     }
 
-    if (req.user && req.user.role === 'ADMIN' && req.user.email !== 'admin@gym.com' && existingPlan.ownerId !== req.user.id) {
+    if (req.user && req.user.role === 'ADMIN' && !isSuperAdmin(req.user) && existingPlan.ownerId !== req.user.id) {
       return res.status(403).json({ error: 'Access Denied: You do not own this plan.' });
     }
 
@@ -151,7 +152,7 @@ export const deletePlan = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: 'Plan not found' });
     }
 
-    if (req.user && req.user.role === 'ADMIN' && req.user.email !== 'admin@gym.com' && existingPlan.ownerId !== req.user.id) {
+    if (req.user && req.user.role === 'ADMIN' && !isSuperAdmin(req.user) && existingPlan.ownerId !== req.user.id) {
       return res.status(403).json({ error: 'Access Denied: You do not own this plan.' });
     }
 

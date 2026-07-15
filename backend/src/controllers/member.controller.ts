@@ -3,6 +3,7 @@ import { AuthRequest } from '../middleware/auth.js';
 import bcrypt from 'bcryptjs';
 import prisma from '../config/prisma.js';
 import { cacheGet, cacheSet, cacheDel, cacheDelPrefix, CacheKeys } from '../config/cache.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 import { UserRole, MemberStatus, SubscriptionStatus, PaymentStatus, PaymentMethod } from '@prisma/client';
 import { createNotification } from './notification.controller.js';
 import logger from '../config/logger.js';
@@ -38,8 +39,8 @@ const checkMemberAccess = async (reqUser: any, memberId: string) => {
     return { errorStatus: 404, error: 'Member not found', member: null };
   }
 
-  // 1. Global Admin admin@gym.com bypasses all checks
-  if (reqUser.email === 'admin@gym.com') {
+  // 1. Global Admin isSuperAdmin bypasses all checks
+  if (isSuperAdmin(reqUser)) {
     return { member };
   }
 
@@ -208,8 +209,8 @@ export const getMembers = async (req: AuthRequest, res: Response) => {
       };
     } else {
       const ownedBranches = await prisma.branch.findMany({
-        where: req.user?.email === 'admin@gym.com' ? {
-          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        where: isSuperAdmin(req.user) ? {
+          OR: [{ ownerId: req.user?.id || '' }, { ownerId: null }]
         } : { ownerId: req.user?.id || '' },
         select: { id: true }
       });
@@ -529,8 +530,8 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       branchFilter = { equals: resolvedBranchId };
     } else {
       const ownedBranches = await prisma.branch.findMany({
-        where: req.user?.email === 'admin@gym.com' ? {
-          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        where: isSuperAdmin(req.user) ? {
+          OR: [{ ownerId: req.user?.id || '' }, { ownerId: null }]
         } : { ownerId: req.user?.id || '' },
         select: { id: true }
       });

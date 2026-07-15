@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth.js';
 import prisma from '../config/prisma.js';
 import { cacheDelPrefix } from '../config/cache.js';
+import { isSuperAdmin } from '../utils/superadmin.js';
 import { PaymentStatus, PaymentMethod, SubscriptionStatus, MemberStatus } from '@prisma/client';
 import PDFDocument from 'pdfkit';
 import { createNotification } from './notification.controller.js';
@@ -33,8 +34,8 @@ export const getPayments = async (req: AuthRequest, res: Response) => {
     } else {
       // Find all branches owned by this admin
       const ownedBranches = await prisma.branch.findMany({
-        where: req.user?.email === 'admin@gym.com' ? {
-          OR: [{ ownerId: req.user.id }, { ownerId: null }]
+        where: isSuperAdmin(req.user) ? {
+          OR: [{ ownerId: req.user?.id || '' }, { ownerId: null }]
         } : { ownerId: req.user?.id || '' },
         select: { id: true }
       });
@@ -110,7 +111,7 @@ export const recordManualPayment = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Associated member not found' });
     }
 
-    if (reqUser && reqUser.email !== 'admin@gym.com') {
+    if (reqUser && !isSuperAdmin(reqUser)) {
       if (reqUser.role === 'ADMIN') {
         if (paymentMember.user.branchId) {
           const branch = await prisma.branch.findUnique({
@@ -217,7 +218,7 @@ export const processMockCardPayment = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Associated member not found' });
     }
 
-    if (reqUser && reqUser.email !== 'admin@gym.com') {
+    if (reqUser && !isSuperAdmin(reqUser)) {
       if (reqUser.role === 'MEMBER') {
         if (reqUser.id !== paymentMember.userId) {
           return res.status(403).json({ error: 'Access Denied: You can only pay for your own subscriptions.' });
