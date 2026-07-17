@@ -59,7 +59,7 @@ export const SaaSBilling: React.FC = () => {
     fetchSaaSStatus();
   }, []);
 
-  const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY') => {
+  const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY' | 'DAILY') => {
     const loaded = await new Promise((resolve) => {
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -201,6 +201,14 @@ export const SaaSBilling: React.FC = () => {
     : 0;
 
   const planOptions = [
+    {
+      name: '1-Day Test Pass',
+      cycle: 'DAILY' as const,
+      price: '₹1',
+      periodText: 'day',
+      features: ['Perfect for sandbox testing', '1-Day Expiry duration', 'Verifies Razorpay Integration', 'Full platform features enabled'],
+      badge: 'Developer Sandbox'
+    },
     {
       name: 'Monthly Plan',
       cycle: 'MONTHLY' as const,
