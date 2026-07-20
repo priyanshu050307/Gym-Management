@@ -38,6 +38,10 @@ initCronJobs();
 
 const app = express();
 
+// Trust reverse proxy (Nginx on VPS) — required for express-rate-limit to read
+// X-Forwarded-For headers correctly and identify real client IPs
+app.set('trust proxy', 1);
+
 // ──────────────────────────────────────────────
 // Security: Helmet (11 HTTP security headers)
 // ──────────────────────────────────────────────
