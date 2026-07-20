@@ -85,6 +85,36 @@
       "suggestions": ["Go to Dashboard", "View Members List"]
     },
     {
+      "tag": "project_overview",
+      "patterns": ["what is this project", "how does this software work", "what is gymos", "project overview", "what can this system do", "explain the platform", "how to use the gym project"],
+      "responses": ["GymOS is a premium SaaS Gym Management platform featuring multi-branch isolation, billing portals, schedules/classes booking, check-in kiosk tracking, and supplement POS systems. It supports four distinct roles: Administrator, Staff, Trainer, and Member. Ask me about a specific role to learn more!"],
+      "suggestions": ["Admin User Guide", "Member User Guide", "Trainer User Guide"]
+    },
+    {
+      "tag": "admin_guide",
+      "patterns": ["admin guide", "how to use as admin", "administrator instructions", "admin manual", "what can admins do", "help for admin"],
+      "responses": ["As an **Administrator**, you have complete control over your gym branches:\n\n1. **Dashboard**: View branch revenue, member metrics, peak hours, and check-in logs.\n2. **Branches**: Add/edit branches and assign managers.\n3. **Membership Plans**: Create, edit, and deactivate subscription tiers.\n4. **Equipment**: Track gym assets, quantities, and service maintenance dates.\n5. **SaaS Subscription**: Purchase or renew your platform subscription passes."],
+      "suggestions": ["Staff User Guide", "Membership Pricing", "Biometric Sync Help"]
+    },
+    {
+      "tag": "staff_guide",
+      "patterns": ["staff guide", "how to use as staff", "staff instructions", "staff manual", "what can staff do", "help for staff", "receptionist guide"],
+      "responses": ["As a **Staff Member/Receptionist**, you manage day-to-day operations for your branch:\n\n1. **Member Registry**: Onboard and register new members, freeze profiles, or review membership expiry dates.\n2. **Billing & Payments**: Record membership fees, process manual payments, and email digital receipts.\n3. **Supplement POS**: Check out protein/supplements, manage stock inventory levels, and log sales.\n4. **Check-Ins**: Monitor active entries in real-time."],
+      "suggestions": ["Member User Guide", "Register a Member", "Record Payment Help"]
+    },
+    {
+      "tag": "trainer_guide",
+      "patterns": ["trainer guide", "how to use as trainer", "trainer instructions", "trainer manual", "what can trainers do", "help for trainer"],
+      "responses": ["As a **Trainer**, you manage fitness plans and group classes:\n\n1. **Group Classes**: Create and manage workout sessions, set capacities, and check enrolled member rosters.\n2. **Member Rosters**: Track client goals, write progress feedback logs, and assign personal diet routine guides."],
+      "suggestions": ["Group Class Schedules", "Admin User Guide"]
+    },
+    {
+      "tag": "member_guide",
+      "patterns": ["member guide", "how to use as member", "member instructions", "member manual", "what can members do", "help for member"],
+      "responses": ["As a **Member**, you have self-service access to your fitness journey:\n\n1. **Portal**: View your active subscription plans, remaining days, and invoice payment receipts.\n2. **Group Classes**: Browse scheduled sessions and book a slot.\n3. **Profile**: Upload your avatar photo, customize profile details, and update your phone number."],
+      "suggestions": ["Group Class Schedules", "View Membership Plans", "My Profile Edit"]
+    },
+    {
       "tag": "help",
       "patterns": ["help", "support", "what can you do", "bot functions", "commands", "menu"],
       "responses": ["I can help you navigate GymOS! Ask me about:\n\n1. **Membership Plans & Rates**\n2. **Group Class Schedules & Bookings**\n3. **Updating Profile details & pictures**\n4. **Biometric agent check-ins**\n5. **Branch locations and timing**"],
