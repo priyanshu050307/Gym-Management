@@ -26,7 +26,7 @@ yarn-error.log*
 Thumbs.db
 
 # Frontend Build
-frontend/dist/
+# frontend/dist/ intentionally NOT ignored — pre-built locally, deployed via git (avoids slow VPS build)
 frontend/build/
 frontend/.svelte-kit/
 frontend/.next/
