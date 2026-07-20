@@ -542,110 +542,151 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    const totalMembers = await prisma.member.count({
-      where: {
-        status: MemberStatus.ACTIVE,
-        user: { branchId: branchFilter },
-      },
-    });
-
-    const revenueResult = await prisma.payment.aggregate({
-      where: {
-        status: PaymentStatus.PAID,
-        paymentDate: {
-          gte: startOfMonth,
-        },
-        subscription: {
-          member: {
-            user: {
-              branchId: branchFilter,
-            },
-          },
-        },
-      },
-      _sum: {
-        amount: true,
-      },
-    });
-
-    const monthlyRevenue = revenueResult._sum.amount || 0;
-
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
 
-    const checkInsToday = await prisma.checkIn.count({
-      where: {
-        timestamp: {
-          gte: startOfToday,
-        },
-        member: {
-          user: {
-            branchId: branchFilter,
-          },
-        },
-      },
-    });
-
-    const pendingResult = await prisma.payment.aggregate({
-      where: {
-        status: PaymentStatus.PENDING,
-        subscription: {
-          member: {
-            user: {
-              branchId: branchFilter,
-            },
-          },
-        },
-      },
-      _sum: {
-        amount: true,
-      },
-    });
-
-    const pendingPayments = pendingResult._sum.amount || 0;
-
-    const recentCheckIns = await prisma.checkIn.findMany({
-      where: {
-        member: {
-          user: {
-            branchId: branchFilter,
-          },
-        },
-      },
-      orderBy: { timestamp: 'desc' },
-      take: 5,
-      include: {
-        member: {
-          include: {
-            user: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    // 1. Weekly Registration Signups (Last 7 Days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
-    const membersInLastWeek = await prisma.member.findMany({
-      where: {
-        joinDate: {
-          gte: sevenDaysAgo,
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    thirtyDaysAgo.setHours(0, 0, 0, 0);
+
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+    const now = new Date();
+
+    const [
+      totalMembers,
+      revenueResult,
+      checkInsToday,
+      pendingResult,
+      recentCheckIns,
+      membersInLastWeek,
+      checkInsLastMonth,
+      activeTrainers,
+      expiringIn7Days
+    ] = await Promise.all([
+      prisma.member.count({
+        where: {
+          status: MemberStatus.ACTIVE,
+          user: { branchId: branchFilter },
         },
-        user: {
-          branchId: branchFilter,
+      }),
+      prisma.payment.aggregate({
+        where: {
+          status: PaymentStatus.PAID,
+          paymentDate: {
+            gte: startOfMonth,
+          },
+          subscription: {
+            member: {
+              user: {
+                branchId: branchFilter,
+              },
+            },
+          },
         },
-      },
-      select: {
-        joinDate: true,
-      },
-    });
+        _sum: {
+          amount: true,
+        },
+      }),
+      prisma.checkIn.count({
+        where: {
+          timestamp: {
+            gte: startOfToday,
+          },
+          member: {
+            user: {
+              branchId: branchFilter,
+            },
+          },
+        },
+      }),
+      prisma.payment.aggregate({
+        where: {
+          status: PaymentStatus.PENDING,
+          subscription: {
+            member: {
+              user: {
+                branchId: branchFilter,
+              },
+            },
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+      prisma.checkIn.findMany({
+        where: {
+          member: {
+            user: {
+              branchId: branchFilter,
+            },
+          },
+        },
+        orderBy: { timestamp: 'desc' },
+        take: 5,
+        include: {
+          member: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      prisma.member.findMany({
+        where: {
+          joinDate: {
+            gte: sevenDaysAgo,
+          },
+          user: {
+            branchId: branchFilter,
+          },
+        },
+        select: {
+          joinDate: true,
+        },
+      }),
+      prisma.checkIn.findMany({
+        where: {
+          timestamp: {
+            gte: thirtyDaysAgo,
+          },
+          member: {
+            user: {
+              branchId: branchFilter,
+            },
+          },
+        },
+        select: {
+          timestamp: true,
+        },
+      }),
+      prisma.trainer.count({
+        where: {
+          isActive: true,
+          ...(resolvedBranchId ? { user: { branchId: resolvedBranchId } } : {}),
+        },
+      }),
+      prisma.subscription.count({
+        where: {
+          status: SubscriptionStatus.ACTIVE,
+          endDate: { gt: now, lte: sevenDaysFromNow },
+          ...(resolvedBranchId ? { member: { user: { branchId: resolvedBranchId } } } : {}),
+        },
+      })
+    ]);
+
+    const monthlyRevenue = revenueResult._sum.amount || 0;
+    const pendingPayments = pendingResult._sum.amount || 0;
 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const signupMap: { [key: string]: number } = {};
@@ -669,27 +710,6 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       day,
       count,
     }));
-
-    // 2. Peak Hours Analysis (Last 30 Days)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    thirtyDaysAgo.setHours(0, 0, 0, 0);
-
-    const checkInsLastMonth = await prisma.checkIn.findMany({
-      where: {
-        timestamp: {
-          gte: thirtyDaysAgo,
-        },
-        member: {
-          user: {
-            branchId: branchFilter,
-          },
-        },
-      },
-      select: {
-        timestamp: true,
-      },
-    });
 
     const hoursList = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
     const peakMap: { [key: string]: number } = {};
@@ -717,27 +737,6 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       hour,
       count,
     }));
-
-    // 3. Active Trainers count
-    const activeTrainers = await prisma.trainer.count({
-      where: {
-        isActive: true,
-        ...(resolvedBranchId ? { user: { branchId: resolvedBranchId } } : {}),
-      },
-    });
-
-    // 4. Members with subscriptions expiring within the next 7 days
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
-    const now = new Date();
-
-    const expiringIn7Days = await prisma.subscription.count({
-      where: {
-        status: SubscriptionStatus.ACTIVE,
-        endDate: { gt: now, lte: sevenDaysFromNow },
-        ...(resolvedBranchId ? { member: { user: { branchId: resolvedBranchId } } } : {}),
-      },
-    });
 
     const responseData = {
       stats: {
