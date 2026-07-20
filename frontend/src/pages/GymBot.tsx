@@ -5,12 +5,7 @@ import {
   Send, 
   Sparkles, 
   Trash2, 
-  Brain, 
-  DollarSign, 
-  Bookmark, 
-  Layers,
   User,
-  Activity,
   AlertCircle
 } from 'lucide-react';
 
@@ -52,9 +47,7 @@ export const GymBot: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Active explainability metadata from latest bot response
-  const [activeMetadata, setActiveMetadata] = useState<ChatMessage['metadata'] | null>(null);
-  const [showMetadataPanel, setShowMetadataPanel] = useState(true);
+
   
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -75,11 +68,6 @@ export const GymBot: React.FC = () => {
         const data = await apiFetch<any>(`/gymbot/history/${sessionId}`);
         if (data && data.history && data.history.length > 0) {
           setMessages(data.history);
-          // Set metadata from the last bot message in history if exists
-          const lastBot = [...data.history].reverse().find(m => m.sender === 'bot');
-          if (lastBot && lastBot.metadata) {
-            setActiveMetadata(lastBot.metadata);
-          }
         } else {
           // Send welcome message
           setMessages([
@@ -127,9 +115,6 @@ export const GymBot: React.FC = () => {
       });
       
       setMessages(prev => [...prev, response]);
-      if (response.metadata) {
-        setActiveMetadata(response.metadata);
-      }
     } catch (err: any) {
       setError(err.message || 'Failed to connect to the Chatbot engine.');
     } finally {
@@ -154,7 +139,6 @@ export const GymBot: React.FC = () => {
           suggestions: ["View Membership Plans", "Group Class Schedules", "Biometric Check-in Help"]
         }
       ]);
-      setActiveMetadata(null);
     } catch (err: any) {
       setError(err.message || 'Failed to reset chatbot context.');
     } finally {
@@ -193,201 +177,96 @@ export const GymBot: React.FC = () => {
         </div>
       )}
 
-      {/* Main Layout Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* Main Layout Chat Card (Full Width) */}
+      <div className="flex flex-col glass-card rounded-2xl border border-slate-100 h-[650px] relative overflow-hidden bg-white/70 w-full">
         
-        {/* Chat Area Panel */}
-        <div className={`flex flex-col glass-card rounded-2xl border border-slate-100 h-[650px] relative overflow-hidden bg-white/70 ${showMetadataPanel ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
-          
-          {/* Chat bubbles list */}
-          <div className="flex-1 p-6 overflow-y-auto space-y-4">
-            {messages.map((msg, index) => (
-              <div 
-                key={index}
-                className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
-              >
-                {/* Icon wrapper */}
-                <div className={`h-8 w-8 rounded-full shrink-0 flex items-center justify-center border ${
-                  msg.sender === 'user' 
-                    ? 'bg-gym-secondary text-white border-gym-secondary/10' 
-                    : 'bg-gym-primary/10 text-gym-primary border-gym-primary/20'
+        {/* Chat bubbles list */}
+        <div className="flex-1 p-6 overflow-y-auto space-y-4">
+          {messages.map((msg, index) => (
+            <div 
+              key={index}
+              className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
+            >
+              {/* Icon wrapper */}
+              <div className={`h-8 w-8 rounded-full shrink-0 flex items-center justify-center border ${
+                msg.sender === 'user' 
+                  ? 'bg-gym-secondary text-white border-gym-secondary/10' 
+                  : 'bg-gym-primary/10 text-gym-primary border-gym-primary/20'
+              }`}>
+                {msg.sender === 'user' ? <User className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+              </div>
+
+              {/* Bubble content */}
+              <div className="space-y-1">
+                <div className={`p-4 rounded-2xl text-sm ${
+                  msg.sender === 'user'
+                    ? 'bg-gym-secondary text-white rounded-tr-none'
+                    : 'bg-slate-50 text-gym-text border border-slate-100 rounded-tl-none leading-relaxed'
                 }`}>
-                  {msg.sender === 'user' ? <User className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+                  {renderMarkdown(msg.text)}
                 </div>
-
-                {/* Bubble content */}
-                <div className="space-y-1">
-                  <div className={`p-4 rounded-2xl text-sm ${
-                    msg.sender === 'user'
-                      ? 'bg-gym-secondary text-white rounded-tr-none'
-                      : 'bg-slate-50 text-gym-text border border-slate-100 rounded-tl-none leading-relaxed'
-                  }`}>
-                    {renderMarkdown(msg.text)}
-                  </div>
-                  <span className="block text-[9px] text-gym-muted text-right px-1 mt-0.5">
-                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
+                <span className="block text-[9px] text-gym-muted text-right px-1 mt-0.5">
+                  {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
               </div>
-            ))}
-            
-            {/* Loading Indicator */}
-            {loading && (
-              <div className="flex gap-3 max-w-[80%]">
-                <div className="h-8 w-8 rounded-full shrink-0 flex items-center justify-center bg-gym-primary/10 text-gym-primary border border-gym-primary/20">
-                  <Sparkles className="h-4 w-4 animate-spin" />
-                </div>
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 rounded-tl-none flex gap-1.5 items-center">
-                  <div className="w-2 h-2 rounded-full bg-gym-primary/50 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 rounded-full bg-gym-primary/50 animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 rounded-full bg-gym-primary/50 animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
+            </div>
+          ))}
+          
+          {/* Loading Indicator */}
+          {loading && (
+            <div className="flex gap-3 max-w-[80%]">
+              <div className="h-8 w-8 rounded-full shrink-0 flex items-center justify-center bg-gym-primary/10 text-gym-primary border border-gym-primary/20">
+                <Sparkles className="h-4 w-4 animate-spin" />
               </div>
-            )}
-            
-            <div ref={chatEndRef} />
-          </div>
-
-          {/* Quick Suggestions block */}
-          {messages.length > 0 && !loading && (
-            <div className="px-6 py-2 flex flex-wrap gap-2 justify-start border-t border-slate-100 bg-slate-50/50">
-              {(messages[messages.length - 1].suggestions || ["View Membership Plans", "Group Class Schedules", "Biometric Check-in Help"]).map((suggestion, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendMessage(suggestion)}
-                  className="px-3 py-1.5 bg-white border border-slate-200 hover:border-gym-primary text-gym-muted hover:text-gym-primary rounded-full text-xs font-semibold transition-all hover:scale-[1.02] cursor-pointer"
-                >
-                  {suggestion}
-                </button>
-              ))}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 rounded-tl-none flex gap-1.5 items-center">
+                <div className="w-2 h-2 rounded-full bg-gym-primary/50 animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2 h-2 rounded-full bg-gym-primary/50 animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2 h-2 rounded-full bg-gym-primary/50 animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
             </div>
           )}
-
-          {/* Input Action Controls */}
-          <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendMessage(inputMessage);
-            }}
-            className="p-4 border-t border-slate-100 flex gap-3 bg-white"
-          >
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask anything about GymOS (e.g. what plans do you have?)"
-              className="gym-input focus:ring-1 focus:ring-gym-primary/25"
-            />
-            <button
-              type="submit"
-              disabled={loading || !inputMessage.trim()}
-              className="px-5 bg-gym-primary text-white hover:bg-gym-primary/90 disabled:bg-slate-200 disabled:text-slate-400 rounded-xl transition-all cursor-pointer flex items-center justify-center"
-            >
-              <Send className="h-4.5 w-4.5" />
-            </button>
-          </form>
           
-          {/* Metadata Collapsible toggle */}
-          <button
-            onClick={() => setShowMetadataPanel(!showMetadataPanel)}
-            className="absolute top-4 right-4 h-8 w-8 bg-slate-50 border border-slate-200 hover:border-gym-primary rounded-full flex items-center justify-center text-gym-muted hover:text-gym-primary transition-all cursor-pointer"
-            title="Toggle Explainability Panel"
-          >
-            <Brain className="h-4 w-4" />
-          </button>
+          <div ref={chatEndRef} />
         </div>
 
-        {/* Explainability metadata panel */}
-        {showMetadataPanel && (
-          <div className="lg:col-span-1 glass-card rounded-2xl border border-slate-100 p-6 space-y-6 flex flex-col justify-between bg-white/70">
-            <div className="space-y-5">
-              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <Brain className="h-5 w-5 text-gym-primary animate-pulse" />
-                <h3 className="font-extrabold text-gym-secondary text-sm uppercase tracking-wider">Explainability Panel</h3>
-              </div>
-
-              {activeMetadata ? (
-                <div className="space-y-5 text-xs">
-                  
-                  {/* Intent classification Tag */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
-                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1.5">
-                      <Bookmark className="h-3.5 w-3.5" />
-                      Classified Intent
-                    </span>
-                    <p className="font-mono text-sm font-extrabold text-gym-secondary">{activeMetadata.tag}</p>
-                  </div>
-
-                  {/* Classification Confidence */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3.5">
-                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1.5">
-                      <Activity className="h-3.5 w-3.5" />
-                      Model Confidence
-                    </span>
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between items-center font-bold">
-                        <span className="text-gym-secondary">Score</span>
-                        <span className="text-gym-primary">{(activeMetadata.confidence * 100).toFixed(1)}%</span>
-                      </div>
-                      {/* Progress bar */}
-                      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                        <div 
-                          className="bg-gym-primary h-full rounded-full transition-all duration-500"
-                          style={{ width: `${activeMetadata.confidence * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Math method used */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
-                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1.5">
-                      <Layers className="h-3.5 w-3.5" />
-                      Decision Classifier
-                    </span>
-                    <p className="font-semibold text-gym-secondary">{activeMetadata.method}</p>
-                  </div>
-
-                  {/* Extracted Entities */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
-                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1.5">
-                      <DollarSign className="h-3.5 w-3.5" />
-                      Extracted Entities
-                    </span>
-                    
-                    <div className="space-y-1.5 font-medium">
-                      <div className="flex justify-between">
-                        <span className="text-gym-muted">Amount:</span>
-                        <span className="text-gym-secondary">
-                          {activeMetadata.entities.amount !== null ? `₹${activeMetadata.entities.amount.toLocaleString()}` : 'None'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gym-muted">Plan:</span>
-                        <span className="text-gym-secondary">{activeMetadata.entities.plan || 'None'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gym-muted">Section:</span>
-                        <span className="text-gym-secondary">{activeMetadata.entities.section || 'None'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              ) : (
-                <div className="text-center py-16 text-gym-muted italic text-xs space-y-2">
-                  <Brain className="h-8 w-8 mx-auto opacity-30" />
-                  <p>Send a query to inspect NLP feature vectorizations, neural confidence levels, and active context extractions here.</p>
-                </div>
-              )}
-            </div>
-
-            <div className="pt-4 border-t border-slate-100 text-[10px] text-gym-muted text-center leading-relaxed">
-              GymBot NLP uses a 3-layer backprop MLP neural network trained on client patterns combined with self-attention TF-IDF weights.
-            </div>
+        {/* Quick Suggestions block */}
+        {messages.length > 0 && !loading && (
+          <div className="px-6 py-2 flex flex-wrap gap-2 justify-start border-t border-slate-100 bg-slate-50/50">
+            {(messages[messages.length - 1].suggestions || ["View Membership Plans", "Group Class Schedules", "Biometric Check-in Help"]).map((suggestion, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSendMessage(suggestion)}
+                className="px-3 py-1.5 bg-white border border-slate-200 hover:border-gym-primary text-gym-muted hover:text-gym-primary rounded-full text-xs font-semibold transition-all hover:scale-[1.02] cursor-pointer"
+              >
+                {suggestion}
+              </button>
+            ))}
           </div>
         )}
 
+        {/* Input Action Controls */}
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSendMessage(inputMessage);
+          }}
+          className="p-4 border-t border-slate-100 flex gap-3 bg-white"
+        >
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            placeholder="Ask anything about Gymnasium (e.g. what plans do you have?)"
+            className="gym-input focus:ring-1 focus:ring-gym-primary/25"
+          />
+          <button
+            type="submit"
+            disabled={loading || !inputMessage.trim()}
+            className="px-5 bg-gym-primary text-white hover:bg-gym-primary/90 disabled:bg-slate-200 disabled:text-slate-400 rounded-xl transition-all cursor-pointer flex items-center justify-center"
+          >
+            <Send className="h-4.5 w-4.5" />
+          </button>
+        </form>
       </div>
     </div>
   );
