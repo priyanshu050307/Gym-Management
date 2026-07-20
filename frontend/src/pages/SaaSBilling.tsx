@@ -7,21 +7,9 @@ import {
   Zap
 } from 'lucide-react';
 
-interface SaasSubscriptionData {
-  id: string;
-  status: string;
-  planName: string;
-  trialEndDate: string;
-  subscriptionEnd: string | null;
-  billingCycle: string;
-  cardBrand: string | null;
-  cardLast4: string | null;
-  gstin: string | null;
-  billingAddress: string | null;
-}
+
 
 export const SaaSBilling: React.FC = () => {
-  const [sub, setSub] = useState<SaasSubscriptionData | null>(null);
   const [allSubscriptions, setAllSubscriptions] = useState<any[]>([]);
   const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null);
   const [selectedBranchName, setSelectedBranchName] = useState<string>('Primary Branch');
@@ -35,13 +23,6 @@ export const SaaSBilling: React.FC = () => {
   // Profile Edit fields
   const [gstin, setGstin] = useState('');
   const [billingAddress, setBillingAddress] = useState('');
-  const [couponCode, setCouponCode] = useState('');
-  const [couponApplied, setCouponApplied] = useState(false);
-
-  // Mock billing invoices
-  const [invoices] = useState([
-    { id: 'INV-SaaS-2026-001', date: '02-Jul-2026', amount: '₹0.00', plan: 'Starter Trial', status: 'Paid' }
-  ]);
 
   const fetchSaaSStatus = async () => {
     try {
@@ -51,13 +32,14 @@ export const SaaSBilling: React.FC = () => {
       const activeBranchId = localStorage.getItem('activeBranchId') || '';
       const url = activeBranchId ? `/saas/status?branchId=${activeBranchId}` : '/saas/status';
       
-      const data = await apiFetch<{ subscription: SaasSubscriptionData, allSubscriptions?: any[] }>(url);
-      setSub(data.subscription);
+      const data = await apiFetch<any>(url);
       if (data.allSubscriptions) {
         setAllSubscriptions(data.allSubscriptions);
       }
-      setGstin(data.subscription.gstin || '');
-      setBillingAddress(data.subscription.billingAddress || '');
+      if (data.subscription) {
+        setGstin(data.subscription.gstin || '');
+        setBillingAddress(data.subscription.billingAddress || '');
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to fetch SaaS subscription details.');
     } finally {
@@ -86,6 +68,46 @@ export const SaaSBilling: React.FC = () => {
     }
   }, [allSubscriptions]);
 
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoSuccess, setPromoSuccess] = useState<string | null>(null);
+
+  const handleValidatePromo = async () => {
+    if (!promoCodeInput.trim()) {
+      setPromoError('Please enter a promo code.');
+      return;
+    }
+    try {
+      setPromoLoading(true);
+      setPromoError(null);
+      setPromoSuccess(null);
+      
+      const data = await apiFetch<any>(`/saas/validate-promo?code=${promoCodeInput.toUpperCase()}`);
+      if (data.valid) {
+        setPromoDiscount(data.discountPercent);
+        setAppliedPromo(promoCodeInput.toUpperCase());
+        setPromoSuccess(`Promo code applied! You got a ${data.discountPercent}% discount.`);
+      }
+    } catch (err: any) {
+      setPromoError(err.message || 'Invalid or expired promo code.');
+      setPromoDiscount(0);
+      setAppliedPromo(null);
+    } finally {
+      setPromoLoading(false);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setPromoCodeInput('');
+    setPromoDiscount(0);
+    setAppliedPromo(null);
+    setPromoSuccess(null);
+    setPromoError(null);
+  };
+
   const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY') => {
     const loaded = await new Promise((resolve) => {
       const script = document.createElement('script');
@@ -105,10 +127,10 @@ export const SaaSBilling: React.FC = () => {
       setError(null);
       setSuccess(null);
 
-      // 1. Create Order targeting the selected branch
+      // 1. Create Order targeting the selected branch with promo code
       const orderData = await apiFetch<any>('/saas/create-order', {
         method: 'POST',
-        body: { planName, billingCycle: cycle, branchId: selectedBranchId },
+        body: { planName, billingCycle: cycle, branchId: selectedBranchId, promoCode: appliedPromo },
       });
 
       // 2. Open Razorpay checkout
@@ -117,13 +139,13 @@ export const SaaSBilling: React.FC = () => {
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'Gymflow SaaS Platform',
-        description: `Upgrade ${selectedBranchName} - ${cycle}`,
+        description: `Upgrade ${selectedBranchName} - ${cycle} ${appliedPromo ? `(Code: ${appliedPromo})` : ''}`,
         order_id: orderData.orderId,
         handler: async function (response: any) {
           try {
             setActionLoading(true);
             // 3. Verify Payment on Backend
-            const res = await apiFetch<any>('/saas/verify-payment', {
+            await apiFetch<any>('/saas/verify-payment', {
               method: 'POST',
               body: {
                 razorpay_order_id: response.razorpay_order_id,
@@ -136,10 +158,12 @@ export const SaaSBilling: React.FC = () => {
                 gstin,
                 billingAddress,
                 branchId: selectedBranchId,
+                promoCode: appliedPromo,
+                discountApplied: orderData.discountApplied,
+                amountPaid: orderData.finalPrice,
               },
             });
 
-            setSub(res.subscription);
             setSuccess(`Successfully subscribed ${selectedBranchName} to GymOS Premium (${cycle})!`);
             // Reload page to reflect SaaS state changes in context
             setTimeout(() => window.location.reload(), 1500);
@@ -174,12 +198,11 @@ export const SaaSBilling: React.FC = () => {
       setError(null);
       setSuccess(null);
 
-      const res = await apiFetch<any>('/saas/billing', {
+      await apiFetch<any>('/saas/billing', {
         method: 'PUT',
         body: { gstin, billingAddress },
       });
 
-      setSub(res.subscription);
       setSuccess('Billing address and details updated successfully.');
     } catch (err: any) {
       setError(err.message || 'Failed to update billing details.');
@@ -188,14 +211,11 @@ export const SaaSBilling: React.FC = () => {
     }
   };
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (couponCode.toUpperCase() === 'FITJULY30') {
-      setCouponApplied(true);
-      setSuccess('Promo code FITJULY30 (30% Discount) applied successfully!');
-    } else {
-      setError('Invalid promo code.');
-    }
+  const handleDownloadInvoice = (subscriptionId: string) => {
+    const token = localStorage.getItem('token');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const downloadUrl = `${apiUrl}/saas/invoice/${subscriptionId}?token=${token}`;
+    window.open(downloadUrl, '_blank');
   };
 
 
@@ -411,6 +431,57 @@ export const SaaSBilling: React.FC = () => {
         </div>
       )}
 
+      {/* Promo Code & Live Pricing Preview */}
+      <div className="glass-card p-6 rounded-2xl border border-slate-100/10 max-w-xl space-y-4">
+        <div>
+          <h4 className="text-sm font-semibold text-gym-text flex items-center gap-2">
+            <Zap className="h-4.5 w-4.5 text-gym-primary" /> Apply Platform Promo Code
+          </h4>
+          <p className="text-xs text-gym-muted mt-0.5">Enter a discount code to apply savings across all GymOS cloud packages.</p>
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="e.g. GYM20, LAUNCH50, ANNUAL30"
+            value={promoCodeInput}
+            onChange={(e) => setPromoCodeInput(e.target.value)}
+            disabled={appliedPromo !== null || promoLoading}
+            className="gym-input text-xs font-mono uppercase tracking-wider"
+          />
+          {appliedPromo ? (
+            <button
+              onClick={handleRemovePromo}
+              className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold rounded-xl text-xs border border-red-500/20 whitespace-nowrap cursor-pointer"
+            >
+              Remove
+            </button>
+          ) : (
+            <button
+              onClick={handleValidatePromo}
+              disabled={promoLoading}
+              className="px-4 py-2 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl text-xs whitespace-nowrap cursor-pointer disabled:opacity-50"
+            >
+              {promoLoading ? 'Verifying...' : 'Apply Code'}
+            </button>
+          )}
+        </div>
+
+        {promoError && (
+          <span className="text-xs text-red-400 block font-medium">❌ {promoError}</span>
+        )}
+        {promoSuccess && (
+          <span className="text-xs text-emerald-400 block font-medium">🎉 {promoSuccess}</span>
+        )}
+
+        <div className="text-[10px] text-gym-muted flex flex-col gap-1 border-t border-slate-100/5 pt-2">
+          <span>Available Coupons:</span>
+          <span>• <strong className="text-gym-primary font-bold">GYM20</strong> — 20% discount on all cycles</span>
+          <span>• <strong className="text-gym-primary font-bold">LAUNCH50</strong> — 50% limited time discount</span>
+          <span>• <strong className="text-gym-primary font-bold">ANNUAL30</strong> — 30% discount (applicable for yearly cycle only)</span>
+        </div>
+      </div>
+
       {/* Plan selector toggles */}
       <div id="plans-selector" className="space-y-6 scroll-mt-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100/10 pb-4">
@@ -418,90 +489,91 @@ export const SaaSBilling: React.FC = () => {
             <h3 className="text-xl font-bold text-gym-text">Upgrade Plan for: <span className="text-gym-primary font-black">{selectedBranchName}</span></h3>
             <p className="text-xs text-gym-muted">Select the duration plan that matches your gym operations budget.</p>
           </div>
+          {appliedPromo && (
+            <div className="px-3 py-1.5 bg-gym-primary/10 border border-gym-primary/20 rounded-xl text-xs font-bold text-gym-primary">
+              Discount Active: -{promoDiscount}% via {appliedPromo}
+            </div>
+          )}
         </div>
 
         {/* Plan Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {planOptions.map((opt) => (
-            <div
-              key={opt.name}
-              className={`glass-card rounded-3xl p-6 border relative flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
-                opt.popular 
-                  ? 'border-gym-primary/40 shadow-lg shadow-gym-primary/5 bg-slate-900/30' 
-                  : 'border-slate-100/10 hover:border-gym-primary/20'
-              }`}
-            >
-              {opt.popular && (
-                <span className="absolute -top-3 left-6 px-3 py-1 bg-gym-primary text-black text-[10px] font-extrabold uppercase rounded-full tracking-wider shadow">
-                  Most Popular
-                </span>
-              )}
+          {planOptions.map((opt) => {
+            const rawPrice = opt.cycle === 'YEARLY' ? 5500 : opt.cycle === 'HALF_YEARLY' ? 2800 : 500;
+            const discountAmt = (rawPrice * promoDiscount) / 100;
+            const finalPrice = Math.max(0, rawPrice - discountAmt);
 
-              <div className="space-y-6">
-                <div>
-                  <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider">{opt.badge}</span>
-                  <h4 className="text-xl font-bold text-gym-text mt-1">{opt.name}</h4>
+            // Is code valid for this cycle
+            const isInvalidForCycle = appliedPromo === 'ANNUAL30' && opt.cycle !== 'YEARLY';
+
+            return (
+              <div
+                key={opt.name}
+                className={`glass-card rounded-3xl p-6 border relative flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
+                  opt.popular 
+                    ? 'border-gym-primary/40 shadow-lg shadow-gym-primary/5 bg-slate-900/30' 
+                    : 'border-slate-100/10 hover:border-gym-primary/20'
+                } ${isInvalidForCycle ? 'opacity-60' : ''}`}
+              >
+                {opt.popular && (
+                  <span className="absolute -top-3 left-6 px-3 py-1 bg-gym-primary text-black text-[10px] font-extrabold uppercase rounded-full tracking-wider shadow">
+                    Most Popular
+                  </span>
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider">{opt.badge}</span>
+                    <h4 className="text-xl font-bold text-gym-text mt-1">{opt.name}</h4>
+                  </div>
+
+                  <div className="flex flex-col">
+                    {promoDiscount > 0 && !isInvalidForCycle ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm line-through text-gym-muted">₹{rawPrice.toLocaleString()}</span>
+                        <span className="text-xs px-1.5 py-0.5 bg-emerald-500/15 text-emerald-400 rounded font-bold">-{promoDiscount}%</span>
+                      </div>
+                    ) : null}
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-extrabold text-gym-primary">
+                        ₹{finalPrice.toLocaleString()}
+                      </span>
+                      <span className="text-xs text-gym-muted">/{opt.periodText}</span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 text-xs text-gym-muted border-t border-slate-100/10 pt-4">
+                    {opt.features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <Check className="h-4 w-4 text-gym-primary shrink-0" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-gym-primary">{opt.price}</span>
-                  <span className="text-xs text-gym-muted">/{opt.periodText}</span>
+                <div className="mt-8 pt-4">
+                  <button
+                    onClick={() => handleSubscribe('Premium', opt.cycle)}
+                    disabled={actionLoading || isInvalidForCycle}
+                    className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer ${
+                      isInvalidForCycle
+                        ? 'bg-slate-800 text-gym-muted border border-slate-700 cursor-not-allowed'
+                        : opt.popular
+                        ? 'bg-gym-primary hover:bg-gym-primary-hover text-black shadow-gym-primary/10'
+                        : 'bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800'
+                    }`}
+                  >
+                    {isInvalidForCycle 
+                      ? 'Inapplicable Code' 
+                      : `Subscribe & Pay ₹${finalPrice.toLocaleString()}`}
+                  </button>
                 </div>
-
-                <ul className="space-y-3 text-xs text-gym-muted border-t border-slate-100/10 pt-4">
-                  {opt.features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <Check className="h-4 w-4 text-gym-primary shrink-0" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              <div className="mt-8 pt-4">
-                <button
-                  onClick={() => handleSubscribe('Premium', opt.cycle)}
-                  disabled={actionLoading}
-                  className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all shadow-md ${
-                    opt.popular
-                      ? 'bg-gym-primary hover:bg-gym-primary-hover text-black shadow-gym-primary/10'
-                      : 'bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800'
-                  }`}
-                >
-                  {sub?.billingCycle === opt.cycle && sub?.status.includes('ACTIVE') 
-                    ? 'Current Plan' 
-                    : `Subscribe ${opt.name}`}
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-
-      {/* Coupon code */}
-      {!couponApplied && (
-        <div className="glass-card p-6 rounded-2xl border border-slate-100/10 max-w-md">
-          <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-            <Zap className="h-4 w-4 text-gym-primary" /> Apply Promo Code / Coupon
-          </h4>
-          <form onSubmit={handleApplyCoupon} className="flex gap-2">
-            <input
-              type="text"
-              placeholder="e.g. FITJULY30"
-              value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value)}
-              className="gym-input text-xs"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl text-xs whitespace-nowrap"
-            >
-              Apply Code
-            </button>
-          </form>
-          <span className="text-[10px] text-gym-muted mt-1.5 block">Use coupon code <strong className="text-gym-primary">FITJULY30</strong> for 30% discount.</span>
-        </div>
-      )}
 
       {/* Billing Profiles & Invoices */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -534,7 +606,7 @@ export const SaaSBilling: React.FC = () => {
             <button
               type="submit"
               disabled={actionLoading}
-              className="px-4 py-2 bg-slate-900 border border-slate-800 text-gym-text hover:bg-slate-800 text-xs font-semibold rounded-xl"
+              className="px-4 py-2 bg-slate-900 border border-slate-800 text-gym-text hover:bg-slate-800 text-xs font-semibold rounded-xl cursor-pointer"
             >
               Save Billing Profile
             </button>
@@ -547,32 +619,58 @@ export const SaaSBilling: React.FC = () => {
             <FileText className="h-5 w-5 text-gym-primary" /> Invoice History
           </h4>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="text-gym-muted uppercase border-b border-slate-100/10 pb-2">
-                  <th className="py-2">Invoice ID</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Plan</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.map((inv) => (
-                  <tr key={inv.id} className="border-b border-slate-100/5">
-                    <td className="py-3 font-mono text-gym-primary">{inv.id}</td>
-                    <td>{inv.date}</td>
-                    <td>{inv.amount}</td>
-                    <td>{inv.plan}</td>
-                    <td>
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        {inv.status}
-                      </span>
-                    </td>
+            {allSubscriptions.length > 0 ? (
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="text-gym-muted uppercase border-b border-slate-100/10 pb-2">
+                    <th className="py-2 pl-2">Invoice ID</th>
+                    <th>Date</th>
+                    <th>Amount Paid</th>
+                    <th>Plan Info</th>
+                    <th>Status</th>
+                    <th className="text-right pr-2">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {allSubscriptions.map((inv) => (
+                    <tr key={inv.id} className="border-b border-slate-100/5 hover:bg-white/5 transition-colors">
+                      <td className="py-3 pl-2 font-mono text-gym-primary">
+                        {inv.invoiceNumber || `INV-TRIAL-${inv.id.substring(0, 5).toUpperCase()}`}
+                      </td>
+                      <td>{new Date(inv.updatedAt).toLocaleDateString()}</td>
+                      <td className="font-bold text-gym-text">
+                        ₹{(inv.amountPaid || 0).toLocaleString()}
+                      </td>
+                      <td>
+                        <span className="font-medium text-gym-text">{inv.planName}</span>
+                        <span className="ml-1.5 text-gym-muted text-[10px] uppercase">({inv.billingCycle})</span>
+                      </td>
+                      <td>
+                        <span className={`px-2 py-0.5 rounded text-[10px] border ${
+                          inv.status.includes('ACTIVE')
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                            : 'bg-red-500/10 text-red-400 border-red-500/20'
+                        }`}>
+                          {inv.status.replace('_', ' ').toLowerCase()}
+                        </span>
+                      </td>
+                      <td className="text-right pr-2">
+                        <button
+                          onClick={() => handleDownloadInvoice(inv.id)}
+                          className="px-2 py-1 bg-gym-primary/10 hover:bg-gym-primary hover:text-black border border-gym-primary/20 text-gym-primary text-[10px] font-bold rounded transition-colors cursor-pointer"
+                        >
+                          📄 PDF
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="py-8 text-center text-gym-muted text-xs">
+                No subscription billing records found.
+              </div>
+            )}
           </div>
         </div>
       </div>

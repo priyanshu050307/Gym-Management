@@ -5,7 +5,10 @@ if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key-replace-this-in-production';
 export const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    let token = authHeader && authHeader.split(' ')[1];
+    if (!token && req.query.token) {
+        token = req.query.token;
+    }
     if (!token) {
         return res.status(401).json({ error: 'Access token required' });
     }

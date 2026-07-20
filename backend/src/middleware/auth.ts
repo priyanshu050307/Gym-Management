@@ -18,7 +18,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key-replace-this-
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  let token = authHeader && authHeader.split(' ')[1];
+  
+  if (!token && req.query.token) {
+    token = req.query.token as string;
+  }
 
   if (!token) {
     return res.status(401).json({ error: 'Access token required' });

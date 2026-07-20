@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import prisma from '../config/prisma.js';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
+import { generateInvoicePDF } from '../utils/invoiceGenerator.js';
 
 // Helper to find owner user ID for current request user
 const getOwnerIdForUser = async (user: any) => {
@@ -247,9 +248,42 @@ const getRazorpayInstance = () => {
   });
 };
 
+export const validatePromoCode = async (req: Request, res: Response) => {
+  try {
+    const { code, billingCycle } = req.query;
+    if (!code) {
+      return res.status(400).json({ error: 'Promo code is required.' });
+    }
+
+    const promo = await prisma.promoCode.findUnique({
+      where: { code: String(code).toUpperCase() },
+    });
+
+    if (!promo || !promo.isActive) {
+      return res.status(404).json({ error: 'Invalid or inactive promo code.' });
+    }
+
+    if (promo.expiresAt && new Date() > new Date(promo.expiresAt)) {
+      return res.status(400).json({ error: 'Promo code has expired.' });
+    }
+
+    if (billingCycle && promo.applicableCycles.length > 0 && !promo.applicableCycles.includes(String(billingCycle))) {
+      return res.status(400).json({ error: `Promo code is not applicable to the ${billingCycle} billing cycle.` });
+    }
+
+    return res.status(200).json({
+      valid: true,
+      discountPercent: promo.discountPercent,
+    });
+  } catch (error: any) {
+    console.error('Validate promo code error:', error);
+    return res.status(500).json({ error: 'Failed to validate promo code.' });
+  }
+};
+
 export const createSaaSOrder = async (req: Request, res: Response) => {
   try {
-    const { planName, billingCycle, branchId } = req.body;
+    const { planName, billingCycle, branchId, promoCode } = req.body;
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -257,9 +291,25 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid plan selected.' });
     }
 
-    let price = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+    let basePrice = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+    let discountPercent = 0;
+
+    if (promoCode) {
+      const promo = await prisma.promoCode.findUnique({
+        where: { code: String(promoCode).toUpperCase() },
+      });
+      if (promo && promo.isActive && (!promo.expiresAt || new Date() <= new Date(promo.expiresAt))) {
+        if (!promo.applicableCycles.length || promo.applicableCycles.includes(billingCycle)) {
+          discountPercent = promo.discountPercent;
+        }
+      }
+    }
+
+    const discountAmount = (basePrice * discountPercent) / 100;
+    const finalPrice = Math.max(0, basePrice - discountAmount);
+
     const razorpay = getRazorpayInstance();
-    const amountInPaise = Math.round(price * 100);
+    const amountInPaise = Math.round(finalPrice * 100);
 
     const options = {
       amount: amountInPaise,
@@ -270,6 +320,9 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
         planName,
         billingCycle,
         branchId: branchId || '',
+        promoCode: promoCode || '',
+        discountApplied: String(discountAmount),
+        amountPaid: String(finalPrice)
       }
     };
 
@@ -282,7 +335,9 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
       user: {
         name: `${reqUser.firstName} ${reqUser.lastName}`,
         email: reqUser.email,
-      }
+      },
+      discountApplied: discountAmount,
+      finalPrice: finalPrice
     });
   } catch (error: any) {
     console.error('Razorpay SaaS Order Creation Error:', error);
@@ -292,7 +347,21 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
 
 export const verifySaaSPayment = async (req: Request, res: Response) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName, billingCycle, cardBrand, cardLast4, gstin, billingAddress, branchId } = req.body;
+    const { 
+      razorpay_order_id, 
+      razorpay_payment_id, 
+      razorpay_signature, 
+      planName, 
+      billingCycle, 
+      cardBrand, 
+      cardLast4, 
+      gstin, 
+      billingAddress, 
+      branchId,
+      promoCode,
+      discountApplied,
+      amountPaid
+    } = req.body;
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -327,6 +396,11 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
       subscriptionEnd.setMonth(now.getMonth() + 1);
     }
 
+    const invoiceNumber = `INV-GYMOS-${now.getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+    const discountVal = discountApplied ? parseFloat(discountApplied) : 0;
+    const basePrice = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+    const paidVal = amountPaid ? parseFloat(amountPaid) : (basePrice - discountVal);
+
     let updated;
     if (branchId) {
       const sub = await prisma.saaSSubscription.findUnique({
@@ -346,6 +420,11 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
           cardLast4: cardLast4 || '4242',
           gstin: gstin || null,
           billingAddress: billingAddress || null,
+          promoCodeUsed: promoCode || null,
+          discountApplied: discountVal,
+          amountPaid: paidVal,
+          razorpayPaymentId: razorpay_payment_id,
+          invoiceNumber
         },
       });
     } else {
@@ -362,6 +441,11 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
           cardLast4: cardLast4 || '4242',
           gstin: gstin || null,
           billingAddress: billingAddress || null,
+          promoCodeUsed: promoCode || null,
+          discountApplied: discountVal,
+          amountPaid: paidVal,
+          razorpayPaymentId: razorpay_payment_id,
+          invoiceNumber
         },
       });
     }
@@ -372,5 +456,76 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Razorpay SaaS verification error', { error: error.message });
     return res.status(500).json({ error: error.message || 'Internal payment verification error' });
+  }
+};
+
+export const downloadSaaSInvoice = async (req: Request, res: Response) => {
+  try {
+    const { subscriptionId } = req.params;
+    const reqUser = (req as any).user;
+    if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
+
+    const sub = await prisma.saaSSubscription.findUnique({
+      where: { id: subscriptionId },
+      include: {
+        owner: true,
+      }
+    });
+
+    if (!sub) {
+      return res.status(404).json({ error: 'Subscription invoice not found.' });
+    }
+
+    // Security: Only the owner or sub-admins of this workspace can download
+    if (sub.ownerId !== reqUser.id && reqUser.role !== 'ADMIN') {
+      const ownerId = await getOwnerIdForUser(reqUser);
+      if (sub.ownerId !== ownerId) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+    }
+
+    // Fetch branch details
+    let branchInfo = { name: 'Primary Branch', address: 'GymOS Core Location', phone: 'N/A', gstNo: sub.gstin || 'N/A' };
+    if (sub.branchId) {
+      const dbBranch = await prisma.branch.findUnique({
+        where: { id: sub.branchId }
+      });
+      if (dbBranch) {
+        branchInfo = {
+          name: dbBranch.name,
+          address: dbBranch.address || 'N/A',
+          phone: dbBranch.phone || 'N/A',
+          gstNo: dbBranch.gstNo || sub.gstin || 'N/A'
+        };
+      }
+    }
+
+    const basePrice = sub.billingCycle === 'YEARLY' ? 5500 : sub.billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+    
+    // Set headers for secure PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=Invoice-${sub.invoiceNumber || sub.id}.pdf`);
+
+    generateInvoicePDF(res, {
+      invoiceNumber: sub.invoiceNumber || `INV-TEMP-${sub.id.substring(0, 8)}`,
+      date: new Date(sub.updatedAt).toLocaleDateString(),
+      adminName: `${sub.owner.firstName} ${sub.owner.lastName}`,
+      adminEmail: sub.owner.email,
+      branchName: branchInfo.name,
+      branchAddress: branchInfo.address,
+      branchPhone: branchInfo.phone,
+      branchGst: branchInfo.gstNo,
+      planName: sub.planName,
+      billingCycle: sub.billingCycle,
+      amount: basePrice,
+      discount: sub.discountApplied,
+      total: sub.amountPaid > 0 ? sub.amountPaid : (basePrice - sub.discountApplied),
+      paymentId: sub.razorpayPaymentId || 'SYSTEM_TRIAL',
+    });
+  } catch (error: any) {
+    console.error('Invoice generation error:', error);
+    if (!res.headersSent) {
+      return res.status(500).json({ error: 'Failed to generate PDF invoice.' });
+    }
   }
 };

@@ -8,6 +8,7 @@ async function main() {
 
   // 1. Clean existing database
   console.log('Cleaning old records...');
+  await prisma.promoCode.deleteMany({});
   await prisma.supplementSale.deleteMany({});
   await prisma.supplement.deleteMany({});
   await prisma.equipment.deleteMany({});
@@ -519,6 +520,17 @@ async function main() {
 
     sales.push(sale);
   }
+
+  // Seed promo codes
+  console.log('Seeding Promo Codes...');
+  await prisma.promoCode.createMany({
+    data: [
+      { code: 'GYM20', discountPercent: 20.0, applicableCycles: ['MONTHLY', 'HALF_YEARLY', 'YEARLY'] },
+      { code: 'LAUNCH50', discountPercent: 50.0, applicableCycles: ['MONTHLY', 'HALF_YEARLY', 'YEARLY'] },
+      { code: 'ANNUAL30', discountPercent: 30.0, applicableCycles: ['YEARLY'] },
+    ],
+  });
+  console.log('Promo Codes seeded.');
 
   console.log('Database seeding successfully finished!');
   console.log('Credentials Summary:');

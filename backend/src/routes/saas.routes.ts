@@ -6,6 +6,8 @@ import {
   resetSaaSState,
   createSaaSOrder,
   verifySaaSPayment,
+  validatePromoCode,
+  downloadSaaSInvoice,
 } from '../controllers/saas.controller.js';
 import { authenticateToken } from '../middleware/auth.js';
 
@@ -13,6 +15,8 @@ const router = Router();
 
 // Retrieve SaaS status (requires authentication)
 router.get('/status', authenticateToken as any, getSaaSSubscriptionStatus);
+router.get('/validate-promo', authenticateToken as any, validatePromoCode);
+router.get('/invoice/:subscriptionId', authenticateToken as any, downloadSaaSInvoice);
 
 // Secure mutating actions
 router.use(authenticateToken as any);
