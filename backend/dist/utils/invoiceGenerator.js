@@ -15,11 +15,11 @@ export const generateInvoicePDF = (res, data) => {
     doc.fillColor('#ffffff')
         .font('Helvetica-Bold')
         .fontSize(24)
-        .text('GYMOS PLATFORM', 50, 40);
+        .text('GYMNASIUM', 50, 40);
     doc.fillColor(primaryColor)
         .font('Helvetica')
         .fontSize(9)
-        .text('CLOUD GYM MANAGEMENT SOFTWARE', 50, 68);
+        .text('PREMIUM GYM MANAGEMENT SOFTWARE', 50, 68);
     // Invoice Title block
     doc.fillColor('#ffffff')
         .font('Helvetica-Bold')
@@ -58,7 +58,7 @@ export const generateInvoicePDF = (res, data) => {
     y += 25;
     doc.rect(50, y, 495, 36).fill(lightColor);
     doc.fillColor(darkColor).font('Helvetica').fontSize(9);
-    doc.text(`GymOS Premium Cloud Subscription - ${data.planName} Plan`, 60, y + 14);
+    doc.text(`Gymnasium Premium Cloud Subscription - ${data.planName} Plan`, 60, y + 14);
     doc.text(data.billingCycle, 260, y + 14);
     doc.text(`INR ${data.amount.toFixed(2)}`, 360, y + 14, { width: 80, align: 'right' });
     doc.text(`INR ${data.total.toFixed(2)}`, 450, y + 14, { width: 85, align: 'right' });
@@ -81,6 +81,6 @@ export const generateInvoicePDF = (res, data) => {
     doc.fillColor(mutedColor)
         .font('Helvetica-Oblique')
         .fontSize(8)
-        .text('Thank you for partnering with GymOS Cloud! This is a system-generated secure invoice receipt and requires no physical signatures.', 50, 480, { align: 'center', width: 495 });
+        .text('Thank you for partnering with Gymnasium Cloud! This is a system-generated secure invoice receipt and requires no physical signatures.', 50, 480, { align: 'center', width: 495 });
     doc.end();
 };

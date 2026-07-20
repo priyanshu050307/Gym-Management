@@ -307,6 +307,18 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     const member = sub.member;
     const user = member.user;
 
+    // Fetch branch info dynamically
+    let branch = null;
+    if (user.branchId) {
+      branch = await prisma.branch.findUnique({
+        where: { id: user.branchId },
+      });
+    }
+    const branchName = branch ? branch.name : 'Gymnasium Club';
+    const branchAddress = branch ? branch.address : '100 Fitness Boulevard';
+    const branchPhone = branch ? branch.phone : 'N/A';
+    const branchGst = branch ? branch.gstNo : 'N/A';
+
     const reqUser = (req as any).user;
     if (reqUser && reqUser.role === 'MEMBER' && user.id !== reqUser.id) {
       return res.status(403).json({ error: 'Access Denied: You can only download your own invoices.' });
@@ -330,54 +342,69 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     const secondaryColor = '#475569'; // Slate-600
     const lightColor = '#f8fafc'; // Slate-50
 
-    // Header Title
+    // Header Title: Branch Name
     doc.fillColor(primaryColor)
-       .fontSize(26)
-       .text('GYMNASIUM CLUB', 50, 45)
-       .fontSize(10)
+       .font('Helvetica-Bold')
+       .fontSize(18)
+       .text(branchName.toUpperCase(), 50, 45)
+       .fontSize(9)
+       .font('Helvetica')
        .fillColor(secondaryColor)
-       .text('PREMIUM FITNESS & HEALTH CLUB', 50, 75);
+       .text('SECURE MEMBER PAYMENT RECEIPT', 50, 70);
+
+    // Highlight Gymnasium Brand
+    doc.rect(380, 42, 170, 20).fill('#f5f3ff');
+    doc.fillColor(primaryColor)
+       .font('Helvetica-Bold')
+       .fontSize(8)
+       .text('POWERED BY GYMNASIUM SOFTWARE', 380, 48, { align: 'center', width: 170 });
 
     // Invoice Metadata
-    doc.fontSize(16)
+    doc.font('Helvetica')
+       .fontSize(14)
        .fillColor('#0f172a')
-       .text('INVOICE', 400, 45, { align: 'right' })
-       .fontSize(9)
+       .text('RECEIPT', 400, 72, { align: 'right' })
+       .fontSize(8)
        .fillColor(secondaryColor)
-       .text(`Invoice ID: ${payment.id.toUpperCase()}`, 400, 65, { align: 'right' })
-       .text(`Date: ${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : 'N/A'}`, 400, 78, { align: 'right' })
-       .text(`Status: ${payment.status}`, 400, 91, { align: 'right' });
+       .text(`ID: ${payment.id.toUpperCase()}`, 400, 90, { align: 'right' })
+       .text(`Date: ${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : 'N/A'}`, 400, 102, { align: 'right' })
+       .text(`Status: ${payment.status}`, 400, 114, { align: 'right' });
 
     // Separation line
-    doc.moveTo(50, 115).lineTo(550, 115).strokeColor('#e2e8f0').stroke();
+    doc.moveTo(50, 130).lineTo(550, 130).strokeColor('#e2e8f0').stroke();
 
-    // From info
+    // From info (Branch info)
     doc.fontSize(10)
        .fillColor('#0f172a')
-       .text('BILLED BY:', 50, 135)
+       .font('Helvetica-Bold')
+       .text('BILLED BY:', 50, 145)
+       .font('Helvetica')
        .fontSize(9)
        .fillColor(secondaryColor)
-       .text('Gymnasium Inc.', 50, 150)
-       .text('100 Fitness Boulevard', 50, 163)
-       .text('New York, NY 10001', 50, 176)
-       .text('support@gymnasium.com', 50, 189);
+       .text(branchName, 50, 160)
+       .text(branchAddress || 'N/A', 50, 173)
+       .text(`Phone: ${branchPhone || 'N/A'}`, 50, 186)
+       .text(`GSTIN: ${branchGst || 'N/A'}`, 50, 199);
 
     // To info
     doc.fontSize(10)
        .fillColor('#0f172a')
-       .text('BILLED TO:', 300, 135)
+       .font('Helvetica-Bold')
+       .text('BILLED TO:', 300, 145)
+       .font('Helvetica')
        .fontSize(9)
        .fillColor(secondaryColor)
-       .text(`${user.firstName} ${user.lastName}`, 300, 150)
-       .text(`Email: ${user.email}`, 300, 163)
-       .text(`Member ID: ${member.id}`, 300, 176)
-       .text(`Emergency contact: ${member.emergencyContact || 'None'}`, 300, 189);
+       .text(`${user.firstName} ${user.lastName}`, 300, 160)
+       .text(`Email: ${user.email}`, 300, 173)
+       .text(`Member ID: ${member.id}`, 300, 186)
+       .text(`Emergency: ${member.emergencyContact || 'None'}`, 300, 199);
 
     // Table Header Block
-    const tableTop = 230;
+    const tableTop = 240;
     doc.rect(50, tableTop, 500, 25).fill(lightColor);
 
     doc.fillColor('#0f172a')
+       .font('Helvetica-Bold')
        .fontSize(9)
        .text('ITEM DESCRIPTION', 60, tableTop + 8)
        .text('DURATION', 280, tableTop + 8)
@@ -389,6 +416,7 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     doc.moveTo(50, itemRowTop).lineTo(550, itemRowTop).strokeColor('#e2e8f0').stroke();
 
     doc.fillColor(secondaryColor)
+       .font('Helvetica')
        .text(`Membership Plan: ${sub.plan.name}`, 60, itemRowTop + 15)
        .text(`${sub.plan.durationMonths} ${sub.plan.durationMonths === 1 ? 'Month' : 'Months'}`, 280, itemRowTop + 15)
        .text(`${payment.method || 'PENDING'}`, 380, itemRowTop + 15)
@@ -399,21 +427,23 @@ export const downloadInvoice = async (req: Request, res: Response) => {
     const totalTop = itemRowTop + 50;
     doc.moveTo(50, totalTop).lineTo(550, totalTop).strokeColor('#e2e8f0').stroke();
 
-    doc.fontSize(11)
+    doc.fontSize(10)
        .fillColor('#0f172a')
        .text('Subtotal:', 380, totalTop + 15)
        .text(`Rs. ${payment.amount.toFixed(2)}`, 480, totalTop + 15, { align: 'right' })
        .text('Tax (0%):', 380, totalTop + 30)
        .text('Rs. 0.00', 480, totalTop + 30, { align: 'right' })
-       .fontSize(14)
+       .fontSize(12)
+       .font('Helvetica-Bold')
        .fillColor(primaryColor)
        .text('Grand Total:', 380, totalTop + 55)
        .text(`Rs. ${payment.amount.toFixed(2)}`, 480, totalTop + 55, { align: 'right' });
 
     // Footer signature
     doc.fillColor(secondaryColor)
+       .font('Helvetica-Oblique')
        .fontSize(8)
-       .text('Thank you for being part of the Gymnasium community! Please keep this copy for your records.', 50, 480, { align: 'center' });
+       .text('Thank you for being part of the Gymnasium community! Generated securely via Gymnasium Cloud Suite.', 50, 480, { align: 'center', width: 500 });
 
     // End Document
     doc.end();

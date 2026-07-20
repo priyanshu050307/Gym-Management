@@ -138,7 +138,7 @@ export const SaaSBilling: React.FC = () => {
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: 'Gymflow SaaS Platform',
+        name: 'Gymnasium SaaS Platform',
         description: `Upgrade ${selectedBranchName} - ${cycle} ${appliedPromo ? `(Code: ${appliedPromo})` : ''}`,
         order_id: orderData.orderId,
         handler: async function (response: any) {
@@ -164,7 +164,7 @@ export const SaaSBilling: React.FC = () => {
               },
             });
 
-            setSuccess(`Successfully subscribed ${selectedBranchName} to GymOS Premium (${cycle})!`);
+            setSuccess(`Successfully subscribed ${selectedBranchName} to Gymnasium Premium (${cycle})!`);
             // Reload page to reflect SaaS state changes in context
             setTimeout(() => window.location.reload(), 1500);
           } catch (err: any) {
@@ -263,7 +263,7 @@ export const SaaSBilling: React.FC = () => {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">SaaS Subscription & Billing</h1>
-        <p className="text-gym-muted mt-1">Manage GymOS cloud tenant plan, billing address, tax details, and payment histories.</p>
+        <p className="text-gym-muted mt-1">Manage Gymnasium cloud tenant plan, billing address, tax details, and payment histories.</p>
       </div>
 
       {error && (
@@ -437,7 +437,7 @@ export const SaaSBilling: React.FC = () => {
           <h4 className="text-sm font-semibold text-gym-text flex items-center gap-2">
             <Zap className="h-4.5 w-4.5 text-gym-primary" /> Apply Platform Promo Code
           </h4>
-          <p className="text-xs text-gym-muted mt-0.5">Enter a discount code to apply savings across all GymOS cloud packages.</p>
+          <p className="text-xs text-gym-muted mt-0.5">Enter a discount code to apply savings across all Gymnasium cloud packages.</p>
         </div>
 
         <div className="flex gap-2">
