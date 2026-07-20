@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { getSupplements, createSupplement, updateSupplement, deleteSupplement } from '../controllers/supplement.controller.js';
+import { authenticateToken, requireRoles } from '../middleware/auth.js';
+import { UserRole } from '@prisma/client';
+const router = Router();
+router.use(authenticateToken);
+router.get('/', getSupplements);
+router.post('/', requireRoles([UserRole.ADMIN, UserRole.STAFF]), createSupplement);
+router.put('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]), updateSupplement);
+router.delete('/:id', requireRoles([UserRole.ADMIN, UserRole.STAFF]), deleteSupplement);
+export default router;

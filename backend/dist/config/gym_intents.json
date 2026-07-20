@@ -1,0 +1,184 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["hi", "hello", "hey", "hola", "greetings", "is anyone there", "hello bot", "good morning", "good afternoon"],
+      "responses": ["Hello! Welcome to GymOS Support Assistant. How can I help you today?", "Hi there! How can I assist you with your fitness portal today?", "Greetings! I am GymBot AI, your personal fitness system assistant. What are we looking for?"],
+      "suggestions": ["View Membership Plans", "Group Class Schedules", "Biometric Check-in Help"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["bye", "goodbye", "see you later", "exit", "quit", "talk to you later", "have a good day"],
+      "responses": ["Goodbye! Stay fit, stay active!", "See you later! Don't forget your next workout!", "Bye! Have an energetic day ahead!"],
+      "suggestions": ["Restart Chat"]
+    },
+    {
+      "tag": "membership_plans",
+      "patterns": ["membership plans", "what plans do you have", "plans pricing", "pricing", "packages", "cost", "subscription price", "rates", "monthly fee", "yearly fee"],
+      "responses": ["We offer multiple flexible packages tailored to your schedule:\n\n* **Starter Plan**: ₹500/month (Basic access)\n* **Student Discount Pack**: ₹1,000/month (Requires Student ID)\n* **Pilates Core Focus**: ₹2,000/month (Specialist Pilates)\n* **Corporate Elite Pass**: ₹10,000/year (12 Months Elite access)\n\nYou can renew or upgrade your package directly from your member billing dashboard."],
+      "suggestions": ["1 Day Trial", "Renew Membership", "Billing & Invoices"]
+    },
+    {
+      "tag": "costliest_plan",
+      "patterns": ["costliest", "most expensive", "highest price", "maximum cost", "expensive plan", "premium pricing", "costly one", "highest plan"],
+      "responses": ["Our premium and costliest package is the **Corporate Elite Pass** priced at **₹10,000/year** (or ₹34,990/year for multi-branch Professional access). It grants complete access to state-of-the-art facilities, trainer schedules, and supplement POS discounts."],
+      "suggestions": ["Starter Plan Price", "Group Class Schedules"]
+    },
+    {
+      "tag": "cheapest_plan",
+      "patterns": ["cheapest", "most basic", "lowest price", "minimum cost", "cheap plan", "starter pricing", "low cost", "cheapest plan", "least expensive"],
+      "responses": ["Our most affordable package is the **Starter Plan** at only **₹500/month**. We also offer a **1 Day Trial** for **₹0** if you want to try our facilities first!"],
+      "suggestions": ["1 Day Trial", "Corporate Elite Pass"]
+    },
+    {
+      "tag": "trial_period",
+      "patterns": ["trial", "free trial", "1 day trial", "one day trial", "do you have trial", "test period", "try for free", "trial pack"],
+      "responses": ["Yes! We support a **1 Day Trial** package for only ₹0! You can choose this plan during member registration or renewal to experience our state-of-the-art facilities before selecting a recurring billing interval."],
+      "suggestions": ["View Membership Plans", "Register a Member"]
+    },
+    {
+      "tag": "trainer_info",
+      "patterns": ["trainers", "personal trainer", "coaches", "specialty", "trainer schedule", "find a coach", "workout trainer", "who is the trainer"],
+      "responses": ["Our branches host certified fitness coaches specializing in Strength & Conditioning, Powerlifting, HIIT, and Yoga. Members can be assigned a personal trainer to design custom workout and diet plans in their portal profile."],
+      "suggestions": ["Group Class Schedules", "My Workout Plan"]
+    },
+    {
+      "tag": "class_schedule",
+      "patterns": ["group classes", "class schedule", "yoga class", "hiit class", "booking a class", "group training", "aerobics", "what classes are today", "calendar"],
+      "responses": ["We run group classes daily including Yoga, HIIT, and Power Weightlifting. You can view timings, trainer assignments, and book slot capacities in real-time under the **Classes & Bookings** panel."],
+      "suggestions": ["View Classes Bookings", "My Assigned Trainer"]
+    },
+    {
+      "tag": "branch_info",
+      "patterns": ["branches", "where is the gym", "locations", "gym branches", "active branch", "central headquarter", "address"],
+      "responses": ["GymOS supports multi-branch scaling! Admins can create and isolate branches. Currently, our main Central Headquarter Branch is located at Central Plaza, Suite 402, and operates from 6:00 AM to 10:00 PM."],
+      "suggestions": ["Opening Hours", "Manage Branches"]
+    },
+    {
+      "tag": "biometric_sync",
+      "patterns": ["biometric sync", "fingerprint", "checkin agent", "gymsyncagent", "how checkin works", "rfid", "device log", "attendance sync"],
+      "responses": ["Check-ins are automated via the **GymSyncAgent** desktop client. It interfaces with biometric hardware (ZKTeco/eSSL logs) and syncs logs locally and to the cloud. If offline, logs are safely cached in SQLite and retried upon reconnection."],
+      "suggestions": ["Biometric Agent Guide", "Check-In Kiosk"]
+    },
+    {
+      "tag": "profile_help",
+      "patterns": ["change password", "update profile", "profile photo", "upload picture", "avatar", "change phone number", "edit name"],
+      "responses": ["You can manage your identity in your **My Profile** tab. Here, you can edit your name, contact phone, update passwords, and upload custom profile pictures or select preset avatars."],
+      "suggestions": ["Go to My Profile", "View Membership Details"]
+    },
+    {
+      "tag": "billing_payments",
+      "patterns": ["how to pay", "razorpay", "cash payment", "billing receipts", "invoices", "refunds", "payment method", "tax invoice"],
+      "responses": ["We support secure payments via **Razorpay** (online UPI, Cards, NetBanking) and cash. All billing ledger records are logged, and invoices are generated with GST information for reconciliation."],
+      "suggestions": ["Membership Details", "View Invoices"]
+    },
+    {
+      "tag": "gym_rules",
+      "patterns": ["opening hours", "gym timing", "what time does the gym open", "rules", "guidelines", "dress code", "towels", "hours"],
+      "responses": ["Our facilities are open daily from **6:00 AM to 10:00 PM**. Please ensure you bring indoor athletic shoes, a sweat towel, and follow equipment sanitation guidelines after completing your sets."],
+      "suggestions": ["Gym Locations", "Group Class Schedules"]
+    },
+    {
+      "tag": "active_members",
+      "patterns": ["member count", "active members", "how many members", "members list", "enrolled members", "gym occupancy"],
+      "responses": ["For Admins, you can view the complete member registry, their active registration statuses, emergency contacts, and active plans under the **Members** section. The dashboard also aggregates real-time monthly check-ins and signups."],
+      "suggestions": ["Go to Dashboard", "View Members List"]
+    },
+    {
+      "tag": "project_overview",
+      "patterns": ["what is this project", "how does this software work", "what is gymos", "project overview", "what can this system do", "explain the platform", "how to use the gym project"],
+      "responses": ["GymOS is a premium SaaS Gym Management platform featuring multi-branch isolation, billing portals, schedules/classes booking, check-in kiosk tracking, and supplement POS systems. It supports four distinct roles: Administrator, Staff, Trainer, and Member. Ask me about a specific role to learn more!"],
+      "suggestions": ["Admin User Guide", "Member User Guide", "Trainer User Guide"]
+    },
+    {
+      "tag": "admin_guide",
+      "patterns": ["admin guide", "how to use as admin", "administrator instructions", "admin manual", "what can admins do", "help for admin"],
+      "responses": ["As an **Administrator**, you have complete control over your gym branches:\n\n1. **Dashboard**: View branch revenue, member metrics, peak hours, and check-in logs.\n2. **Branches**: Add/edit branches and assign managers.\n3. **Membership Plans**: Create, edit, and deactivate subscription tiers.\n4. **Equipment**: Track gym assets, quantities, and service maintenance dates.\n5. **SaaS Subscription**: Purchase or renew your platform subscription passes."],
+      "suggestions": ["Staff User Guide", "Membership Pricing", "Biometric Sync Help"]
+    },
+    {
+      "tag": "staff_guide",
+      "patterns": ["staff guide", "how to use as staff", "staff instructions", "staff manual", "what can staff do", "help for staff", "receptionist guide"],
+      "responses": ["As a **Staff Member/Receptionist**, you manage day-to-day operations for your branch:\n\n1. **Member Registry**: Onboard and register new members, freeze profiles, or review membership expiry dates.\n2. **Billing & Payments**: Record membership fees, process manual payments, and email digital receipts.\n3. **Supplement POS**: Check out protein/supplements, manage stock inventory levels, and log sales.\n4. **Check-Ins**: Monitor active entries in real-time."],
+      "suggestions": ["Member User Guide", "Register a Member", "Record Payment Help"]
+    },
+    {
+      "tag": "trainer_guide",
+      "patterns": ["trainer guide", "how to use as trainer", "trainer instructions", "trainer manual", "what can trainers do", "help for trainer"],
+      "responses": ["As a **Trainer**, you manage fitness plans and group classes:\n\n1. **Group Classes**: Create and manage workout sessions, set capacities, and check enrolled member rosters.\n2. **Member Rosters**: Track client goals, write progress feedback logs, and assign personal diet routine guides."],
+      "suggestions": ["Group Class Schedules", "Admin User Guide"]
+    },
+    {
+      "tag": "member_guide",
+      "patterns": ["member guide", "how to use as member", "member instructions", "member manual", "what can members do", "help for member"],
+      "responses": ["As a **Member**, you have self-service access to your fitness journey:\n\n1. **Portal**: View your active subscription plans, remaining days, and invoice payment receipts.\n2. **Group Classes**: Browse scheduled sessions and book a slot.\n3. **Profile**: Upload your avatar photo, customize profile details, and update your phone number."],
+      "suggestions": ["Group Class Schedules", "View Membership Plans", "My Profile Edit"]
+    },
+    {
+      "tag": "checkin_kiosk",
+      "patterns": ["check-in kiosk", "checkin kiosk", "attendance kiosk", "how to check in", "kiosk", "member kiosk", "qr checkin", "id checkin", "check in kiosk"],
+      "responses": ["The **Check-In Kiosk** is a self-service page where members can log their attendance. Members can either enter their unique Member ID or scan their QR code on their phone screen. This instantly logs their check-in and updates the occupancy charts on the admin dashboard in real-time."],
+      "suggestions": ["Biometric Sync Info", "Member User Guide"]
+    },
+    {
+      "tag": "dashboard_feature",
+      "patterns": ["dashboard page", "admin dashboard", "home page metrics", "overview statistics", "what is on dashboard", "view occupancy stats"],
+      "responses": ["The **Dashboard** is the administrative homepage. For Admins and Staff, it displays real-time summaries of total active members, monthly branch revenue, today's check-ins, pending payments, active trainers, and expiring subscriptions, alongside weekly registration and peak hour charts."],
+      "suggestions": ["Admin User Guide", "Active Branch Info"]
+    },
+    {
+      "tag": "members_feature",
+      "patterns": ["members list", "members directory", "onboard member", "register member", "freeze member", "search members", "members page"],
+      "responses": ["The **Members Directory** is the central list of all registered member accounts. Admins and Staff can view check-in history, search by name or email, onboard new members, freeze profiles, check subscription end dates, and edit emergency contacts."],
+      "suggestions": ["Register a Member", "Staff User Guide"]
+    },
+    {
+      "tag": "plans_feature",
+      "patterns": ["plans list", "membership plans page", "manage plans", "add membership plans", "create gym package", "membership packages management"],
+      "responses": ["The **Membership Plans** page is where Admins define packages (e.g. Starter Plan, Pilates Focus). You can configure rates, duration (monthly, half-yearly, yearly), and class privileges. Staff and members can see these plans, but only Admins can create or modify them."],
+      "suggestions": ["View Membership Plans", "Admin User Guide"]
+    },
+    {
+      "tag": "billing_feature",
+      "patterns": ["billing list", "billing page", "record payment", "manual payment", "invoice history", "billing ledger", "outstanding balances"],
+      "responses": ["The **Billing & Payments** section is the financial ledger of your branch. Staff can record payments (cash, card, bank transfer), review outstanding balances, generate PDF invoices, and send receipt notifications to members."],
+      "suggestions": ["Record Payment Help", "Staff User Guide"]
+    },
+    {
+      "tag": "bookings_feature",
+      "patterns": ["bookings page", "group class booking", "schedule classes", "class bookings", "gym schedules", "book a slot"],
+      "responses": ["The **Classes & Bookings** panel manages fitness schedule rosters. Trainers can create group class sessions, assign workout areas, set capacities, and check enrolled member rosters. Members can browse and book slots directly from their portal."],
+      "suggestions": ["Trainer User Guide", "Group Class Schedules"]
+    },
+    {
+      "tag": "equipment_feature",
+      "patterns": ["equipment tracking", "gym machines", "dumbbells", "treadmills", "manage equipment", "maintenance log", "gym assets"],
+      "responses": ["The **Equipment** section tracks your branch gym machines, dumbbells, and cardio assets. You can log total quantities, conditions, and set next maintenance/service dates to prevent failures."],
+      "suggestions": ["Admin User Guide", "Active Branch Info"]
+    },
+    {
+      "tag": "supplements_feature",
+      "patterns": ["supplements inventory", "supplement sales", "sell protein", "supplement stock", "inventory pos", "shop items", "pos transactions"],
+      "responses": ["The **Supplements Inventory** acts as a Point-of-Sale (POS) system. Staff can track protein/supplement inventory, record transactions, monitor low stock levels, and log sales trends."],
+      "suggestions": ["Staff User Guide", "Record Supplement Sale"]
+    },
+    {
+      "tag": "branches_feature",
+      "patterns": ["branches page", "manage branches", "add branch", "locations management", "gym branches locations"],
+      "responses": ["The **Branches** section enables multi-branch operations. Administrators can add new branch locations, assign branch managers, and verify separate telemetry configurations."],
+      "suggestions": ["Admin User Guide", "Active Branch Info"]
+    },
+    {
+      "tag": "profile_feature",
+      "patterns": ["my profile", "profile page", "update my details", "avatar photo", "personal settings", "change details"],
+      "responses": ["The **My Profile** tab allows users to maintain their identity. You can upload custom avatars, edit name and phone details, modify passwords, and view recent role-based updates."],
+      "suggestions": ["Member User Guide", "Trainer User Guide"]
+    },
+    {
+      "tag": "help",
+      "patterns": ["help", "support", "what can you do", "bot functions", "commands", "menu"],
+      "responses": ["I can help you navigate GymOS! Ask me about:\n\n1. **Membership Plans & Rates**\n2. **Group Class Schedules & Bookings**\n3. **Updating Profile details & pictures**\n4. **Biometric agent check-ins**\n5. **Branch locations and timing**"],
+      "suggestions": ["View Membership Plans", "Group Class Schedules", "Opening Hours"]
+    }
+  ]
+}

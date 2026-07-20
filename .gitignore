@@ -32,7 +32,7 @@ frontend/.svelte-kit/
 frontend/.next/
 
 # Backend Build & Temporary Files
-backend/dist/
+# backend/dist/ intentionally NOT ignored — compiled on local, deployed via git
 backend/build/
 backend/out/
 

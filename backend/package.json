@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "prisma generate && tsc && node copy-assets.js",
+    "build:vps": "prisma generate",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "prisma:generate": "prisma generate",
