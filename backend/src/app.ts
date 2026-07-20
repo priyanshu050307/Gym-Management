@@ -134,14 +134,22 @@ const saasLockMiddleware = async (
 
     if (!ownerId) return next();
 
-    const cacheKey = `saas_sub:${ownerId}`;
+    const branchId = decoded.branchId || req.headers['x-branch-id'] || req.query.branchId;
+    const cacheKey = branchId ? `saas_sub_branch:${branchId}` : `saas_sub_owner:${ownerId}`;
     let sub = cacheGet<any>(cacheKey);
 
     if (sub === undefined) {
-      sub = await prisma.saaSSubscription.findUnique({
-        where: { ownerId },
-      });
-      // Store in memory, fallback to null if not found
+      if (branchId) {
+        sub = await prisma.saaSSubscription.findUnique({
+          where: { branchId: branchId as string },
+        });
+      }
+      if (!sub) {
+        sub = await prisma.saaSSubscription.findFirst({
+          where: { ownerId },
+          orderBy: { createdAt: 'asc' },
+        });
+      }
       cacheSet(cacheKey, sub || null, 120);
     }
 

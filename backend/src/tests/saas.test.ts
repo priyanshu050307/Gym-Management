@@ -49,7 +49,16 @@ vi.mock('../config/prisma.js', () => {
       },
       saaSSubscription: {
         findUnique: vi.fn().mockResolvedValue(mockSubscription),
-        create: vi.fn().mockResolvedValue(mockSubscription),
+        findFirst: vi.fn().mockResolvedValue(mockSubscription),
+        create: vi.fn().mockImplementation(async ({ data }) => {
+          return {
+            ...mockSubscription,
+            status: data.status,
+            planName: data.planName,
+            billingCycle: data.billingCycle,
+            subscriptionEnd: data.subscriptionEnd,
+          };
+        }),
         update: vi.fn().mockImplementation(async ({ data }) => {
           return {
             ...mockSubscription,

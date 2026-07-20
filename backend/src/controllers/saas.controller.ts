@@ -26,17 +26,39 @@ const getOwnerIdForUser = async (user: any) => {
 };
 
 // Helper to guarantee a SaaS subscription record exists
-const getOrCreateSaaSSubscription = async (ownerId: string) => {
-  let sub = await prisma.saaSSubscription.findUnique({
+const getOrCreateSaaSSubscription = async (ownerId: string, branchId?: string | null) => {
+  if (branchId) {
+    let sub = await prisma.saaSSubscription.findUnique({
+      where: { branchId },
+    });
+    if (!sub) {
+      const trialEndDate = new Date();
+      trialEndDate.setDate(trialEndDate.getDate() + 30); // 30 days trial
+      sub = await prisma.saaSSubscription.create({
+        data: {
+          ownerId,
+          branchId,
+          status: 'TRIAL_ACTIVE',
+          planName: 'Starter',
+          trialEndDate,
+          billingCycle: 'MONTHLY',
+        },
+      });
+    }
+    return sub;
+  }
+
+  let sub = await prisma.saaSSubscription.findFirst({
     where: { ownerId },
+    orderBy: { createdAt: 'asc' },
   });
   if (!sub) {
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + 30); // 30 days trial
-
     sub = await prisma.saaSSubscription.create({
       data: {
         ownerId,
+        branchId: null,
         status: 'TRIAL_ACTIVE',
         planName: 'Starter',
         trialEndDate,
@@ -47,13 +69,16 @@ const getOrCreateSaaSSubscription = async (ownerId: string) => {
   return sub;
 };
 
+import { cacheDel } from '../config/cache.js';
+
 export const getSaaSSubscriptionStatus = async (req: Request, res: Response) => {
   try {
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
     const ownerId = await getOwnerIdForUser(reqUser);
-    const sub = await getOrCreateSaaSSubscription(ownerId);
+    const branchId = (req.query.branchId as string) || null;
+    const sub = await getOrCreateSaaSSubscription(ownerId, branchId);
     
     // Check if trial has expired in real-time
     if (sub.status === 'TRIAL_ACTIVE' && new Date() > new Date(sub.trialEndDate)) {
@@ -61,6 +86,7 @@ export const getSaaSSubscriptionStatus = async (req: Request, res: Response) => 
         where: { id: sub.id },
         data: { status: 'TRIAL_EXPIRED' },
       });
+      cacheDel(`saas_sub_branch:${sub.branchId || 'none'}`, `saas_sub_owner:${ownerId}`);
       return res.status(200).json({ subscription: updated });
     }
 
@@ -70,10 +96,27 @@ export const getSaaSSubscriptionStatus = async (req: Request, res: Response) => 
         where: { id: sub.id },
         data: { status: 'SUBSCRIBED_EXPIRED' },
       });
+      cacheDel(`saas_sub_branch:${sub.branchId || 'none'}`, `saas_sub_owner:${ownerId}`);
       return res.status(200).json({ subscription: updated });
     }
 
-    return res.status(200).json({ subscription: sub });
+    // Also fetch all branch subscriptions of this owner for the billing list overview
+    const allSubscriptions = await prisma.saaSSubscription.findMany({
+      where: { ownerId },
+      include: {
+        branch: {
+          select: {
+            name: true,
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return res.status(200).json({ 
+      subscription: sub,
+      allSubscriptions
+    });
   } catch (error: any) {
     console.error('Fetch SaaS status error:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -82,7 +125,7 @@ export const getSaaSSubscriptionStatus = async (req: Request, res: Response) => 
 
 export const subscribeToPlan = async (req: Request, res: Response) => {
   try {
-    const { planName, billingCycle, cardBrand, cardLast4, gstin, billingAddress } = req.body;
+    const { planName, billingCycle, cardBrand, cardLast4, gstin, billingAddress, branchId } = req.body;
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -91,7 +134,7 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
     }
 
     const ownerId = await getOwnerIdForUser(reqUser);
-    const sub = await getOrCreateSaaSSubscription(ownerId);
+    const sub = await getOrCreateSaaSSubscription(ownerId, branchId);
     const now = new Date();
     const subscriptionEnd = new Date();
     
@@ -117,6 +160,7 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
       },
     });
 
+    cacheDel(`saas_sub_branch:${branchId || 'none'}`, `saas_sub_owner:${ownerId}`);
     return res.status(200).json({ message: 'Subscribed successfully', subscription: updated });
   } catch (error: any) {
     console.error('SaaS subscription error:', error);
@@ -126,12 +170,12 @@ export const subscribeToPlan = async (req: Request, res: Response) => {
 
 export const updateBillingProfile = async (req: Request, res: Response) => {
   try {
-    const { gstin, billingAddress, cardBrand, cardLast4 } = req.body;
+    const { gstin, billingAddress, cardBrand, cardLast4, branchId } = req.body;
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
     const ownerId = await getOwnerIdForUser(reqUser);
-    const sub = await getOrCreateSaaSSubscription(ownerId);
+    const sub = await getOrCreateSaaSSubscription(ownerId, branchId);
 
     const updated = await prisma.saaSSubscription.update({
       where: { id: sub.id },
@@ -197,7 +241,7 @@ const getRazorpayInstance = () => {
 
 export const createSaaSOrder = async (req: Request, res: Response) => {
   try {
-    const { planName, billingCycle } = req.body;
+    const { planName, billingCycle, branchId } = req.body;
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -217,6 +261,7 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
         userId: reqUser.id,
         planName,
         billingCycle,
+        branchId: branchId || '',
       }
     };
 
@@ -239,7 +284,7 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
 
 export const verifySaaSPayment = async (req: Request, res: Response) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName, billingCycle, cardBrand, cardLast4, gstin, billingAddress } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName, billingCycle, cardBrand, cardLast4, gstin, billingAddress, branchId } = req.body;
     const reqUser = (req as any).user;
     if (!reqUser) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -263,7 +308,6 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
     }
 
     const ownerId = await getOwnerIdForUser(reqUser);
-    const sub = await getOrCreateSaaSSubscription(ownerId);
     const now = new Date();
     const subscriptionEnd = new Date();
     
@@ -275,19 +319,46 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
       subscriptionEnd.setMonth(now.getMonth() + 1);
     }
 
-    const updated = await prisma.saaSSubscription.update({
-      where: { id: sub.id },
-      data: {
-        status: 'SUBSCRIBED_ACTIVE',
-        planName: planName || 'Premium',
-        billingCycle: billingCycle || 'MONTHLY',
-        subscriptionEnd,
-        cardBrand: cardBrand || 'Visa',
-        cardLast4: cardLast4 || '4242',
-        gstin: gstin || null,
-        billingAddress: billingAddress || null,
-      },
-    });
+    let updated;
+    if (branchId) {
+      const sub = await prisma.saaSSubscription.findUnique({
+        where: { branchId },
+      });
+      if (!sub) {
+        return res.status(404).json({ error: 'Subscription not found for this branch.' });
+      }
+      updated = await prisma.saaSSubscription.update({
+        where: { id: sub.id },
+        data: {
+          status: 'SUBSCRIBED_ACTIVE',
+          planName: planName || 'Premium',
+          billingCycle: billingCycle || 'MONTHLY',
+          subscriptionEnd,
+          cardBrand: cardBrand || 'Visa',
+          cardLast4: cardLast4 || '4242',
+          gstin: gstin || null,
+          billingAddress: billingAddress || null,
+        },
+      });
+    } else {
+      updated = await prisma.saaSSubscription.create({
+        data: {
+          ownerId,
+          branchId: null,
+          status: 'SUBSCRIBED_ACTIVE',
+          planName: planName || 'Premium',
+          billingCycle: billingCycle || 'MONTHLY',
+          subscriptionEnd,
+          trialEndDate: now,
+          cardBrand: cardBrand || 'Visa',
+          cardLast4: cardLast4 || '4242',
+          gstin: gstin || null,
+          billingAddress: billingAddress || null,
+        },
+      });
+    }
+
+    cacheDel(`saas_sub_branch:${branchId || 'none'}`, `saas_sub_owner:${ownerId}`);
 
     return res.status(200).json({ message: 'Subscribed successfully', subscription: updated });
   } catch (error: any) {

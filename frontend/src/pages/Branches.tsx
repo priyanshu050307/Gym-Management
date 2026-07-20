@@ -19,6 +19,11 @@ export const Branches: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
   
+  // SaaS billing states
+  const [subCount, setSubCount] = useState(0);
+  const [activePlan, setActivePlan] = useState<any>(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  
   // Form State
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -31,6 +36,20 @@ export const Branches: React.FC = () => {
   const [staffPassword, setStaffPassword] = useState('');
   const [staffFirstName, setStaffFirstName] = useState('');
   const [staffLastName, setStaffLastName] = useState('');
+
+  const fetchSaaSInfo = async () => {
+    try {
+      const data = await apiFetch<{ allSubscriptions?: any[], subscription?: any }>('/saas/status');
+      if (data.allSubscriptions) {
+        setSubCount(data.allSubscriptions.length);
+      }
+      if (data.subscription) {
+        setActivePlan(data.subscription);
+      }
+    } catch (err) {
+      console.error('Failed to load SaaS info:', err);
+    }
+  };
 
   // Staff Portal States
   const [staffModalOpen, setStaffModalOpen] = useState(false);
@@ -156,6 +175,7 @@ export const Branches: React.FC = () => {
 
   useEffect(() => {
     fetchBranches();
+    fetchSaaSInfo();
   }, []);
 
   const openCreateModal = () => {
@@ -206,6 +226,99 @@ export const Branches: React.FC = () => {
       }
     }
 
+    const limitExceeded = !editingBranch && branches.length >= subCount;
+
+    if (limitExceeded) {
+      try {
+        setPaymentLoading(true);
+        setError('');
+        
+        const loaded = await new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+
+        if (!loaded) {
+          setError('Razorpay SDK failed to load. Are you offline?');
+          setPaymentLoading(false);
+          return;
+        }
+
+        const planName = activePlan?.planName || 'Premium';
+        const cycle = activePlan?.billingCycle || 'MONTHLY';
+        
+        const orderData = await apiFetch<any>('/saas/create-order', {
+          method: 'POST',
+          body: { planName, billingCycle: cycle },
+        });
+
+        const options = {
+          key: orderData.keyId,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: 'GymOS Platform',
+          description: `Add Gym Branch Slot - ${planName} (${cycle})`,
+          order_id: orderData.orderId,
+          handler: async function (response: any) {
+            try {
+              setPaymentLoading(true);
+              await apiFetch<any>('/saas/verify-payment', {
+                method: 'POST',
+                body: {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  planName,
+                  billingCycle: cycle,
+                },
+              });
+
+              // Create branch after verified payment
+              await apiFetch('/branches', {
+                method: 'POST',
+                body: { 
+                  name, 
+                  address, 
+                  phone, 
+                  gstNo,
+                  staffEmail: createStaff ? staffEmail : undefined,
+                  staffPassword: createStaff ? staffPassword : undefined,
+                  staffFirstName: createStaff ? staffFirstName : undefined,
+                  staffLastName: createStaff ? staffLastName : undefined
+                },
+              });
+
+              setModalOpen(false);
+              fetchBranches();
+              fetchSaaSInfo();
+              refreshProfile();
+            } catch (err: any) {
+              setError(err.message || 'Payment verification or branch creation failed.');
+            } finally {
+              setPaymentLoading(false);
+            }
+          },
+          prefill: {
+            name: orderData.user.name,
+            email: orderData.user.email,
+          },
+          theme: {
+            color: '#8b5cf6',
+          },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+      } catch (err: any) {
+        setError(err.message || 'Payment initiation failed.');
+        setPaymentLoading(false);
+      }
+      return;
+    }
+
     try {
       if (editingBranch) {
         // Update Branch
@@ -232,7 +345,8 @@ export const Branches: React.FC = () => {
       
       setModalOpen(false);
       fetchBranches();
-      refreshProfile(); // Refresh branches in context
+      fetchSaaSInfo();
+      refreshProfile();
     } catch (err: any) {
       setError(err.message || 'Operation failed');
     }
@@ -378,6 +492,17 @@ export const Branches: React.FC = () => {
                 </div>
               )}
 
+              {!editingBranch && branches.length >= subCount && activePlan && (
+                <div className="p-3.5 bg-amber-500/10 border border-amber-500/25 rounded-xl text-amber-300 text-xs leading-relaxed space-y-1.5 animate-pulse">
+                  <div className="font-bold flex items-center gap-1.5">
+                    ⚠️ Branch License Capacity Reached
+                  </div>
+                  <p>
+                    You have used all {subCount} active branch slots. Adding this new branch requires purchasing an additional slot under your current plan **({activePlan.planName} - {activePlan.billingCycle})** for **₹{activePlan.billingCycle === 'YEARLY' ? '5,500' : activePlan.billingCycle === 'HALF_YEARLY' ? '2,800' : '500'}**.
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gym-muted mb-1.5">
                   Branch Name *
@@ -517,11 +642,20 @@ export const Branches: React.FC = () => {
                 >
                   Cancel
                 </button>
-                <button
+                 <button
                   type="submit"
-                  className="px-5 py-2 text-sm font-semibold bg-gym-primary hover:bg-gym-primary-hover text-black rounded-xl transition-all shadow-md shadow-gym-primary/20"
+                  disabled={paymentLoading}
+                  className="px-5 py-2 text-sm font-semibold bg-gym-primary hover:bg-gym-primary-hover text-black rounded-xl transition-all shadow-md shadow-gym-primary/20 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px] flex items-center justify-center"
                 >
-                  {editingBranch ? 'Save Changes' : 'Create Branch'}
+                  {paymentLoading ? (
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent"></div>
+                  ) : editingBranch ? (
+                    'Save Changes'
+                  ) : (!editingBranch && branches.length >= subCount) ? (
+                    `Pay & Create Branch (₹${activePlan?.billingCycle === 'YEARLY' ? '5,500' : activePlan?.billingCycle === 'HALF_YEARLY' ? '2,800' : '500'})`
+                  ) : (
+                    'Create Branch'
+                  )}
                 </button>
               </div>
             </form>

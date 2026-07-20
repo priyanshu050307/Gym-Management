@@ -37,11 +37,14 @@ export const DashboardLayout: React.FC = () => {
 
   const fetchSaaSStatus = async () => {
     try {
-      const data = await apiFetch<{ subscription: any }>('/saas/status');
+      const branchId = activeBranchId || localStorage.getItem('activeBranchId') || '';
+      const url = branchId ? `/saas/status?branchId=${branchId}` : '/saas/status';
+      const data = await apiFetch<{ subscription: any }>(url);
       setSaasSub(data.subscription);
       
       // Show welcome modal if new trial is active and not shown yet
       if (
+        data.subscription &&
         data.subscription.status === 'TRIAL_ACTIVE' &&
         !localStorage.getItem('gymos_welcome_shown') &&
         user?.role === 'ADMIN'
@@ -55,7 +58,7 @@ export const DashboardLayout: React.FC = () => {
 
   useEffect(() => {
     fetchSaaSStatus();
-  }, [location.pathname]); // Refetch on navigation to stay updated
+  }, [location.pathname, activeBranchId]); // Refetch on navigation or branch change
 
   const handleDismissWelcome = () => {
     localStorage.setItem('gymos_welcome_shown', 'true');

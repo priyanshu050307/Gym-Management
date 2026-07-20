@@ -4,7 +4,6 @@ import {
   Check,
   MapPin,
   FileText,
-  Sparkles,
   Zap
 } from 'lucide-react';
 
@@ -23,6 +22,11 @@ interface SaasSubscriptionData {
 
 export const SaaSBilling: React.FC = () => {
   const [sub, setSub] = useState<SaasSubscriptionData | null>(null);
+  const [allSubscriptions, setAllSubscriptions] = useState<any[]>([]);
+  const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null);
+  const [selectedBranchName, setSelectedBranchName] = useState<string>('Primary Branch');
+  const [now, setNow] = useState(new Date());
+  
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,8 +47,15 @@ export const SaaSBilling: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiFetch<{ subscription: SaasSubscriptionData }>('/saas/status');
+      
+      const activeBranchId = localStorage.getItem('activeBranchId') || '';
+      const url = activeBranchId ? `/saas/status?branchId=${activeBranchId}` : '/saas/status';
+      
+      const data = await apiFetch<{ subscription: SaasSubscriptionData, allSubscriptions?: any[] }>(url);
       setSub(data.subscription);
+      if (data.allSubscriptions) {
+        setAllSubscriptions(data.allSubscriptions);
+      }
       setGstin(data.subscription.gstin || '');
       setBillingAddress(data.subscription.billingAddress || '');
     } catch (err: any) {
@@ -56,7 +67,24 @@ export const SaaSBilling: React.FC = () => {
 
   useEffect(() => {
     fetchSaaSStatus();
+    
+    // Realtime countdown clock ticker
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const activeId = localStorage.getItem('activeBranchId');
+    setSelectedBranchId(activeId);
+    if (activeId && allSubscriptions.length > 0) {
+      const match = allSubscriptions.find(s => s.branchId === activeId);
+      if (match) {
+        setSelectedBranchName(match.branch?.name || 'Primary Branch');
+      }
+    }
+  }, [allSubscriptions]);
 
   const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY') => {
     const loaded = await new Promise((resolve) => {
@@ -77,10 +105,10 @@ export const SaaSBilling: React.FC = () => {
       setError(null);
       setSuccess(null);
 
-      // 1. Create Order
+      // 1. Create Order targeting the selected branch
       const orderData = await apiFetch<any>('/saas/create-order', {
         method: 'POST',
-        body: { planName, billingCycle: cycle },
+        body: { planName, billingCycle: cycle, branchId: selectedBranchId },
       });
 
       // 2. Open Razorpay checkout
@@ -89,7 +117,7 @@ export const SaaSBilling: React.FC = () => {
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'Gymflow SaaS Platform',
-        description: `Gymflow Premium SaaS Subscription - ${cycle}`,
+        description: `Upgrade ${selectedBranchName} - ${cycle}`,
         order_id: orderData.orderId,
         handler: async function (response: any) {
           try {
@@ -107,11 +135,12 @@ export const SaaSBilling: React.FC = () => {
                 cardLast4: '4242',
                 gstin,
                 billingAddress,
+                branchId: selectedBranchId,
               },
             });
 
             setSub(res.subscription);
-            setSuccess(`Successfully subscribed to GymOS Premium (${cycle})!`);
+            setSuccess(`Successfully subscribed ${selectedBranchName} to GymOS Premium (${cycle})!`);
             // Reload page to reflect SaaS state changes in context
             setTimeout(() => window.location.reload(), 1500);
           } catch (err: any) {
@@ -179,9 +208,7 @@ export const SaaSBilling: React.FC = () => {
     );
   }
 
-  const daysRemaining = sub
-    ? Math.max(0, Math.ceil((new Date(sub.trialEndDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))
-    : 0;
+
 
   const planOptions = [
     {
@@ -231,48 +258,164 @@ export const SaaSBilling: React.FC = () => {
         </div>
       )}
 
-      {/* Current Plan Card */}
-      {sub && (
-        <div className="glass-card p-6 rounded-2xl border border-slate-100/15 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gym-primary/5 rounded-bl-full -z-10" />
+      {/* Real-time Expiration Alerts */}
+      {(() => {
+        const criticalSubs = allSubscriptions.filter(s => {
+          const expiry = s.status === 'TRIAL_ACTIVE' ? s.trialEndDate : s.subscriptionEnd;
+          if (!expiry) return false;
+          const diffMs = new Date(expiry).getTime() - now.getTime();
+          const days = Math.ceil(diffMs / (1000 * 3600 * 24));
+          return s.status.includes('ACTIVE') && days <= 5 && days >= 0;
+        });
+
+        const getTimeRemainingStr = (targetDateStr: string) => {
+          const diffMs = new Date(targetDateStr).getTime() - now.getTime();
+          if (diffMs <= 0) return "Expired";
+          const days = Math.floor(diffMs / (1000 * 3600 * 24));
+          const hours = Math.floor((diffMs % (1000 * 3600 * 24)) / (1000 * 3600));
+          const mins = Math.floor((diffMs % (1000 * 3600)) / (1000 * 60));
+          const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+          return `${days}d ${hours}h ${mins}m ${secs}s`;
+        };
+
+        if (criticalSubs.length === 0) return null;
+
+        return (
+          <div className="space-y-3">
+            {criticalSubs.map(s => {
+              const expiry = s.status === 'TRIAL_ACTIVE' ? s.trialEndDate : s.subscriptionEnd;
+              const daysLeft = Math.ceil((new Date(expiry).getTime() - now.getTime()) / (1000 * 3600 * 24));
+              
+              return (
+                <div 
+                  key={s.id} 
+                  className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 animate-pulse ${
+                    daysLeft <= 1 
+                      ? 'bg-red-600/10 border-red-500/30 text-red-400' 
+                      : 'bg-amber-500/10 border-amber-500/20 text-amber-300'
+                  }`}
+                >
+                  <div className="space-y-1">
+                    <div className="font-extrabold text-sm flex items-center gap-1.5">
+                      ⚠️ {s.branch?.name || 'Primary Branch'} Subscription Expiry Warning
+                    </div>
+                    <p className="text-xs opacity-90">
+                      Your plan for {s.branch?.name || 'Primary Branch'} is expiring soon. Renew now to prevent operations lockouts!
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4 self-start sm:self-auto">
+                    <div className="font-mono text-sm font-bold bg-black/20 px-3 py-1.5 rounded-lg border border-white/5">
+                      Time Left: {getTimeRemainingStr(expiry)}
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedBranchId(s.branchId);
+                        setSelectedBranchName(s.branch?.name || 'Primary Branch');
+                        document.getElementById('plans-selector')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="px-4 py-2 bg-gym-primary hover:bg-gym-primary-hover text-black text-xs font-bold rounded-lg shadow transition-all whitespace-nowrap cursor-pointer hover:scale-102"
+                    >
+                      Renew Now
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
+
+      {/* Branch Subscriptions List */}
+      {allSubscriptions.length > 0 && (
+        <div className="glass-card p-6 rounded-2xl border border-slate-100/10 space-y-4">
+          <div>
+            <h3 className="text-lg font-bold text-gym-text">Active Branch Subscriptions</h3>
+            <p className="text-xs text-gym-muted">Select a branch row to target it for upgrade or renewal below.</p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-            <div>
-              <span className="text-xs font-semibold text-gym-muted uppercase tracking-wider">Current SaaS Plan</span>
-              <h2 className="text-2xl font-bold text-gym-primary mt-1 flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                {sub.planName} Plan
-              </h2>
-            </div>
-            
-            <div>
-              <span className="text-xs font-semibold text-gym-muted uppercase tracking-wider">Status</span>
-              <div className="mt-1 flex items-center gap-2">
-                <span className={`h-2.5 w-2.5 rounded-full ${sub.status.includes('ACTIVE') ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                <span className="font-semibold capitalize text-sm">{sub.status.replace('_', ' ').toLowerCase()}</span>
-              </div>
-            </div>
-
-            <div>
-              <span className="text-xs font-semibold text-gym-muted uppercase tracking-wider">Billing Interval</span>
-              <p className="font-medium text-sm mt-1">{sub.billingCycle}</p>
-            </div>
-
-            <div>
-              <span className="text-xs font-semibold text-gym-muted uppercase tracking-wider">Trial Status</span>
-              <p className="font-semibold text-sm mt-1 text-gym-primary">
-                {sub.status === 'TRIAL_ACTIVE' ? `${daysRemaining} Days Remaining` : 'Trial Finished'}
-              </p>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="border-b border-slate-100/10 text-gym-muted font-semibold uppercase tracking-wider pb-2">
+                  <th className="py-2.5 pl-2">Branch Name</th>
+                  <th>SaaS Plan</th>
+                  <th>Billing Cycle</th>
+                  <th>Status</th>
+                  <th>Expiration / Trial Expiry</th>
+                  <th className="text-right pr-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allSubscriptions.map((s) => {
+                  const expiryDate = s.status === 'TRIAL_ACTIVE' ? s.trialEndDate : s.subscriptionEnd;
+                  const isSelected = selectedBranchId === s.branchId;
+                  const daysRemaining = expiryDate
+                    ? Math.max(0, Math.ceil((new Date(expiryDate).getTime() - now.getTime()) / (1000 * 3600 * 24)))
+                    : 0;
+                  
+                  return (
+                    <tr 
+                      key={s.id} 
+                      onClick={() => {
+                        setSelectedBranchId(s.branchId);
+                        setSelectedBranchName(s.branch?.name || 'Primary Branch');
+                      }}
+                      className={`border-b border-slate-100/5 hover:bg-white/5 transition-all cursor-pointer ${
+                        isSelected ? 'bg-gym-primary/5 border-l-2 border-l-gym-primary' : ''
+                      }`}
+                    >
+                      <td className="py-3.5 pl-2 font-bold text-gym-text">
+                        {s.branch?.name || 'Primary Branch (Unlinked)'}
+                        {isSelected && <span className="ml-2 px-1.5 py-0.5 bg-gym-primary text-black rounded text-[9px] font-bold">Selected</span>}
+                      </td>
+                      <td className="font-medium text-gym-primary">{s.planName}</td>
+                      <td className="text-gym-muted uppercase font-bold">{s.billingCycle}</td>
+                      <td>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] border ${
+                          s.status.includes('ACTIVE')
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                            : 'bg-red-500/10 text-red-400 border-red-500/25'
+                        }`}>
+                          {s.status.replace('_', ' ').toLowerCase()}
+                        </span>
+                      </td>
+                      <td className="font-mono text-gym-text">
+                        {expiryDate ? new Date(expiryDate).toLocaleDateString() : 'N/A'}
+                        <span className="ml-2 text-gym-muted text-[10px]">
+                          ({daysRemaining} days left)
+                        </span>
+                      </td>
+                      <td className="text-right pr-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedBranchId(s.branchId);
+                            setSelectedBranchName(s.branch?.name || 'Primary Branch');
+                            document.getElementById('plans-selector')?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                            isSelected 
+                              ? 'bg-gym-primary text-black' 
+                              : 'bg-slate-800 text-gym-text border border-slate-700 hover:border-gym-primary'
+                          }`}
+                        >
+                          Select to Upgrade
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
       {/* Plan selector toggles */}
-      <div className="space-y-6">
+      <div id="plans-selector" className="space-y-6 scroll-mt-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100/10 pb-4">
           <div>
-            <h3 className="text-xl font-bold text-gym-text">Upgrade or Change Subscription</h3>
+            <h3 className="text-xl font-bold text-gym-text">Upgrade Plan for: <span className="text-gym-primary font-black">{selectedBranchName}</span></h3>
             <p className="text-xs text-gym-muted">Select the duration plan that matches your gym operations budget.</p>
           </div>
         </div>

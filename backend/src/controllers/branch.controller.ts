@@ -24,15 +24,42 @@ export const createBranch = async (req: AuthRequest, res: Response) => {
       }
     }
 
+    const ownerId = req.user?.id || '';
+    const branchCount = await prisma.branch.count({ where: { ownerId } });
+    const subCount = await prisma.saaSSubscription.count({ where: { ownerId } });
+
+    if (branchCount >= subCount) {
+      return res.status(402).json({
+        error: 'LIMIT_EXCEEDED',
+        message: 'You have reached your branch limit. Please purchase an additional branch subscription slot to add a new branch.'
+      });
+    }
+
     const result = await prisma.$transaction(async (tx) => {
+      // Find an unused subscription slot
+      const unusedSub = await tx.saaSSubscription.findFirst({
+        where: { ownerId, branchId: null },
+        orderBy: { createdAt: 'asc' }
+      });
+
+      if (!unusedSub) {
+        throw new Error('No unused subscription slot found. Please purchase a branch slot first.');
+      }
+
       const branch = await tx.branch.create({
         data: { 
           name, 
           address, 
           phone, 
           gstNo,
-          ownerId: req.user?.id || null
+          ownerId: ownerId || null
         },
+      });
+
+      // Link subscription slot to this branch
+      await tx.saaSSubscription.update({
+        where: { id: unusedSub.id },
+        data: { branchId: branch.id }
       });
 
       let staffUser = null;

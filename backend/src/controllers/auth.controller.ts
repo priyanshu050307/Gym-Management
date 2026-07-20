@@ -59,7 +59,7 @@ export const register = async (req: Request, res: Response) => {
         const trialEndDate = new Date();
         trialEndDate.setDate(trialEndDate.getDate() + 30);
 
-        const existingSub = await tx.saaSSubscription.findUnique({
+        const existingSub = await tx.saaSSubscription.findFirst({
           where: { ownerId: user.id },
         });
         if (existingSub) {

@@ -60,7 +60,7 @@ model User {
   trainer      Trainer?
   notifications Notification[]
   forgotTokens  ForgotPasswordToken[]
-  saaSSubscription SaaSSubscription?
+  saaSSubscriptions SaaSSubscription[]
 }
 
 model Member {
@@ -211,6 +211,7 @@ model Branch {
   equipments      Equipment[]
   supplements     Supplement[]
   supplementSales SupplementSale[]
+  saaSSubscription SaaSSubscription?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
@@ -379,18 +380,20 @@ model SupplementSale {
 }
 
 model SaaSSubscription {
-  id              String   @id @default(uuid())
-  ownerId         String   @unique
-  owner           User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  status          String   @default("TRIAL_ACTIVE") // TRIAL_ACTIVE, TRIAL_EXPIRED, SUBSCRIBED_ACTIVE, SUBSCRIBED_EXPIRED
-  planName        String   @default("Starter")      // Starter, Professional, Enterprise
+  id              String    @id @default(uuid())
+  ownerId         String
+  owner           User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  branchId        String?   @unique
+  branch          Branch?   @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  status          String    @default("TRIAL_ACTIVE") // TRIAL_ACTIVE, TRIAL_EXPIRED, SUBSCRIBED_ACTIVE, SUBSCRIBED_EXPIRED
+  planName        String    @default("Starter")      // Starter, Professional, Enterprise
   trialEndDate    DateTime
   subscriptionEnd DateTime?
-  billingCycle    String   @default("MONTHLY")      // MONTHLY, YEARLY
+  billingCycle    String    @default("MONTHLY")      // MONTHLY, YEARLY
   cardBrand       String?
   cardLast4       String?
   gstin           String?
   billingAddress  String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
