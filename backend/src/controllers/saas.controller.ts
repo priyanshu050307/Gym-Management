@@ -101,17 +101,24 @@ export const getSaaSSubscriptionStatus = async (req: Request, res: Response) => 
     }
 
     // Also fetch all branch subscriptions of this owner for the billing list overview
-    const allSubscriptions = await prisma.saaSSubscription.findMany({
-      where: { ownerId },
-      include: {
-        branch: {
-          select: {
-            name: true,
+    let allSubscriptions: any[] = [];
+    try {
+      allSubscriptions = await prisma.saaSSubscription.findMany({
+        where: { ownerId },
+        include: {
+          branch: {
+            select: { name: true }
           }
-        }
-      },
-      orderBy: { createdAt: 'asc' },
-    });
+        },
+        orderBy: { createdAt: 'asc' },
+      });
+    } catch {
+      // Fallback: DB may not have branchId column yet (run prisma db push on server)
+      allSubscriptions = await prisma.saaSSubscription.findMany({
+        where: { ownerId },
+        orderBy: { createdAt: 'asc' },
+      });
+    }
 
     return res.status(200).json({ 
       subscription: sub,
