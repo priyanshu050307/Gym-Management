@@ -107,6 +107,11 @@ const saasLockMiddleware = async (req, res, next) => {
         }
         if (!decoded)
             return next();
+        // ── Super Admin bypass: admin@gym.com always has unlimited access ──
+        const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@gym.com';
+        if (decoded.email === superAdminEmail) {
+            return next(); // Never lock the super admin account
+        }
         let ownerId = '';
         if (decoded.role === 'ADMIN') {
             ownerId = decoded.id;
