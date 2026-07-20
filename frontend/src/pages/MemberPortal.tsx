@@ -55,9 +55,23 @@ export const printInvoice = (payment: any, memberName: string, planName: string,
       <head>
         <title>Invoice - ${payment.id.slice(0, 8)}</title>
         <style>
-          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; padding: 40px; line-height: 1.5; }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1e293b; padding: 40px; line-height: 1.5; position: relative; }
           .header { display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; }
           .gym-logo { font-size: 24px; font-weight: 800; text-transform: uppercase; background: #0f172a; color: #fff; padding: 4px 12px; border-radius: 6px; display: inline-block; }
+          .watermark {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-size: 90px;
+            font-weight: 900;
+            color: rgba(139, 92, 246, 0.05); /* Elegant transparent violet */
+            z-index: -100;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            letter-spacing: 12px;
+          }
           .invoice-title { font-size: 28px; font-weight: 900; text-align: right; text-transform: uppercase; color: #0f172a; }
           .details { display: grid; grid-template-cols: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
           .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 10px; }
@@ -77,10 +91,11 @@ export const printInvoice = (payment: any, memberName: string, planName: string,
         </style>
       </head>
       <body>
+        <div class="watermark">GYMNASIUM</div>
         <button class="print-btn no-print" onclick="window.print()">Print Invoice</button>
         <div class="header">
           <div>
-            <div class="gym-logo">GYMFLOW</div>
+            <div class="gym-logo">GYMNASIUM</div>
             <p style="font-size: 12px; color: #64748b; margin: 6px 0 0 0;">${branchName}</p>
           </div>
           <div>
@@ -137,7 +152,7 @@ export const printInvoice = (payment: any, memberName: string, planName: string,
         </div>
 
         <div class="footer">
-          <p>Thank you for training with GymFlow! For support, contact your branch reception.</p>
+          <p>Thank you for training with Gymnasium! For support, contact your branch reception.</p>
           <p style="margin-top: 6px;">This is a computer-generated document and requires no physical signature.</p>
         </div>
       </body>
