@@ -100,29 +100,30 @@ export const getSaaSSubscriptionStatus = async (req: Request, res: Response) => 
       return res.status(200).json({ subscription: updated });
     }
 
-    // Also fetch all branch subscriptions of this owner for the billing list overview
-    let allSubscriptions: any[] = [];
-    try {
-      allSubscriptions = await prisma.saaSSubscription.findMany({
-        where: { ownerId },
-        include: {
-          branch: {
-            select: { name: true }
-          }
-        },
-        orderBy: { createdAt: 'asc' },
-      });
-    } catch {
-      // Fallback: DB may not have branchId column yet (run prisma db push on server)
-      allSubscriptions = await prisma.saaSSubscription.findMany({
-        where: { ownerId },
-        orderBy: { createdAt: 'asc' },
-      });
-    }
+    // Fetch all subscriptions for this owner (no relation include to avoid client version issues)
+    const allSubscriptions = await prisma.saaSSubscription.findMany({
+      where: { ownerId },
+      orderBy: { createdAt: 'asc' },
+    });
 
-    return res.status(200).json({ 
+    // Separately fetch branch names and join manually
+    const branchIds = allSubscriptions.map((s: any) => (s as any).branchId).filter(Boolean);
+    const branches = branchIds.length > 0
+      ? await prisma.branch.findMany({
+          where: { id: { in: branchIds as string[] } },
+          select: { id: true, name: true },
+        })
+      : [];
+    const branchMap: Record<string, string> = Object.fromEntries(branches.map(b => [b.id, b.name]));
+
+    const allSubsWithBranch = allSubscriptions.map((s: any) => ({
+      ...s,
+      branch: (s as any).branchId ? { name: branchMap[(s as any).branchId] || 'Unknown Branch' } : null,
+    }));
+
+    return res.status(200).json({
       subscription: sub,
-      allSubscriptions
+      allSubscriptions: allSubsWithBranch,
     });
   } catch (error: any) {
     console.error('Fetch SaaS status error:', error);

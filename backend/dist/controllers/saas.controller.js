@@ -91,29 +91,27 @@ export const getSaaSSubscriptionStatus = async (req, res) => {
             cacheDel(`saas_sub_branch:${sub.branchId || 'none'}`, `saas_sub_owner:${ownerId}`);
             return res.status(200).json({ subscription: updated });
         }
-        // Also fetch all branch subscriptions of this owner for the billing list overview
-        let allSubscriptions = [];
-        try {
-            allSubscriptions = await prisma.saaSSubscription.findMany({
-                where: { ownerId },
-                include: {
-                    branch: {
-                        select: { name: true }
-                    }
-                },
-                orderBy: { createdAt: 'asc' },
-            });
-        }
-        catch {
-            // Fallback: DB may not have branchId column yet (run prisma db push on server)
-            allSubscriptions = await prisma.saaSSubscription.findMany({
-                where: { ownerId },
-                orderBy: { createdAt: 'asc' },
-            });
-        }
+        // Fetch all subscriptions for this owner (no relation include to avoid client version issues)
+        const allSubscriptions = await prisma.saaSSubscription.findMany({
+            where: { ownerId },
+            orderBy: { createdAt: 'asc' },
+        });
+        // Separately fetch branch names and join manually
+        const branchIds = allSubscriptions.map((s) => s.branchId).filter(Boolean);
+        const branches = branchIds.length > 0
+            ? await prisma.branch.findMany({
+                where: { id: { in: branchIds } },
+                select: { id: true, name: true },
+            })
+            : [];
+        const branchMap = Object.fromEntries(branches.map(b => [b.id, b.name]));
+        const allSubsWithBranch = allSubscriptions.map((s) => ({
+            ...s,
+            branch: s.branchId ? { name: branchMap[s.branchId] || 'Unknown Branch' } : null,
+        }));
         return res.status(200).json({
             subscription: sub,
-            allSubscriptions
+            allSubscriptions: allSubsWithBranch,
         });
     }
     catch (error) {
