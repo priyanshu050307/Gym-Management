@@ -115,6 +115,66 @@
       "suggestions": ["Group Class Schedules", "View Membership Plans", "My Profile Edit"]
     },
     {
+      "tag": "checkin_kiosk",
+      "patterns": ["check-in kiosk", "checkin kiosk", "attendance kiosk", "how to check in", "kiosk", "member kiosk", "qr checkin", "id checkin", "check in kiosk"],
+      "responses": ["The **Check-In Kiosk** is a self-service page where members can log their attendance. Members can either enter their unique Member ID or scan their QR code on their phone screen. This instantly logs their check-in and updates the occupancy charts on the admin dashboard in real-time."],
+      "suggestions": ["Biometric Sync Info", "Member User Guide"]
+    },
+    {
+      "tag": "dashboard_feature",
+      "patterns": ["dashboard page", "admin dashboard", "home page metrics", "overview statistics", "what is on dashboard", "view occupancy stats"],
+      "responses": ["The **Dashboard** is the administrative homepage. For Admins and Staff, it displays real-time summaries of total active members, monthly branch revenue, today's check-ins, pending payments, active trainers, and expiring subscriptions, alongside weekly registration and peak hour charts."],
+      "suggestions": ["Admin User Guide", "Active Branch Info"]
+    },
+    {
+      "tag": "members_feature",
+      "patterns": ["members list", "members directory", "onboard member", "register member", "freeze member", "search members", "members page"],
+      "responses": ["The **Members Directory** is the central list of all registered member accounts. Admins and Staff can view check-in history, search by name or email, onboard new members, freeze profiles, check subscription end dates, and edit emergency contacts."],
+      "suggestions": ["Register a Member", "Staff User Guide"]
+    },
+    {
+      "tag": "plans_feature",
+      "patterns": ["plans list", "membership plans page", "manage plans", "add membership plans", "create gym package", "membership packages management"],
+      "responses": ["The **Membership Plans** page is where Admins define packages (e.g. Starter Plan, Pilates Focus). You can configure rates, duration (monthly, half-yearly, yearly), and class privileges. Staff and members can see these plans, but only Admins can create or modify them."],
+      "suggestions": ["View Membership Plans", "Admin User Guide"]
+    },
+    {
+      "tag": "billing_feature",
+      "patterns": ["billing list", "billing page", "record payment", "manual payment", "invoice history", "billing ledger", "outstanding balances"],
+      "responses": ["The **Billing & Payments** section is the financial ledger of your branch. Staff can record payments (cash, card, bank transfer), review outstanding balances, generate PDF invoices, and send receipt notifications to members."],
+      "suggestions": ["Record Payment Help", "Staff User Guide"]
+    },
+    {
+      "tag": "bookings_feature",
+      "patterns": ["bookings page", "group class booking", "schedule classes", "class bookings", "gym schedules", "book a slot"],
+      "responses": ["The **Classes & Bookings** panel manages fitness schedule rosters. Trainers can create group class sessions, assign workout areas, set capacities, and check enrolled member rosters. Members can browse and book slots directly from their portal."],
+      "suggestions": ["Trainer User Guide", "Group Class Schedules"]
+    },
+    {
+      "tag": "equipment_feature",
+      "patterns": ["equipment tracking", "gym machines", "dumbbells", "treadmills", "manage equipment", "maintenance log", "gym assets"],
+      "responses": ["The **Equipment** section tracks your branch gym machines, dumbbells, and cardio assets. You can log total quantities, conditions, and set next maintenance/service dates to prevent failures."],
+      "suggestions": ["Admin User Guide", "Active Branch Info"]
+    },
+    {
+      "tag": "supplements_feature",
+      "patterns": ["supplements inventory", "supplement sales", "sell protein", "supplement stock", "inventory pos", "shop items", "pos transactions"],
+      "responses": ["The **Supplements Inventory** acts as a Point-of-Sale (POS) system. Staff can track protein/supplement inventory, record transactions, monitor low stock levels, and log sales trends."],
+      "suggestions": ["Staff User Guide", "Record Supplement Sale"]
+    },
+    {
+      "tag": "branches_feature",
+      "patterns": ["branches page", "manage branches", "add branch", "locations management", "gym branches locations"],
+      "responses": ["The **Branches** section enables multi-branch operations. Administrators can add new branch locations, assign branch managers, and verify separate telemetry configurations."],
+      "suggestions": ["Admin User Guide", "Active Branch Info"]
+    },
+    {
+      "tag": "profile_feature",
+      "patterns": ["my profile", "profile page", "update my details", "avatar photo", "personal settings", "change details"],
+      "responses": ["The **My Profile** tab allows users to maintain their identity. You can upload custom avatars, edit name and phone details, modify passwords, and view recent role-based updates."],
+      "suggestions": ["Member User Guide", "Trainer User Guide"]
+    },
+    {
       "tag": "help",
       "patterns": ["help", "support", "what can you do", "bot functions", "commands", "menu"],
       "responses": ["I can help you navigate GymOS! Ask me about:\n\n1. **Membership Plans & Rates**\n2. **Group Class Schedules & Bookings**\n3. **Updating Profile details & pictures**\n4. **Biometric agent check-ins**\n5. **Branch locations and timing**"],
