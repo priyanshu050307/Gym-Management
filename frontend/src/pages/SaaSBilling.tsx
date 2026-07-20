@@ -5,8 +5,7 @@ import {
   MapPin,
   FileText,
   Sparkles,
-  Zap,
-  Activity
+  Zap
 } from 'lucide-react';
 
 interface SaasSubscriptionData {
@@ -59,7 +58,7 @@ export const SaaSBilling: React.FC = () => {
     fetchSaaSStatus();
   }, []);
 
-  const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY' | 'DAILY') => {
+  const handleSubscribe = async (planName: string, cycle: 'MONTHLY' | 'HALF_YEARLY' | 'YEARLY') => {
     const loaded = await new Promise((resolve) => {
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -170,23 +169,7 @@ export const SaaSBilling: React.FC = () => {
     }
   };
 
-  // Helper function to simulate state triggers for verification
-  const handleSimulateState = async (status: string, daysRemaining: number) => {
-    try {
-      setActionLoading(true);
-      const res = await apiFetch<any>('/saas/reset', {
-        method: 'POST',
-        body: { status, daysRemaining },
-      });
-      setSub(res.subscription);
-      setSuccess(`Simulator state set: ${status} with ${daysRemaining} days remaining.`);
-      setTimeout(() => window.location.reload(), 1500);
-    } catch (err: any) {
-      setError(err.message || 'Simulator reset failed.');
-    } finally {
-      setActionLoading(false);
-    }
-  };
+
 
   if (loading) {
     return (
@@ -201,14 +184,6 @@ export const SaaSBilling: React.FC = () => {
     : 0;
 
   const planOptions = [
-    {
-      name: '1-Day Test Pass',
-      cycle: 'DAILY' as const,
-      price: '₹1',
-      periodText: 'day',
-      features: ['Perfect for sandbox testing', '1-Day Expiry duration', 'Verifies Razorpay Integration', 'Full platform features enabled'],
-      badge: 'Developer Sandbox'
-    },
     {
       name: 'Monthly Plan',
       cycle: 'MONTHLY' as const,
@@ -459,41 +434,6 @@ export const SaaSBilling: React.FC = () => {
         </div>
       </div>
 
-      {/* Simulator Section for Testing */}
-      <div className="p-6 rounded-2xl border border-dashed border-gym-primary/30 bg-gym-primary/5 space-y-4">
-        <h4 className="font-bold text-base text-gym-primary flex items-center gap-2">
-          <Activity className="h-5 w-5" /> SaaS Billing Simulator (For System Testing)
-        </h4>
-        <p className="text-xs text-gym-muted">
-          Use the actions below to trigger different SaaS subscription states. This allows you to verify how the rest of the application (members lists, schedules, bookings, equipment) locks write options once expired.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => handleSimulateState('TRIAL_ACTIVE', 29)}
-            className="px-4.5 py-2.5 bg-slate-900 border border-slate-800 text-gym-text hover:bg-slate-800 rounded-xl text-xs font-medium"
-          >
-            Activate 30-Day Trial (Green Banner)
-          </button>
-          <button
-            onClick={() => handleSimulateState('TRIAL_ACTIVE', 5)}
-            className="px-4.5 py-2.5 bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 rounded-xl text-xs font-medium"
-          >
-            Trial Impending Expiry (Orange Banner)
-          </button>
-          <button
-            onClick={() => handleSimulateState('TRIAL_ACTIVE', 1)}
-            className="px-4.5 py-2.5 bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30 rounded-xl text-xs font-medium"
-          >
-            Trial Critical Expiring (Red Banner)
-          </button>
-          <button
-            onClick={() => handleSimulateState('TRIAL_EXPIRED', 0)}
-            className="px-4.5 py-2.5 bg-red-600 text-white hover:bg-red-700 rounded-xl text-xs font-bold shadow-md shadow-red-600/10"
-          >
-            Simulate Trial Expired (Lock Overlay)
-          </button>
-        </div>
-      </div>
     </div>
   );
 };

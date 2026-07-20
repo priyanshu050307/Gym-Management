@@ -205,7 +205,7 @@ export const createSaaSOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid plan selected.' });
     }
 
-    let price = billingCycle === 'DAILY' ? 1 : billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+    let price = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
     const razorpay = getRazorpayInstance();
     const amountInPaise = Math.round(price * 100);
 
@@ -267,9 +267,7 @@ export const verifySaaSPayment = async (req: Request, res: Response) => {
     const now = new Date();
     const subscriptionEnd = new Date();
     
-    if (billingCycle === 'DAILY') {
-      subscriptionEnd.setDate(now.getDate() + 1);
-    } else if (billingCycle === 'YEARLY') {
+    if (billingCycle === 'YEARLY') {
       subscriptionEnd.setFullYear(now.getFullYear() + 1);
     } else if (billingCycle === 'HALF_YEARLY') {
       subscriptionEnd.setMonth(now.getMonth() + 6);

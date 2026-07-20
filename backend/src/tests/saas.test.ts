@@ -106,7 +106,6 @@ describe('SaaS Subscription API', () => {
 
   describe('POST /api/saas/create-order', () => {
     const plansToTest = [
-      { cycle: 'DAILY', expectedPrice: 100 },
       { cycle: 'MONTHLY', expectedPrice: 50000 },
       { cycle: 'HALF_YEARLY', expectedPrice: 280000 },
       { cycle: 'YEARLY', expectedPrice: 550000 },
@@ -129,7 +128,6 @@ describe('SaaS Subscription API', () => {
 
   describe('POST /api/saas/verify-payment', () => {
     const verificationToTest = [
-      { cycle: 'DAILY' },
       { cycle: 'MONTHLY' },
       { cycle: 'HALF_YEARLY' },
       { cycle: 'YEARLY' },
@@ -164,10 +162,7 @@ describe('SaaS Subscription API', () => {
         const end = new Date(res.body.subscription.subscriptionEnd);
         const now = new Date();
         
-        if (cycle === 'DAILY') {
-          const deltaDays = Math.round((end.getTime() - now.getTime()) / (1000 * 3600 * 24));
-          expect(deltaDays).toBe(1);
-        } else if (cycle === 'MONTHLY') {
+        if (cycle === 'MONTHLY') {
           const deltaMonths = (end.getFullYear() - now.getFullYear()) * 12 + (end.getMonth() - now.getMonth());
           expect(deltaMonths).toBe(1);
         } else if (cycle === 'HALF_YEARLY') {

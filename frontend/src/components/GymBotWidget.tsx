@@ -5,13 +5,8 @@ import {
   Send, 
   Sparkles, 
   Trash2, 
-  Brain, 
   X, 
   User, 
-  DollarSign, 
-  Layers, 
-  Bookmark, 
-  Activity,
   AlertCircle
 } from 'lucide-react';
 
@@ -48,9 +43,7 @@ export const GymBotWidget: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Explainability drawer state
-  const [activeMetadata, setActiveMetadata] = useState<ChatMessage['metadata'] | null>(null);
-  const [showMetadataPanel, setShowMetadataPanel] = useState(false);
+
   
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -73,10 +66,7 @@ export const GymBotWidget: React.FC = () => {
           const data = await apiFetch<any>(`/gymbot/history/${sessionId}`);
           if (data && data.history && data.history.length > 0) {
             setMessages(data.history);
-            const lastBot = [...data.history].reverse().find(m => m.sender === 'bot');
-            if (lastBot && lastBot.metadata) {
-              setActiveMetadata(lastBot.metadata);
-            }
+
           } else {
             // Welcome message tailored by role
             let welcome = "Hello! I am **GymBot AI**, your smart dashboard assistant. ";
@@ -131,9 +121,7 @@ export const GymBotWidget: React.FC = () => {
       });
 
       setMessages(prev => [...prev, response]);
-      if (response.metadata) {
-        setActiveMetadata(response.metadata);
-      }
+
     } catch (err: any) {
       setError(err.message || 'Failed to connect to the Chatbot engine.');
     } finally {
@@ -157,8 +145,7 @@ export const GymBotWidget: React.FC = () => {
           suggestions: ["View Membership Plans", "Group Class Schedules"]
         }
       ]);
-      setActiveMetadata(null);
-      setShowMetadataPanel(false);
+
     } catch (err: any) {
       setError(err.message || 'Failed to reset chat.');
     } finally {
@@ -192,13 +179,7 @@ export const GymBotWidget: React.FC = () => {
             </div>
             
             <div className="flex gap-2">
-              <button 
-                onClick={() => setShowMetadataPanel(!showMetadataPanel)}
-                className="hover:bg-white/10 p-1.5 rounded transition-all cursor-pointer text-white"
-                title="Toggle Brain Explainability Panel"
-              >
-                <Brain className="h-4 w-4" />
-              </button>
+
               <button 
                 onClick={handleResetChat}
                 className="hover:bg-white/10 p-1.5 rounded transition-all cursor-pointer text-red-200"
@@ -209,73 +190,7 @@ export const GymBotWidget: React.FC = () => {
             </div>
           </div>
 
-          {/* Explainability Side-drawer Overlay */}
-          {showMetadataPanel && (
-            <div className="absolute top-11 bottom-14 left-0 right-0 bg-white z-10 border-b border-slate-200 p-4 overflow-y-auto space-y-4 animate-fade-in text-xs">
-              <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-                <span className="font-extrabold text-gym-secondary flex items-center gap-1.5">
-                  <Brain className="h-4 w-4 text-gym-primary animate-pulse" />
-                  NLP EXPLAINABILITY PANEL
-                </span>
-                <button 
-                  onClick={() => setShowMetadataPanel(false)}
-                  className="p-1 hover:bg-slate-100 rounded text-gym-muted"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
 
-              {activeMetadata ? (
-                <div className="space-y-4">
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1">
-                    <span className="text-[9px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1">
-                      <Bookmark className="h-3.5 w-3.5 text-gym-primary" />
-                      Classified Intent
-                    </span>
-                    <p className="font-mono text-xs font-extrabold text-gym-secondary">{activeMetadata.tag}</p>
-                  </div>
-
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1.5">
-                    <span className="text-[9px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1">
-                      <Activity className="h-3.5 w-3.5 text-gym-primary" />
-                      Decision Confidence
-                    </span>
-                    <div className="flex justify-between font-bold text-gym-secondary mb-1">
-                      <span>Score:</span>
-                      <span className="text-gym-primary">{(activeMetadata.confidence * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-gym-primary h-full rounded-full" style={{ width: `${activeMetadata.confidence * 100}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-1">
-                    <span className="text-[9px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1">
-                      <Layers className="h-3.5 w-3.5 text-gym-primary" />
-                      Decision Classifier
-                    </span>
-                    <p className="font-semibold text-gym-secondary">{activeMetadata.method}</p>
-                  </div>
-
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 space-y-2">
-                    <span className="text-[9px] font-bold text-gym-muted uppercase tracking-wider flex items-center gap-1">
-                      <DollarSign className="h-3.5 w-3.5 text-gym-primary" />
-                      Extracted Entities
-                    </span>
-                    <div className="space-y-1 font-semibold text-gym-secondary text-[11px]">
-                      <div className="flex justify-between"><span className="text-gym-muted">Amount:</span><span>{activeMetadata.entities.amount !== null ? `₹${activeMetadata.entities.amount.toLocaleString()}` : 'None'}</span></div>
-                      <div className="flex justify-between"><span className="text-gym-muted">Plan:</span><span>{activeMetadata.entities.plan || 'None'}</span></div>
-                      <div className="flex justify-between"><span className="text-gym-muted">Section:</span><span>{activeMetadata.entities.section || 'None'}</span></div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-12 text-gym-muted italic text-[11px]">
-                  Send a message to see raw model decision vectors.
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Main Bubble Log area */}
           <div className="flex-1 p-4 overflow-y-auto space-y-3">
