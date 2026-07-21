@@ -6,7 +6,6 @@ import { GymBotWidget } from '../components/GymBotWidget.js';
 import { 
   Dumbbell, 
   Shield, 
-  Users, 
   TrendingUp, 
   Mail, 
   Phone, 
@@ -15,7 +14,13 @@ import {
   CheckCircle,
   Star,
   Check,
-  Zap
+  Zap,
+  QrCode,
+  Briefcase,
+  UserPlus,
+  Bot,
+  FileText,
+  Activity
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
@@ -106,7 +111,7 @@ export const LandingPage: React.FC = () => {
         },
       });
 
-      setSuccess(`Thank you for subscribing to GymOS ${planName}! Activating access...`);
+      setSuccess(`Thank you for subscribing to Gymnasium ${planName}! Activating access...`);
       setTimeout(() => {
         navigate('/dashboard');
       }, 1500);
@@ -127,27 +132,46 @@ export const LandingPage: React.FC = () => {
     }
   };
 
-
-  const benefits = [
+  const coreFeatures = [
     {
-      icon: Shield,
-      title: 'Branch Isolation & Control',
-      desc: 'Secure multi-tenant environment ensuring branch staff access only their branch data, while admins oversee globally.'
+      icon: QrCode,
+      title: 'Digital Check-In Kiosk & Member QR Pass',
+      desc: 'Contactless lobby scanner. Members present their dynamic phone QR pass for instant access verification.'
     },
     {
-      icon: Users,
-      title: 'Personal Training Roster',
-      desc: 'Dedicated portal for trainers to monitor client workouts, diet macros, check-ins, and progressive overload histories.'
+      icon: Activity,
+      title: '7x24 Peak Density Heatmap',
+      desc: 'Real-time hourly attendance grid mapping peak gym crowding across 7 days to optimize staff & trainer shifts.'
+    },
+    {
+      icon: UserPlus,
+      title: 'Lead Management & CRM Pipeline',
+      desc: 'Track walk-ins, phone inquiries, and follow-ups. Convert leads to active members with a single click.'
+    },
+    {
+      icon: Briefcase,
+      title: 'Staff Payroll & Session Payouts',
+      desc: 'Calculate trainer base salaries, personal training session rates, bonuses, deductions, and net payouts.'
+    },
+    {
+      icon: Bot,
+      title: 'GymBot AI Assistant',
+      desc: 'Domain-trained AI assistant for exercise form guidance, customized macro split logic, and business insights.'
+    },
+    {
+      icon: FileText,
+      title: 'GST Invoices & Transparent Watermark',
+      desc: 'Generate printable tax receipts with dynamic branch details and slanting transparent Gymnasium security watermark.'
+    },
+    {
+      icon: Shield,
+      title: 'Multi-Branch Isolation',
+      desc: 'Secure multi-tenant environment allowing multi-city owners to switch branch contexts while restricting staff visibility.'
     },
     {
       icon: TrendingUp,
       title: 'Supplement Retail POS',
-      desc: 'Process product transactions at the front desk, manage inventory levels, and log sales to members automatically.'
-    },
-    {
-      icon: CheckCircle,
-      title: 'Self-Service Member App',
-      desc: 'Empower members to view active subscriptions, book group fitness classes, log weights, and rate their trainers.'
+      desc: 'Front-desk point of sale for protein powders, pre-workouts, and gear with real-time stock deduction.'
     }
   ];
 
@@ -156,19 +180,19 @@ export const LandingPage: React.FC = () => {
       name: 'Rohan Sharma',
       role: 'Gym Member',
       rating: 5,
-      comment: 'The member portal is fantastic! I can see my workout cards and macro meals directly on my phone. Highly recommend.'
+      comment: 'The digital QR pass and member portal are smooth! I can view my workout cards and macro meals directly on my phone.'
     },
     {
       name: 'Priya Patel',
-      role: 'Head Trainer',
+      role: 'Head Fitness Trainer',
       rating: 5,
-      comment: 'Managing 15+ PT clients is now seamless. Logging workout progress and diets takes seconds instead of hours of paperwork.'
+      comment: 'Managing 20+ PT clients and tracking session payouts is seamless. Logging workout progress takes seconds.'
     },
     {
       name: 'Amit Verma',
-      role: 'Branch Manager',
+      role: 'Gymnasium Franchise Owner',
       rating: 5,
-      comment: 'The Check-In Kiosk and Billing alerts saved our reception team massive hours. Multi-branch stats are clean and accurate.'
+      comment: 'The 7x24 Peak Density Heatmap and Staff Payroll module saved us massive administration hours across our 3 locations!'
     }
   ];
 
@@ -186,9 +210,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gym-muted">
-            <a href="#about" className="hover:text-gym-primary transition-colors">About</a>
-            <a href="#benefits" className="hover:text-gym-primary transition-colors">Benefits</a>
-            <a href="#pricing" className="hover:text-gym-primary transition-colors">Pricing & Plans</a>
+            <a href="#about" className="hover:text-gym-primary transition-colors">Platform</a>
+            <a href="#features" className="hover:text-gym-primary transition-colors">Features</a>
+            <a href="#pricing" className="hover:text-gym-primary transition-colors">Plans & SaaS</a>
             <a href="#reviews" className="hover:text-gym-primary transition-colors">Reviews</a>
             <a href="#contact" className="hover:text-gym-primary transition-colors">Contact</a>
           </nav>
@@ -197,7 +221,7 @@ export const LandingPage: React.FC = () => {
             onClick={handleLoginClick}
             className="flex items-center gap-2 px-5 py-2.5 bg-gym-primary hover:bg-gym-primary-hover text-black font-semibold rounded-xl transition-all duration-200 shadow-md shadow-gym-primary/10"
           >
-            {user ? 'Go to App' : 'Login'}
+            {user ? 'Go to Dashboard' : 'Sign In'}
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
@@ -206,7 +230,7 @@ export const LandingPage: React.FC = () => {
       {/* Expiry Alerts & Success Banner */}
       {((saasSub && (saasSub.status === 'TRIAL_EXPIRED' || saasSub.status === 'SUBSCRIBED_EXPIRED')) || location.state?.fromExpired) && (
         <div className="w-full bg-red-600/90 text-white text-center py-3.5 px-6 font-bold flex items-center justify-center gap-2 animate-pulse text-sm">
-          <span>🚨 Trial or Subscription Ended. Please choose a paid plan below to instantly reactivate your GymOS cloud tenant.</span>
+          <span>🚨 Trial or Subscription Ended. Please choose a paid plan below to reactivate your Gymnasium instance.</span>
         </div>
       )}
 
@@ -229,123 +253,89 @@ export const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gym-primary/10 rounded-full blur-3xl -z-10" />
-        <div className="max-w-5xl mx-auto px-6 text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gym-primary/15 border border-gym-primary/20 text-gym-primary rounded-full text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5" /> Next-Generation Gym Management
+        <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gym-primary/15 border border-gym-primary/20 text-gym-primary rounded-full text-xs font-semibold uppercase tracking-wider">
+            <Sparkles className="h-3.5 w-3.5" /> Powered by Gymnasium Software ERP
           </div>
           
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-none bg-gradient-premium bg-clip-text text-transparent">
-            Powering Premium Fitness Operations
+            The Complete Operating System for Modern Gyms & Clubs
           </h1>
           
-          <p className="text-lg sm:text-xl text-gym-muted max-w-3xl mx-auto">
-            A unified solution to manage branch metrics, classes, personal training schedules, automated subscription billing, and supplement inventory POS in one cohesive platform.
+          <p className="text-lg sm:text-xl text-gym-muted max-w-3xl mx-auto leading-relaxed">
+            Automate member subscriptions, QR kiosk check-ins, staff payroll, sales leads CRM, 7x24 attendance heatmaps, and POS billing — all in one unified multi-tenant software.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
               onClick={handleLoginClick}
-              className="w-full sm:w-auto px-8 py-4 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl shadow-lg shadow-gym-primary/20 transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 bg-gym-primary hover:bg-gym-primary-hover text-black font-extrabold rounded-xl shadow-lg shadow-gym-primary/20 transition-all flex items-center justify-center gap-2"
             >
-              Get Started Now
+              Launch Gymnasium Portal
               <ArrowRight className="h-5 w-5" />
             </button>
             <a
-              href="#about"
+              href="#features"
               className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800 font-bold rounded-xl transition-all flex items-center justify-center"
             >
-              Learn More
+              Explore Core Features
             </a>
           </div>
-        </div>
-      </section>
 
-      {/* About Section */}
-      <section id="about" className="py-20 border-t border-slate-100/10">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold tracking-tight">Unified Multi-Branch Ecosystem</h2>
-            <p className="text-gym-muted leading-relaxed">
-              Designed specifically for fitness entrepreneurs and managers, this application bridges the gap between daily front-desk operations and long-term business analytics.
-            </p>
-            <p className="text-gym-muted leading-relaxed">
-              From the instant a member scans their attendance at the front lobby Kiosk to the moment a trainer updates their caloric macros, all touchpoints synchronize in a secure cloud ledger.
-            </p>
-            <div className="grid grid-cols-2 gap-4 pt-4">
+          {/* Dynamic Platform UI Preview Showcase */}
+          <div className="mt-16 glass-card p-6 md:p-8 rounded-3xl border border-slate-100/10 text-left max-w-4xl mx-auto shadow-2xl space-y-6 relative overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-100/10 pb-4">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-gym-primary" />
-                <span className="font-medium">100% Paperless</span>
+                <div className="h-3 w-3 rounded-full bg-red-500" />
+                <div className="h-3 w-3 rounded-full bg-amber-500" />
+                <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                <span className="text-xs text-gym-muted font-mono ml-2">https://gym.toolcab.in/dashboard</span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-gym-primary" />
-                <span className="font-medium">Real-Time Sync</span>
+              <span className="text-[10px] bg-gym-primary/10 text-gym-primary px-2.5 py-1 rounded-full font-bold uppercase">Live Instance</span>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-1">
+                <span className="text-[10px] text-gym-muted uppercase font-bold">Active Members</span>
+                <p className="text-xl font-extrabold text-gym-primary">1,248 Active</p>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-gym-primary" />
-                <span className="font-medium">Role-Based Portals</span>
+              <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-1">
+                <span className="text-[10px] text-gym-muted uppercase font-bold">Peak Rush Hour</span>
+                <p className="text-xl font-extrabold text-gym-secondary">6 PM - 8 PM</p>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-gym-primary" />
-                <span className="font-medium">Automated CRON Alerts</span>
+              <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-1">
+                <span className="text-[10px] text-gym-muted uppercase font-bold">CRM Leads Pipeline</span>
+                <p className="text-xl font-extrabold text-emerald-400">84% Converted</p>
+              </div>
+              <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-800 space-y-1">
+                <span className="text-[10px] text-gym-muted uppercase font-bold">Staff Payroll</span>
+                <p className="text-xl font-extrabold text-blue-400">Calculated Net</p>
               </div>
             </div>
-          </div>
-
-          <div className="glass-card border border-slate-100/10 p-8 rounded-3xl relative overflow-hidden space-y-6">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gym-primary/10 rounded-bl-full -z-10" />
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-gym-primary/20 rounded-lg flex items-center justify-center border border-gym-primary/30">
-                <Dumbbell className="h-5 w-5 text-gym-primary" />
-              </div>
-              <span className="text-lg font-bold">Key Modules Included</span>
-            </div>
-            
-            <ul className="space-y-3.5 text-sm text-gym-muted">
-              <li className="flex justify-between border-b border-slate-100/10 pb-2">
-                <span>Member Onboarding & Subscriptions</span>
-                <span className="text-gym-primary font-mono">Active</span>
-              </li>
-              <li className="flex justify-between border-b border-slate-100/10 pb-2">
-                <span>Diet & Workout Plan Editors</span>
-                <span className="text-gym-primary font-mono">Active</span>
-              </li>
-              <li className="flex justify-between border-b border-slate-100/10 pb-2">
-                <span>Classes Scheduling & Slot Limits</span>
-                <span className="text-gym-primary font-mono">Active</span>
-              </li>
-              <li className="flex justify-between border-b border-slate-100/10 pb-2">
-                <span>Supplements POS Checkout Store</span>
-                <span className="text-gym-primary font-mono">Active</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Billing Invoices & Refund Ledgers</span>
-                <span className="text-gym-primary font-mono">Active</span>
-              </li>
-            </ul>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section id="benefits" className="py-20 bg-slate-950/40 border-t border-slate-100/10">
+      {/* Core Features Grid */}
+      <section id="features" className="py-20 border-t border-slate-100/10 bg-slate-950/40">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold tracking-tight">Engineered for Results</h2>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Built for Modern Scale</h2>
             <p className="text-gym-muted max-w-xl mx-auto">
-              Discover how our customized modules speed up administration and optimize member retention.
+              Every tool required to run high-performing fitness centers, staff payouts, and member experiences.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((b, idx) => {
-              const Icon = b.icon;
+            {coreFeatures.map((f, idx) => {
+              const Icon = f.icon;
               return (
                 <div key={idx} className="glass-card border border-slate-100/10 p-6 rounded-2xl space-y-4 hover:border-gym-primary/30 transition-all duration-300">
                   <div className="h-12 w-12 bg-gym-primary/10 rounded-xl flex items-center justify-center text-gym-primary border border-gym-primary/20">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-bold text-gym-text">{b.title}</h3>
-                  <p className="text-sm text-gym-muted leading-relaxed">{b.desc}</p>
+                  <h3 className="text-lg font-bold text-gym-text">{f.title}</h3>
+                  <p className="text-sm text-gym-muted leading-relaxed">{f.desc}</p>
                 </div>
               );
             })}
@@ -357,9 +347,9 @@ export const LandingPage: React.FC = () => {
       <section id="reviews" className="py-20 border-t border-slate-100/10">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold tracking-tight">Loved by Gym Owners & Members</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Trusted by Gym Owners & Trainers</h2>
             <p className="text-gym-muted max-w-xl mx-auto">
-              Read real-life testimonials from branches already powered by our management platform.
+              See what fitness managers and members say about Gymnasium software.
             </p>
           </div>
 
@@ -396,9 +386,9 @@ export const LandingPage: React.FC = () => {
       <section id="pricing" className="py-20 border-t border-slate-100/10 bg-slate-900/10">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <h2 className="text-4xl font-extrabold tracking-tight">Flexible SaaS Subscription Plans</h2>
+            <h2 className="text-4xl font-extrabold tracking-tight">Gymnasium SaaS Subscriptions</h2>
             <p className="text-gym-muted text-sm">
-              Activate your cloud instance immediately. Save up to 20% by paying annually. Free trial users can purchase paid plans to restore instant write actions.
+              Instant setup for single branches or multi-city franchises. Save 20% by paying annually.
             </p>
 
             {/* Toggle Billing Interval */}
@@ -428,21 +418,21 @@ export const LandingPage: React.FC = () => {
               {
                 name: 'Starter',
                 price: billingCycle === 'YEARLY' ? '₹14,990' : '₹1,499',
-                features: ['1 Branch Location', 'Up to 200 Gym Members', 'Check-In Kiosk Scanner', 'Basic Revenue Reports', 'SMS Alerts & Notifications'],
+                features: ['1 Branch Location', 'Up to 200 Gym Members', 'QR Kiosk Scanner & Pass', 'Attendance Heatmaps', 'Leads CRM Pipeline'],
                 badge: 'Solopreneurs'
               },
               {
                 name: 'Professional',
                 price: billingCycle === 'YEARLY' ? '₹34,990' : '₹3,499',
-                features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk + Self-Service Portal', 'Class Schedules & Booking', 'Supplement Inventory POS', 'Multi-staff Access Control'],
-                badge: 'Popular choice',
+                features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk Scanner & Pass', 'Staff Payroll & PT Session Payouts', 'Leads CRM + 1-Click Convert', 'Supplement Inventory POS', 'GymBot AI Assistant'],
+                badge: 'Most Popular',
                 popular: true
               },
               {
                 name: 'Enterprise',
                 price: billingCycle === 'YEARLY' ? '₹79,990' : '₹7,999',
-                features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom API access', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
-                badge: 'Large chains'
+                features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom GST Tax Invoice Layouts', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
+                badge: 'Multi-city chains'
               }
             ].map((opt) => (
               <div
@@ -522,7 +512,7 @@ export const LandingPage: React.FC = () => {
                   Apply Code
                 </button>
               </form>
-              <span className="text-[10px] text-gym-muted block">Use coupon code <strong className="text-gym-primary">FITJULY30</strong> for 30% discount.</span>
+              <span className="text-[10px] text-gym-muted block">Use promo code <strong className="text-gym-primary">FITJULY30</strong> for 30% discount.</span>
             </div>
           )}
         </div>
@@ -534,7 +524,7 @@ export const LandingPage: React.FC = () => {
           <div className="space-y-6">
             <h2 className="text-3xl font-bold tracking-tight">Get in Touch</h2>
             <p className="text-gym-muted leading-relaxed">
-              Have questions about integrating your branches, Supabase schemas, or configuring stripe custom billing? Send us a message and our support team will reach out.
+              Have questions about multi-branch setups, staff payroll rules, or custom payment gateway integrations? Send us an inquiry and our team will get back to you.
             </p>
 
             <div className="space-y-4 text-sm text-gym-muted">
@@ -557,13 +547,13 @@ export const LandingPage: React.FC = () => {
             {submitted ? (
               <div className="h-64 flex flex-col items-center justify-center text-center space-y-4 animate-fade-in">
                 <CheckCircle className="h-16 w-16 text-gym-primary" />
-                <h3 className="text-xl font-bold text-gym-text">Message Sent Successfully!</h3>
-                <p className="text-sm text-gym-muted">We will respond to your query within 24 hours.</p>
+                <h3 className="text-xl font-bold text-gym-text">Inquiry Received!</h3>
+                <p className="text-sm text-gym-muted">Our Gymnasium representative will contact you within 24 hours.</p>
               </div>
             ) : (
               <form onSubmit={handleContactSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gym-muted mb-1.5">Name</label>
+                  <label className="block text-sm font-medium text-gym-muted mb-1.5">Your Name</label>
                   <input
                     type="text"
                     required
@@ -592,7 +582,7 @@ export const LandingPage: React.FC = () => {
                     required
                     value={contactMessage}
                     onChange={(e) => setContactMessage(e.target.value)}
-                    placeholder="How can we help your fitness center?"
+                    placeholder="Tell us about your fitness center or branch count..."
                     rows={4}
                     className="gym-input text-sm"
                   />
@@ -600,7 +590,7 @@ export const LandingPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl transition-all shadow-lg shadow-gym-primary/20"
+                  className="w-full py-3.5 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl transition-all shadow-lg shadow-gym-primary/20 text-sm"
                 >
                   Send Inquiry
                 </button>
@@ -615,7 +605,7 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gym-muted">
           <div className="flex items-center gap-2">
             <Dumbbell className="h-5 w-5 text-gym-primary" />
-            <span>© {new Date().getFullYear()} Gymnasium ERP. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} Gymnasium Software ERP. All rights reserved.</span>
           </div>
           <div className="flex gap-6">
             <a href="#about" className="hover:text-gym-primary transition-colors">Privacy Policy</a>
@@ -645,3 +635,4 @@ const Sparkles = ({ className }: { className?: string }) => (
     <path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" />
   </svg>
 );
+
