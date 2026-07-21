@@ -41,8 +41,8 @@ export const generateSampleData = async (req, res) => {
                 firstName: 'Alex',
                 lastName: 'Fitness Pro',
                 specialty: 'Hypertrophy & Weight Loss',
-                email: `trainer_${Date.now()}@gymnasium.com`,
-                phone: '+91 98765 43210',
+                email: `trainer_${Date.now()}_${Math.floor(Math.random() * 1000)}@gymnasium.com`,
+                phone: `+91 97${Math.floor(10000000 + Math.random() * 89999999)}`,
             },
         });
         // 3. Create Sample Leads
@@ -85,13 +85,15 @@ export const generateSampleData = async (req, res) => {
             { first: 'Karan', last: 'Singh', phone: '+91 98333 44455' },
         ];
         const now = new Date();
-        for (const m of sampleMembers) {
+        const ts = Date.now();
+        for (let idx = 0; idx < sampleMembers.length; idx++) {
+            const m = sampleMembers[idx];
             const user = await prisma.user.create({
                 data: {
                     firstName: m.first,
                     lastName: m.last,
-                    email: `${m.first.toLowerCase()}.${m.last.toLowerCase()}_demo@example.com`,
-                    phoneNumber: m.phone,
+                    email: `${m.first.toLowerCase()}.${m.last.toLowerCase()}_demo_${ts}_${idx}@example.com`,
+                    phoneNumber: `+91 98${Math.floor(10000000 + Math.random() * 89999999)}`,
                     role: 'MEMBER',
                     branchId,
                     member: {
