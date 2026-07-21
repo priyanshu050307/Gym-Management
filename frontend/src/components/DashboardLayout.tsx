@@ -130,7 +130,7 @@ export const DashboardLayout: React.FC = () => {
     <div className="flex h-screen bg-gym-darker text-gym-text overflow-hidden">
       <NotificationPopup />
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex md:w-64 flex-col glass-card border-r border-slate-100 relative z-20">
+      <aside className="hidden md:flex md:w-64 flex-col glass-card border-r border-slate-100 relative z-20 shrink-0 h-screen overflow-hidden">
         {/* Logo Header */}
         <div className="p-6 flex items-center justify-between border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -295,7 +295,7 @@ export const DashboardLayout: React.FC = () => {
         )}
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
           {/* Top Trial Banner */}
           {saasSub && saasSub.status === 'TRIAL_ACTIVE' && (
             <div className={`w-full py-3 px-6 text-center text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
@@ -327,7 +327,7 @@ export const DashboardLayout: React.FC = () => {
             </div>
           )}
 
-          <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
+          <main className="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full min-h-0">
             <Outlet />
           </main>
         </div>
