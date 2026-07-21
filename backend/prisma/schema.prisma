@@ -169,6 +169,7 @@ model Trainer {
   dietPlans    DietPlan[]
   feedbacks    TrainerFeedback[]
   ptMembers    Member[]          @relation("PersonalTrainer")
+  payrolls     Payroll[]
 }
 
 model GroupClass {
@@ -212,6 +213,8 @@ model Branch {
   supplements     Supplement[]
   supplementSales SupplementSale[]
   saaSSubscription SaaSSubscription?
+  leads            Lead[]
+  payrolls         Payroll[]
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
@@ -412,3 +415,59 @@ model PromoCode {
   applicableCycles String[]
   createdAt        DateTime @default(now())
 }
+
+enum LeadStatus {
+  NEW
+  FOLLOWED_UP
+  CONVERTED
+  LOST
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+}
+
+model Lead {
+  id               String     @id @default(uuid())
+  name             String
+  email            String?
+  phone            String
+  interestedPlanId String?
+  status           LeadStatus @default(NEW)
+  notes            String?
+  followUpDate     DateTime?
+  branchId         String
+  branch           Branch     @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([branchId])
+  @@index([status])
+}
+
+model Payroll {
+  id           String       @id @default(uuid())
+  trainerId    String
+  trainer      Trainer      @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  month        Int
+  year         Int
+  baseSalary   Float        @default(0)
+  sessionCount Int          @default(0)
+  sessionRate  Float        @default(0)
+  bonus        Float        @default(0)
+  deductions   Float        @default(0)
+  totalAmount  Float
+  status       PayoutStatus @default(PENDING)
+  paymentDate  DateTime?
+  notes        String?
+  branchId     String
+  branch       Branch       @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([trainerId])
+  @@index([branchId])
+  @@index([year, month])
+}
+

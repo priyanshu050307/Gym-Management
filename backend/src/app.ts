@@ -19,6 +19,10 @@ import saleRoutes from './routes/sale.routes.js';
 import saasRoutes from './routes/saas.routes.js';
 import syncRoutes from './routes/sync.routes.js';
 import gymbotRoutes from './routes/gymbot.routes.js';
+import leadRoutes from './routes/lead.routes.js';
+import payrollRoutes from './routes/payroll.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
+import demoRoutes from './routes/demo.routes.js';
 
 import { initCronJobs } from './config/cron.js';
 import prisma from './config/prisma.js';
@@ -214,6 +218,10 @@ app.use('/api/sales', saleRoutes);
 app.use('/api/saas', saasRoutes);
 app.use('/api/sync', syncRoutes);
 app.use('/api/gymbot', gymbotRoutes);
+app.use('/api/leads', leadRoutes);
+app.use('/api/payroll', payrollRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/demo', demoRoutes);
 
 // ──────────────────────────────────────────────
 // 404 Handler

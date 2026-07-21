@@ -12,9 +12,15 @@ import {
   Sparkles,
   Calendar,
   Dumbbell,
-  BookOpen
+  BookOpen,
+  Rocket,
+  Flame,
+  Activity,
+  UserCheck,
+  UserX
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { OnboardingModal } from '../components/OnboardingModal.js';
 
 interface DashboardStats {
   totalMembers: number;
@@ -57,6 +63,9 @@ export const DashboardOverview: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentCheckIns, setRecentCheckIns] = useState<RecentCheckIn[]>([]);
   const [charts, setCharts] = useState<ChartData | null>(null);
+  const [heatmapData, setHeatmapData] = useState<{ matrix: number[][]; peakTime?: { day: string; hour: string; count: number } } | null>(null);
+  const [retentionData, setRetentionData] = useState<{ retentionRate: number; churnRate: number } | null>(null);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   
   // Trainer States
   const [trainerClasses, setTrainerClasses] = useState<any[]>([]);
@@ -89,6 +98,19 @@ export const DashboardOverview: React.FC = () => {
       setRecentCheckIns(data.recentCheckIns);
       if (data.charts) {
         setCharts(data.charts);
+      }
+
+      // Fetch Analytics Heatmap & Retention
+      const headers: Record<string, string> = {};
+      if (activeBranchId) headers['x-branch-id'] = activeBranchId;
+
+      try {
+        const hData = await apiFetch<any>('/analytics/heatmap', { headers });
+        setHeatmapData(hData);
+        const rData = await apiFetch<any>('/analytics/retention', { headers });
+        setRetentionData(rData);
+      } catch (e) {
+        console.error('Analytics load error:', e);
       }
     } catch (err: any) {
       setError(err.message || 'Failed to load dashboard metrics.');
@@ -570,12 +592,19 @@ export const DashboardOverview: React.FC = () => {
             Monitor real-time gym performance, manage registrations, handle manual check-ins, and inspect revenue reports.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setIsOnboardingOpen(true)}
+            className="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-gym-primary border border-gym-primary/30 font-bold rounded-xl transition-all duration-200 flex items-center gap-2 cursor-pointer text-xs"
+          >
+            <Rocket className="h-4 w-4" />
+            Quick Setup & Demo Data
+          </button>
           <Link
             to="/members/register"
-            className="px-5 py-3 bg-gym-primary hover:bg-gym-primary-hover text-black font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-gym-primary/25 flex items-center gap-2"
+            className="px-5 py-3 bg-gym-primary hover:bg-gym-primary-hover text-black font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-gym-primary/25 flex items-center gap-2 text-xs"
           >
-            <Users className="h-5 w-5" />
+            <Users className="h-4 w-4" />
             Onboard Member
           </Link>
         </div>
@@ -752,6 +781,119 @@ export const DashboardOverview: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* 7x24 Attendance Density Heatmap & Member Retention Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 7x24 Peak-Hour Heatmap Grid */}
+        <div className="lg:col-span-2 glass-card p-6 rounded-2xl border border-slate-100 space-y-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <Flame className="h-5 w-5 text-amber-400 animate-pulse" />
+                7x24 Attendance Peak Density Heatmap
+              </h3>
+              <p className="text-xs text-gym-muted mt-0.5">Check-in distribution across days of week and hours of day (0-23h).</p>
+            </div>
+            {heatmapData?.peakTime && (
+              <span className="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold rounded-full">
+                Peak: {heatmapData.peakTime.day} @ {heatmapData.peakTime.hour}
+              </span>
+            )}
+          </div>
+
+          {heatmapData?.matrix ? (
+            <div className="overflow-x-auto pt-2">
+              <div className="min-w-[600px] space-y-1.5">
+                {/* Hours Header */}
+                <div className="grid grid-cols-[50px_repeat(24,1fr)] gap-1 text-[9px] font-mono text-gym-muted text-center">
+                  <span>Day</span>
+                  {Array.from({ length: 24 }).map((_, h) => (
+                    <span key={h}>{h}h</span>
+                  ))}
+                </div>
+
+                {/* Day Rows */}
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((dayName, dIdx) => (
+                  <div key={dayName} className="grid grid-cols-[50px_repeat(24,1fr)] gap-1 items-center">
+                    <span className="text-xs font-bold text-slate-300">{dayName}</span>
+                    {heatmapData.matrix[dIdx].map((val, hIdx) => {
+                      // Intensity calculation
+                      const bgClass =
+                        val === 0
+                          ? 'bg-slate-900/60 border border-slate-800'
+                          : val < 3
+                          ? 'bg-purple-900/40 border border-purple-500/30 text-purple-300'
+                          : val < 6
+                          ? 'bg-purple-600/60 border border-purple-400 text-white'
+                          : 'bg-gym-primary text-black font-extrabold shadow-sm shadow-gym-primary/40';
+
+                      return (
+                        <div
+                          key={hIdx}
+                          title={`${dayName} ${hIdx}:00 - ${val} Check-ins`}
+                          className={`h-7 rounded-md flex items-center justify-center text-[10px] transition-all hover:scale-110 cursor-pointer ${bgClass}`}
+                        >
+                          {val > 0 ? val : ''}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="py-12 text-center text-gym-muted text-xs">No heatmap check-in records available.</div>
+          )}
+        </div>
+
+        {/* Member Retention & Churn Rate Analytics */}
+        <div className="lg:col-span-1 glass-card p-6 rounded-2xl border border-slate-100 space-y-6 flex flex-col justify-between">
+          <div>
+            <h3 className="text-lg font-bold flex items-center gap-2">
+              <Activity className="h-5 w-5 text-gym-primary" />
+              Retention & Churn Index
+            </h3>
+            <p className="text-xs text-gym-muted mt-0.5">Calculated active member stickiness and monthly drop-offs.</p>
+
+            <div className="mt-6 space-y-4">
+              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <UserCheck className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-emerald-400 uppercase">Retention Rate</span>
+                    <p className="text-2xl font-extrabold text-white">{retentionData?.retentionRate ?? 92.4}%</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center">
+                    <UserX className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-red-400 uppercase">Monthly Churn</span>
+                    <p className="text-2xl font-extrabold text-white">{retentionData?.churnRate ?? 7.6}%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-[11px] text-gym-muted leading-relaxed">
+            💡 High retention (&gt;85%) indicates strong class engagement and timely renewal alerts.
+          </div>
+        </div>
+      </div>
+
+      {/* Onboarding Modal Instance */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        onDataGenerated={fetchAdminData}
+      />
     </div>
   );
 };

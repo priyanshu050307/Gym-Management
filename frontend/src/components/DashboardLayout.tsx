@@ -21,7 +21,9 @@ import {
   ShoppingBag,
   Sparkles,
   Clock,
-  Lock
+  Lock,
+  UserPlus,
+  Briefcase
 } from 'lucide-react';
 
 export const DashboardLayout: React.FC = () => {
@@ -69,8 +71,10 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'STAFF'] },
     { name: 'My Dashboard', path: '/trainer-portal', icon: LayoutDashboard, roles: ['TRAINER'] },
     { name: 'Members', path: '/members', icon: Users, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
+    { name: 'Leads CRM', path: '/leads', icon: UserPlus, roles: ['ADMIN', 'STAFF'] },
     { name: 'Membership Plans', path: '/plans', icon: FileText, roles: ['ADMIN', 'STAFF'] },
     { name: 'Billing & Payments', path: '/billing', icon: CreditCard, roles: ['ADMIN', 'STAFF'] },
+    { name: 'Staff Payroll', path: '/payroll', icon: Briefcase, roles: ['ADMIN'] },
     { name: 'Check-In Kiosk', path: '/kiosk', icon: QrCode, roles: ['ADMIN', 'STAFF'] },
     { name: 'Classes & Bookings', path: '/schedules', icon: Calendar, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
     { name: 'Equipment', path: '/equipment', icon: Dumbbell, roles: ['ADMIN', 'STAFF'] },

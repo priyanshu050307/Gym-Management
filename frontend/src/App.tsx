@@ -4,6 +4,8 @@ import { AuthProvider } from './context/AuthContext.js';
 import { ProtectedRoute } from './components/ProtectedRoute.js';
 import { DashboardLayout } from './components/DashboardLayout.js';
 
+import ErrorBoundary from './components/ErrorBoundary.js';
+
 // Lazy load page components to improve initial loading speed
 const Login = lazy(() => import('./pages/Login.js').then(m => ({ default: m.Login })));
 const LandingPage = lazy(() => import('./pages/LandingPage.js').then(m => ({ default: m.LandingPage })));
@@ -24,59 +26,65 @@ const SaaSBilling = lazy(() => import('./pages/SaaSBilling.js').then(m => ({ def
 const RegisterOwner = lazy(() => import('./pages/RegisterOwner.js').then(m => ({ default: m.RegisterOwner })));
 const Profile = lazy(() => import('./pages/Profile.js').then(m => ({ default: m.Profile })));
 const GymBot = lazy(() => import('./pages/GymBot.js').then(m => ({ default: m.GymBot })));
+const Leads = lazy(() => import('./pages/Leads.js').then(m => ({ default: m.Leads })));
+const Payroll = lazy(() => import('./pages/Payroll.js').then(m => ({ default: m.Payroll })));
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Suspense fallback={
-          <div className="flex h-screen items-center justify-center bg-gym-darker">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gym-primary border-t-transparent"></div>
-          </div>
-        }>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register-owner" element={<RegisterOwner />} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <Suspense fallback={
+            <div className="flex h-screen items-center justify-center bg-gym-darker">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-gym-primary border-t-transparent"></div>
+            </div>
+          }>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register-owner" element={<RegisterOwner />} />
 
-            {/* Secure Administrative & Member Dashboard Routes */}
-            <Route
-              element={
-                <ProtectedRoute allowedRoles={['ADMIN', 'STAFF', 'MEMBER', 'TRAINER']}>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              {/* Administrative Routes */}
-              <Route path="dashboard" element={<DashboardOverview />} />
-              <Route path="members" element={<MembersList />} />
-              <Route path="members/register" element={<MemberRegister />} />
-              <Route path="members/:id" element={<MemberDetails />} />
-              <Route path="plans" element={<Plans />} />
-              <Route path="billing" element={<BillingList />} />
-              <Route path="kiosk" element={<KioskScanner />} />
-              <Route path="schedules" element={<Schedules />} />
-              <Route path="branches" element={<Branches />} />
-              <Route path="equipment" element={<Equipment />} />
-              <Route path="supplements" element={<Supplements />} />
-              <Route path="subscription" element={<SaaSBilling />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="gymbot" element={<GymBot />} />
+              {/* Secure Administrative & Member Dashboard Routes */}
+              <Route
+                element={
+                  <ProtectedRoute allowedRoles={['ADMIN', 'STAFF', 'MEMBER', 'TRAINER']}>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                {/* Administrative Routes */}
+                <Route path="dashboard" element={<DashboardOverview />} />
+                <Route path="members" element={<MembersList />} />
+                <Route path="members/register" element={<MemberRegister />} />
+                <Route path="members/:id" element={<MemberDetails />} />
+                <Route path="leads" element={<Leads />} />
+                <Route path="plans" element={<Plans />} />
+                <Route path="billing" element={<BillingList />} />
+                <Route path="payroll" element={<Payroll />} />
+                <Route path="kiosk" element={<KioskScanner />} />
+                <Route path="schedules" element={<Schedules />} />
+                <Route path="branches" element={<Branches />} />
+                <Route path="equipment" element={<Equipment />} />
+                <Route path="supplements" element={<Supplements />} />
+                <Route path="subscription" element={<SaaSBilling />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="gymbot" element={<GymBot />} />
 
-              {/* Member Self-Service Portal Route */}
-              <Route path="portal" element={<MemberPortal />} />
+                {/* Member Self-Service Portal Route */}
+                <Route path="portal" element={<MemberPortal />} />
 
-              {/* Trainer Self-Service Portal Route */}
-              <Route path="trainer-portal" element={<TrainerPortal />} />
-            </Route>
+                {/* Trainer Self-Service Portal Route */}
+                <Route path="trainer-portal" element={<TrainerPortal />} />
+              </Route>
 
-            {/* Catch-all - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </AuthProvider>
+              {/* Catch-all - redirect to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
