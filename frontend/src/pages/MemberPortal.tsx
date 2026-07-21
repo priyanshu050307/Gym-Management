@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { apiFetch } from '../utils/api.js';
 import {
@@ -15,7 +16,6 @@ import {
   Dumbbell,
   Apple,
   TrendingUp,
-  History,
   Printer,
   Upload,
   Heart,
@@ -173,7 +173,17 @@ export const MemberPortal: React.FC = () => {
   const memberStatus = user?.member?.status;
 
   // Custom tabs & sub-module states
+  const [searchParams] = useSearchParams();
+  const tabQuery = searchParams.get('tab');
   const [portalTab, setPortalTab] = useState<'overview' | 'workout' | 'diet' | 'progress' | 'profile' | 'attendance'>('overview');
+
+  useEffect(() => {
+    if (tabQuery && ['overview', 'workout', 'diet', 'progress', 'profile', 'attendance'].includes(tabQuery)) {
+      setPortalTab(tabQuery as any);
+    } else {
+      setPortalTab('overview');
+    }
+  }, [tabQuery]);
   const [workout, setWorkout] = useState<any>(null);
   const [diet, setDiet] = useState<any>(null);
   const [progressLogs, setProgressLogs] = useState<any[]>([]);
@@ -697,76 +707,6 @@ export const MemberPortal: React.FC = () => {
           </button>
         </div>
       )}
-
-      {/* Tab Navigation Menu */}
-      <div className="flex flex-wrap border-b border-slate-800 gap-6">
-        <button
-          onClick={() => setPortalTab('overview')}
-          className={`pb-3 font-bold text-sm tracking-wide transition-all border-b-2 flex items-center gap-2 ${
-            portalTab === 'overview'
-              ? 'border-gym-primary text-gym-primary'
-              : 'border-transparent text-gym-muted hover:text-gym-text'
-          }`}
-        >
-          <QrCode className="h-4.5 w-4.5" />
-          Overview & Pass
-        </button>
-        <button
-          onClick={() => setPortalTab('workout')}
-          className={`pb-3 font-bold text-sm tracking-wide transition-all border-b-2 flex items-center gap-2 ${
-            portalTab === 'workout'
-              ? 'border-gym-primary text-gym-primary'
-              : 'border-transparent text-gym-muted hover:text-gym-text'
-          }`}
-        >
-          <Dumbbell className="h-4.5 w-4.5" />
-          My Workouts
-        </button>
-        <button
-          onClick={() => setPortalTab('diet')}
-          className={`pb-3 font-bold text-sm tracking-wide transition-all border-b-2 flex items-center gap-2 ${
-            portalTab === 'diet'
-              ? 'border-gym-primary text-gym-primary'
-              : 'border-transparent text-gym-muted hover:text-gym-text'
-          }`}
-        >
-          <Apple className="h-4.5 w-4.5" />
-          My Nutrition
-        </button>
-        <button
-          onClick={() => setPortalTab('progress')}
-          className={`pb-3 font-bold text-sm tracking-wide transition-all border-b-2 flex items-center gap-2 ${
-            portalTab === 'progress'
-              ? 'border-gym-primary text-gym-primary'
-              : 'border-transparent text-gym-muted hover:text-gym-text'
-          }`}
-        >
-          <TrendingUp className="h-4.5 w-4.5" />
-          Progress Tracker
-        </button>
-        <button
-          onClick={() => setPortalTab('profile')}
-          className={`pb-3 font-bold text-sm tracking-wide transition-all border-b-2 flex items-center gap-2 ${
-            portalTab === 'profile'
-              ? 'border-gym-primary text-gym-primary'
-              : 'border-transparent text-gym-muted hover:text-gym-text'
-          }`}
-        >
-          <User className="h-4.5 w-4.5" />
-          My Profile & Health
-        </button>
-        <button
-          onClick={() => setPortalTab('attendance')}
-          className={`pb-3 font-bold text-sm tracking-wide transition-all border-b-2 flex items-center gap-2 ${
-            portalTab === 'attendance'
-              ? 'border-gym-primary text-gym-primary'
-              : 'border-transparent text-gym-muted hover:text-gym-text'
-          }`}
-        >
-          <History className="h-4.5 w-4.5" />
-          Attendance History
-        </button>
-      </div>
 
       {portalTab === 'overview' && (
         <>

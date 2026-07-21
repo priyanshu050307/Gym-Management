@@ -23,7 +23,10 @@ import {
   Clock,
   Lock,
   UserPlus,
-  Briefcase
+  Briefcase,
+  Apple,
+  TrendingUp,
+  History
 } from 'lucide-react';
 
 export const DashboardLayout: React.FC = () => {
@@ -81,8 +84,13 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Supplements Inventory', path: '/supplements', icon: ShoppingBag, roles: ['ADMIN', 'STAFF'] },
     { name: 'Branches', path: '/branches', icon: MapPin, roles: ['ADMIN'] },
     { name: 'SaaS Subscription', path: '/subscription', icon: Sparkles, roles: ['ADMIN'] },
-    { name: 'My Portal', path: '/portal', icon: LayoutDashboard, roles: ['MEMBER'] },
-    { name: 'My Profile', path: '/profile', icon: UserIcon, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
+    { name: 'Overview & Pass', path: '/portal?tab=overview', icon: QrCode, roles: ['MEMBER'] },
+    { name: 'My Workouts', path: '/portal?tab=workout', icon: Dumbbell, roles: ['MEMBER'] },
+    { name: 'My Nutrition', path: '/portal?tab=diet', icon: Apple, roles: ['MEMBER'] },
+    { name: 'Progress Tracker', path: '/portal?tab=progress', icon: TrendingUp, roles: ['MEMBER'] },
+    { name: 'Profile & Health', path: '/portal?tab=profile', icon: UserIcon, roles: ['MEMBER'] },
+    { name: 'Attendance History', path: '/portal?tab=attendance', icon: History, roles: ['MEMBER'] },
+    { name: 'My Profile', path: '/profile', icon: UserIcon, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
     { name: 'GymBot AI', path: '/gymbot', icon: Sparkles, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
   ];
 
@@ -108,22 +116,36 @@ export const DashboardLayout: React.FC = () => {
     }
   }, [isLocked, isBillingPage]);
 
+  const isItemActive = (itemPath: string) => {
+    const currentFull = location.pathname + location.search;
+    if (itemPath.includes('?')) {
+      if (currentFull === itemPath) return true;
+      if (itemPath === '/portal?tab=overview' && location.pathname === '/portal' && (!location.search || location.search === '?tab=overview')) return true;
+      return false;
+    }
+    return location.pathname === itemPath || (itemPath !== '/' && location.pathname.startsWith(itemPath));
+  };
+
   return (
-    <div className="min-h-screen bg-gym-darker flex">
+    <div className="flex h-screen bg-gym-darker text-gym-text overflow-hidden">
       <NotificationPopup />
-      {/* Sidebar for Desktop */}
-      <aside className="hidden md:flex md:w-64 md:flex-col glass-card border-r border-slate-100 h-screen sticky top-0">
-        <div className="flex items-center gap-3 px-6 h-20 border-b border-slate-100">
-          <Dumbbell className="h-8 w-8 text-gym-primary" />
-          <span className="text-xl font-bold tracking-wider bg-gradient-premium bg-clip-text text-transparent">
-            GYMNASIUM
-          </span>
+      {/* Sidebar Desktop */}
+      <aside className="hidden md:flex md:w-64 flex-col glass-card border-r border-slate-100 relative z-20">
+        {/* Logo Header */}
+        <div className="p-6 flex items-center justify-between border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <Dumbbell className="h-8 w-8 text-gym-primary" />
+            <span className="text-xl font-bold tracking-wider bg-gradient-premium bg-clip-text text-transparent">
+              GYMNASIUM
+            </span>
+          </div>
         </div>
 
+        {/* Branch Selector (Admin multi-tenant context) */}
         {branches.length > 0 && user?.role === 'ADMIN' && (
-          <div className="px-6 py-4 border-b border-slate-100">
+          <div className="px-4 pt-4 pb-2 border-b border-slate-100">
             <label className="block text-[10px] font-semibold text-gym-muted uppercase tracking-wider mb-1">
-              Active Branch
+              Active Branch Filter
             </label>
             <select
               value={activeBranchId || ''}
@@ -143,7 +165,7 @@ export const DashboardLayout: React.FC = () => {
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {filteredNavigation.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname.startsWith(item.path);
+            const isActive = isItemActive(item.path);
             return (
               <Link
                 key={item.name}
@@ -229,7 +251,7 @@ export const DashboardLayout: React.FC = () => {
             <nav className="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
               {filteredNavigation.map((item) => {
                 const Icon = item.icon;
-                const isActive = location.pathname.startsWith(item.path);
+                const isActive = isItemActive(item.path);
                 return (
                   <Link
                     key={item.name}
