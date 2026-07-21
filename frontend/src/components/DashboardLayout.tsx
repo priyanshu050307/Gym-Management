@@ -71,27 +71,40 @@ export const DashboardLayout: React.FC = () => {
   };
 
   const navigationItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'STAFF'] },
-    { name: 'My Dashboard', path: '/trainer-portal', icon: LayoutDashboard, roles: ['TRAINER'] },
-    { name: 'Members', path: '/members', icon: Users, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
-    { name: 'Leads CRM', path: '/leads', icon: UserPlus, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Membership Plans', path: '/plans', icon: FileText, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Billing & Payments', path: '/billing', icon: CreditCard, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Staff Payroll', path: '/payroll', icon: Briefcase, roles: ['ADMIN'] },
-    { name: 'Check-In Kiosk', path: '/kiosk', icon: QrCode, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Classes & Bookings', path: '/schedules', icon: Calendar, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
-    { name: 'Equipment', path: '/equipment', icon: Dumbbell, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Supplements Inventory', path: '/supplements', icon: ShoppingBag, roles: ['ADMIN', 'STAFF'] },
-    { name: 'Branches', path: '/branches', icon: MapPin, roles: ['ADMIN'] },
-    { name: 'SaaS Subscription', path: '/subscription', icon: Sparkles, roles: ['ADMIN'] },
-    { name: 'Overview & Pass', path: '/portal?tab=overview', icon: QrCode, roles: ['MEMBER'] },
-    { name: 'My Workouts', path: '/portal?tab=workout', icon: Dumbbell, roles: ['MEMBER'] },
-    { name: 'My Nutrition', path: '/portal?tab=diet', icon: Apple, roles: ['MEMBER'] },
-    { name: 'Progress Tracker', path: '/portal?tab=progress', icon: TrendingUp, roles: ['MEMBER'] },
-    { name: 'Profile & Health', path: '/portal?tab=profile', icon: UserIcon, roles: ['MEMBER'] },
-    { name: 'Attendance History', path: '/portal?tab=attendance', icon: History, roles: ['MEMBER'] },
-    { name: 'My Profile', path: '/profile', icon: UserIcon, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
-    { name: 'GymBot AI', path: '/gymbot', icon: Sparkles, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
+    // 1. MAIN OVERVIEW
+    { category: 'Main Overview', name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'STAFF'] },
+    { category: 'Main Overview', name: 'My Dashboard', path: '/trainer-portal', icon: LayoutDashboard, roles: ['TRAINER'] },
+
+    // 2. MEMBERS & LEADS
+    { category: 'Members & Leads', name: 'Members', path: '/members', icon: Users, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
+    { category: 'Members & Leads', name: 'Leads CRM', path: '/leads', icon: UserPlus, roles: ['ADMIN', 'STAFF'] },
+    { category: 'Members & Leads', name: 'Check-In Kiosk', path: '/kiosk', icon: QrCode, roles: ['ADMIN', 'STAFF'] },
+    { category: 'Members & Leads', name: 'Classes & Bookings', path: '/schedules', icon: Calendar, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
+
+    // 3. STAFF & FACILITY
+    { category: 'Staff & Facility', name: 'Staff Payroll', path: '/payroll', icon: Briefcase, roles: ['ADMIN'] },
+    { category: 'Staff & Facility', name: 'Equipment', path: '/equipment', icon: Dumbbell, roles: ['ADMIN', 'STAFF'] },
+    { category: 'Staff & Facility', name: 'Supplements Inventory', path: '/supplements', icon: ShoppingBag, roles: ['ADMIN', 'STAFF'] },
+
+    // 4. FINANCE & PLANS
+    { category: 'Finance & Plans', name: 'Membership Plans', path: '/plans', icon: FileText, roles: ['ADMIN', 'STAFF'] },
+    { category: 'Finance & Plans', name: 'Billing & Payments', path: '/billing', icon: CreditCard, roles: ['ADMIN', 'STAFF'] },
+
+    // 5. ORGANIZATION & SAAS
+    { category: 'Organization', name: 'Branches', path: '/branches', icon: MapPin, roles: ['ADMIN'] },
+    { category: 'Organization', name: 'SaaS Subscription', path: '/subscription', icon: Sparkles, roles: ['ADMIN'] },
+
+    // 6. MEMBER PORTAL
+    { category: 'My Portal', name: 'Overview & Pass', path: '/portal?tab=overview', icon: QrCode, roles: ['MEMBER'] },
+    { category: 'My Portal', name: 'My Workouts', path: '/portal?tab=workout', icon: Dumbbell, roles: ['MEMBER'] },
+    { category: 'My Portal', name: 'My Nutrition', path: '/portal?tab=diet', icon: Apple, roles: ['MEMBER'] },
+    { category: 'My Portal', name: 'Progress Tracker', path: '/portal?tab=progress', icon: TrendingUp, roles: ['MEMBER'] },
+    { category: 'My Portal', name: 'Profile & Health', path: '/portal?tab=profile', icon: UserIcon, roles: ['MEMBER'] },
+    { category: 'My Portal', name: 'Attendance History', path: '/portal?tab=attendance', icon: History, roles: ['MEMBER'] },
+
+    // 7. ACCOUNT & ASSISTANT
+    { category: 'Account & AI', name: 'My Profile', path: '/profile', icon: UserIcon, roles: ['ADMIN', 'STAFF', 'TRAINER'] },
+    { category: 'Account & AI', name: 'GymBot AI', path: '/gymbot', icon: Sparkles, roles: ['ADMIN', 'STAFF', 'TRAINER', 'MEMBER'] },
   ];
 
   const filteredNavigation = navigationItems.filter(
@@ -162,25 +175,33 @@ export const DashboardLayout: React.FC = () => {
           </div>
         )}
 
-        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-          {filteredNavigation.map((item) => {
+        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+          {filteredNavigation.map((item, index) => {
             const Icon = item.icon;
             const isActive = isItemActive(item.path);
+            const showHeader = index === 0 || filteredNavigation[index - 1].category !== item.category;
+
             return (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                  isActive
-                    ? 'bg-gym-primary/20 text-gym-primary border-l-4 border-gym-primary font-medium'
-                    : 'text-gym-muted hover:bg-slate-50 hover:text-gym-text'
-                }`}
-              >
-                <Icon className={`h-5 w-5 transition-transform duration-200 group-hover:scale-110 ${
-                  isActive ? 'text-gym-primary' : 'text-gym-muted group-hover:text-gym-text'
-                }`} />
-                {item.name}
-              </Link>
+              <React.Fragment key={item.name}>
+                {showHeader && (
+                  <div className="px-4 pt-4 pb-1 text-[10px] font-extrabold text-gym-muted/60 uppercase tracking-widest">
+                    {item.category}
+                  </div>
+                )}
+                <Link
+                  to={item.path}
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group text-sm ${
+                    isActive
+                      ? 'bg-gym-primary/20 text-gym-primary border-l-4 border-gym-primary font-bold shadow-sm'
+                      : 'text-gym-muted hover:bg-slate-50 hover:text-gym-text'
+                  }`}
+                >
+                  <Icon className={`h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-110 ${
+                    isActive ? 'text-gym-primary' : 'text-gym-muted group-hover:text-gym-text'
+                  }`} />
+                  {item.name}
+                </Link>
+              </React.Fragment>
             );
           })}
         </nav>
@@ -248,24 +269,32 @@ export const DashboardLayout: React.FC = () => {
                 </select>
               </div>
             )}
-            <nav className="flex-1 px-6 py-8 space-y-2 overflow-y-auto">
-              {filteredNavigation.map((item) => {
+            <nav className="flex-1 px-6 py-6 space-y-1.5 overflow-y-auto">
+              {filteredNavigation.map((item, index) => {
                 const Icon = item.icon;
                 const isActive = isItemActive(item.path);
+                const showHeader = index === 0 || filteredNavigation[index - 1].category !== item.category;
+
                 return (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all ${
-                      isActive
-                        ? 'bg-gym-primary/20 text-gym-primary border-l-4 border-gym-primary font-medium'
-                        : 'text-gym-muted hover:bg-slate-50 hover:text-gym-text'
-                    }`}
-                  >
-                    <Icon className="h-6 w-6" />
-                    <span className="text-base">{item.name}</span>
-                  </Link>
+                  <React.Fragment key={item.name}>
+                    {showHeader && (
+                      <div className="px-4 pt-4 pb-1 text-[11px] font-extrabold text-gym-muted/70 uppercase tracking-widest">
+                        {item.category}
+                      </div>
+                    )}
+                    <Link
+                      to={item.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all ${
+                        isActive
+                          ? 'bg-gym-primary/20 text-gym-primary border-l-4 border-gym-primary font-bold shadow-sm'
+                          : 'text-gym-muted hover:bg-slate-50 hover:text-gym-text'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      <span className="text-sm font-semibold">{item.name}</span>
+                    </Link>
+                  </React.Fragment>
                 );
               })}
             </nav>
