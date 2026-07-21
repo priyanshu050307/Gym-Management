@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiFetch } from '../utils/api.js';
+import { apiFetch, getApiUrl } from '../utils/api.js';
 import {
   Check,
   MapPin,
@@ -213,7 +213,7 @@ export const SaaSBilling: React.FC = () => {
 
   const handleDownloadInvoice = (subscriptionId: string) => {
     const token = localStorage.getItem('token');
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const apiUrl = getApiUrl();
     const downloadUrl = `${apiUrl}/saas/invoice/${subscriptionId}?token=${token}`;
     window.open(downloadUrl, '_blank');
   };

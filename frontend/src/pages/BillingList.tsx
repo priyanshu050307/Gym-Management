@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiFetch } from '../utils/api.js';
+import { apiFetch, getApiUrl } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.js';
 import {
   CreditCard,
@@ -185,7 +185,7 @@ export const BillingList: React.FC = () => {
 
   // PDF invoice downloader helper
   const handleDownloadInvoice = (paymentId: string) => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const API_URL = getApiUrl();
     const token = localStorage.getItem('token');
     
     // Trigger download by opening endpoint in new tab with auth token inside headers or query params

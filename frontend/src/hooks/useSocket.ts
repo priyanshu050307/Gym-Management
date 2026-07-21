@@ -10,7 +10,15 @@ export interface RealtimeNotification {
   timestamp: Date;
 }
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const getSocketUrl = (): string => {
+  if (import.meta.env.VITE_SOCKET_URL) {
+    return import.meta.env.VITE_SOCKET_URL;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return window.location.origin;
+  }
+  return 'http://localhost:5000';
+};
 
 export const useSocket = () => {
   const { user, token } = useAuth();
@@ -39,7 +47,7 @@ export const useSocket = () => {
     // Only admin/staff need real-time dashboard events
     if (!['ADMIN', 'STAFF'].includes(user.role)) return;
 
-    const socket = io(SOCKET_URL, {
+    const socket = io(getSocketUrl(), {
       auth: {
         userId: user.id,
         ownerId: user.id, // for ADMIN, their own id is the ownerId

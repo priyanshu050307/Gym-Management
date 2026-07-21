@@ -1,4 +1,12 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const getApiUrl = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return '/api';
+  }
+  return 'http://localhost:5000/api';
+};
 
 interface RequestOptions extends RequestInit {
   body?: any;
@@ -6,6 +14,7 @@ interface RequestOptions extends RequestInit {
 
 export async function apiFetch<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const token = localStorage.getItem('token');
+  const baseUrl = getApiUrl();
   
   const headers = new Headers(options.headers || {});
   
@@ -31,7 +40,7 @@ export async function apiFetch<T = any>(endpoint: string, options: RequestOption
     config.body = JSON.stringify(options.body);
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, config);
+  const response = await fetch(`${baseUrl}${endpoint}`, config);
   
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
