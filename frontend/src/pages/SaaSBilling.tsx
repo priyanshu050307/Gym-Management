@@ -230,31 +230,30 @@ export const SaaSBilling: React.FC = () => {
 
 
 
+  const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
+
   const planOptions = [
     {
-      name: 'Monthly Plan',
-      cycle: 'MONTHLY' as const,
-      price: '₹500',
-      periodText: 'mo',
-      features: ['1 Branch Location', 'Up to 200 Gym Members', 'Check-In Kiosk Scanner', 'Basic Revenue Reports', 'SMS Alerts & Notifications'],
-      badge: 'Starter Plan'
+      name: 'Starter',
+      monthlyPrice: 499,
+      yearlyPrice: 4990,
+      features: ['1 Branch Location', 'Up to 200 Gym Members', 'QR Kiosk Scanner & Pass', 'Attendance Heatmaps', 'Leads CRM Pipeline'],
+      badge: 'Solopreneurs'
     },
     {
-      name: '6-Month Plan',
-      cycle: 'HALF_YEARLY' as const,
-      price: '₹2,800',
-      periodText: '6 mos',
-      features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk + Self-Service Portal', 'Class Schedules & Booking', 'Supplement Inventory POS', 'Multi-staff Access Control'],
-      badge: 'Best Value',
+      name: 'Professional',
+      monthlyPrice: 1499,
+      yearlyPrice: 14990,
+      features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk Scanner & Pass', 'Staff Payroll & PT Session Payouts', 'Leads CRM + 1-Click Convert', 'Supplement Inventory POS', 'GymBot AI Assistant'],
+      badge: 'Most Popular',
       popular: true
     },
     {
-      name: 'Yearly Plan',
-      cycle: 'YEARLY' as const,
-      price: '₹5,500',
-      periodText: 'yr',
-      features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom API access', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
-      badge: 'Enterprise Level'
+      name: 'Enterprise',
+      monthlyPrice: 3499,
+      yearlyPrice: 34990,
+      features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom GST Tax Invoice Layouts', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
+      badge: 'Multi-city chains'
     }
   ];
 
@@ -487,24 +486,40 @@ export const SaaSBilling: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100/10 pb-4">
           <div>
             <h3 className="text-xl font-bold text-gym-text">Upgrade Plan for: <span className="text-gym-primary font-black">{selectedBranchName}</span></h3>
-            <p className="text-xs text-gym-muted">Select the duration plan that matches your gym operations budget.</p>
+            <p className="text-xs text-gym-muted">Select the tier and billing cycle that matches your gym operations budget.</p>
           </div>
-          {appliedPromo && (
-            <div className="px-3 py-1.5 bg-gym-primary/10 border border-gym-primary/20 rounded-xl text-xs font-bold text-gym-primary">
-              Discount Active: -{promoDiscount}% via {appliedPromo}
-            </div>
-          )}
+          
+          {/* Toggle Billing Interval */}
+          <div className="inline-flex items-center gap-2 bg-slate-950/40 p-1.5 rounded-xl border border-slate-800">
+            <button
+              onClick={() => setBillingCycle('MONTHLY')}
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                billingCycle === 'MONTHLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
+              }`}
+            >
+              Monthly Billing
+            </button>
+            <button
+              onClick={() => setBillingCycle('YEARLY')}
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                billingCycle === 'YEARLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
+              }`}
+            >
+              Yearly (2 Months Free)
+            </button>
+          </div>
         </div>
 
         {/* Plan Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {planOptions.map((opt) => {
-            const rawPrice = opt.cycle === 'YEARLY' ? 5500 : opt.cycle === 'HALF_YEARLY' ? 2800 : 500;
+            const rawPrice = billingCycle === 'YEARLY' ? opt.yearlyPrice : opt.monthlyPrice;
+            const periodText = billingCycle === 'YEARLY' ? 'yr' : 'mo';
             const discountAmt = (rawPrice * promoDiscount) / 100;
             const finalPrice = Math.max(0, rawPrice - discountAmt);
 
             // Is code valid for this cycle
-            const isInvalidForCycle = appliedPromo === 'ANNUAL30' && opt.cycle !== 'YEARLY';
+            const isInvalidForCycle = appliedPromo === 'ANNUAL30' && billingCycle !== 'YEARLY';
 
             return (
               <div
@@ -538,7 +553,7 @@ export const SaaSBilling: React.FC = () => {
                       <span className="text-4xl font-extrabold text-gym-primary">
                         ₹{finalPrice.toLocaleString()}
                       </span>
-                      <span className="text-xs text-gym-muted">/{opt.periodText}</span>
+                      <span className="text-xs text-gym-muted">/{periodText}</span>
                     </div>
                   </div>
 
@@ -554,7 +569,7 @@ export const SaaSBilling: React.FC = () => {
 
                 <div className="mt-8 pt-4">
                   <button
-                    onClick={() => handleSubscribe('Premium', opt.cycle)}
+                    onClick={() => handleSubscribe(opt.name, billingCycle)}
                     disabled={actionLoading || isInvalidForCycle}
                     className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer ${
                       isInvalidForCycle

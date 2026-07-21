@@ -257,6 +257,17 @@ export const validatePromoCode = async (req, res) => {
         return res.status(500).json({ error: 'Failed to validate promo code.' });
     }
 };
+const calculateSaaSPrice = (planName, billingCycle) => {
+    const isYearly = billingCycle === 'YEARLY';
+    if (planName === 'Starter') {
+        return isYearly ? 4990 : 499;
+    }
+    if (planName === 'Professional') {
+        return isYearly ? 14990 : 1499;
+    }
+    // Enterprise / Premium / Default
+    return isYearly ? 34990 : 3499;
+};
 export const createSaaSOrder = async (req, res) => {
     try {
         const { planName, billingCycle, branchId, promoCode } = req.body;
@@ -266,7 +277,7 @@ export const createSaaSOrder = async (req, res) => {
         if (!planName || !['Premium', 'Starter', 'Professional', 'Enterprise'].includes(planName)) {
             return res.status(400).json({ error: 'Invalid plan selected.' });
         }
-        let basePrice = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+        let basePrice = calculateSaaSPrice(planName, billingCycle);
         let discountPercent = 0;
         if (promoCode) {
             const promo = await prisma.promoCode.findUnique({
@@ -350,7 +361,7 @@ export const verifySaaSPayment = async (req, res) => {
         }
         const invoiceNumber = `INV-GYMOS-${now.getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
         const discountVal = discountApplied ? parseFloat(discountApplied) : 0;
-        const basePrice = billingCycle === 'YEARLY' ? 5500 : billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+        const basePrice = calculateSaaSPrice(planName || 'Professional', billingCycle || 'MONTHLY');
         const paidVal = amountPaid ? parseFloat(amountPaid) : (basePrice - discountVal);
         let updated;
         if (branchId) {
@@ -446,7 +457,7 @@ export const downloadSaaSInvoice = async (req, res) => {
                 };
             }
         }
-        const basePrice = sub.billingCycle === 'YEARLY' ? 5500 : sub.billingCycle === 'HALF_YEARLY' ? 2800 : 500;
+        const basePrice = calculateSaaSPrice(sub.planName || 'Professional', sub.billingCycle || 'MONTHLY');
         // Set headers for secure PDF download
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=Invoice-${sub.invoiceNumber || sub.id}.pdf`);

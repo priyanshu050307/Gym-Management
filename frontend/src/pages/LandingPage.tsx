@@ -93,7 +93,7 @@ export const LandingPage: React.FC = () => {
       setError(null);
       setSuccess(null);
 
-      let finalPrice = planName === 'Starter' ? 1499 : planName === 'Professional' ? 3499 : 7999;
+      let finalPrice = planName === 'Starter' ? 499 : planName === 'Professional' ? 1499 : 3499;
       if (billingCycle === 'YEARLY') {
         finalPrice = finalPrice * 10;
       }
@@ -417,20 +417,20 @@ export const LandingPage: React.FC = () => {
             {[
               {
                 name: 'Starter',
-                price: billingCycle === 'YEARLY' ? '₹14,990' : '₹1,499',
+                price: billingCycle === 'YEARLY' ? '₹4,990' : '₹499',
                 features: ['1 Branch Location', 'Up to 200 Gym Members', 'QR Kiosk Scanner & Pass', 'Attendance Heatmaps', 'Leads CRM Pipeline'],
                 badge: 'Solopreneurs'
               },
               {
                 name: 'Professional',
-                price: billingCycle === 'YEARLY' ? '₹34,990' : '₹3,499',
+                price: billingCycle === 'YEARLY' ? '₹14,990' : '₹1,499',
                 features: ['3 Branch Locations', 'Unlimited Members', 'QR Kiosk Scanner & Pass', 'Staff Payroll & PT Session Payouts', 'Leads CRM + 1-Click Convert', 'Supplement Inventory POS', 'GymBot AI Assistant'],
                 badge: 'Most Popular',
                 popular: true
               },
               {
                 name: 'Enterprise',
-                price: billingCycle === 'YEARLY' ? '₹79,990' : '₹7,999',
+                price: billingCycle === 'YEARLY' ? '₹34,990' : '₹3,499',
                 features: ['Unlimited Locations', 'Unlimited Members', 'Dedicated Account Manager', 'Custom GST Tax Invoice Layouts', 'White-labeled Gym Portal', 'All Platform Features Unlocked'],
                 badge: 'Multi-city chains'
               }
