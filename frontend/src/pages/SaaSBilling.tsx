@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch, getApiUrl } from '../utils/api.js';
+import { useAuth } from '../context/AuthContext.js';
 import {
   Check,
   MapPin,
@@ -10,6 +11,7 @@ import {
 
 
 export const SaaSBilling: React.FC = () => {
+  const { user } = useAuth();
   const [allSubscriptions, setAllSubscriptions] = useState<any[]>([]);
   const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null);
   const [selectedBranchName, setSelectedBranchName] = useState<string>('Primary Branch');
@@ -431,164 +433,172 @@ export const SaaSBilling: React.FC = () => {
       )}
 
       {/* Promo Code & Live Pricing Preview */}
-      <div className="glass-card p-6 rounded-2xl border border-slate-100/10 max-w-xl space-y-4">
-        <div>
-          <h4 className="text-sm font-semibold text-gym-text flex items-center gap-2">
-            <Zap className="h-4.5 w-4.5 text-gym-primary" /> Apply Platform Promo Code
-          </h4>
-          <p className="text-xs text-gym-muted mt-0.5">Enter a discount code to apply savings across all Gymnasium cloud packages.</p>
-        </div>
+      {user?.role === 'ADMIN' ? (
+        <>
+          <div className="glass-card p-6 rounded-2xl border border-slate-100/10 max-w-xl space-y-4">
+            <div>
+              <h4 className="text-sm font-semibold text-gym-text flex items-center gap-2">
+                <Zap className="h-4.5 w-4.5 text-gym-primary" /> Apply Platform Promo Code
+              </h4>
+              <p className="text-xs text-gym-muted mt-0.5">Enter a discount code to apply savings across all Gymnasium cloud packages.</p>
+            </div>
 
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="e.g. GYM20, LAUNCH50, ANNUAL30"
-            value={promoCodeInput}
-            onChange={(e) => setPromoCodeInput(e.target.value)}
-            disabled={appliedPromo !== null || promoLoading}
-            className="gym-input text-xs font-mono uppercase tracking-wider"
-          />
-          {appliedPromo ? (
-            <button
-              onClick={handleRemovePromo}
-              className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold rounded-xl text-xs border border-red-500/20 whitespace-nowrap cursor-pointer"
-            >
-              Remove
-            </button>
-          ) : (
-            <button
-              onClick={handleValidatePromo}
-              disabled={promoLoading}
-              className="px-4 py-2 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl text-xs whitespace-nowrap cursor-pointer disabled:opacity-50"
-            >
-              {promoLoading ? 'Verifying...' : 'Apply Code'}
-            </button>
-          )}
-        </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="e.g. GYM20, LAUNCH50, ANNUAL30"
+                value={promoCodeInput}
+                onChange={(e) => setPromoCodeInput(e.target.value)}
+                disabled={appliedPromo !== null || promoLoading}
+                className="gym-input text-xs font-mono uppercase tracking-wider"
+              />
+              {appliedPromo ? (
+                <button
+                  onClick={handleRemovePromo}
+                  className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold rounded-xl text-xs border border-red-500/20 whitespace-nowrap cursor-pointer"
+                >
+                  Remove
+                </button>
+              ) : (
+                <button
+                  onClick={handleValidatePromo}
+                  disabled={promoLoading}
+                  className="px-4 py-2 bg-gym-primary hover:bg-gym-primary-hover text-black font-bold rounded-xl text-xs whitespace-nowrap cursor-pointer disabled:opacity-50"
+                >
+                  {promoLoading ? 'Verifying...' : 'Apply Code'}
+                </button>
+              )}
+            </div>
 
-        {promoError && (
-          <span className="text-xs text-red-400 block font-medium">❌ {promoError}</span>
-        )}
-        {promoSuccess && (
-          <span className="text-xs text-emerald-400 block font-medium">🎉 {promoSuccess}</span>
-        )}
+            {promoError && (
+              <span className="text-xs text-red-400 block font-medium">❌ {promoError}</span>
+            )}
+            {promoSuccess && (
+              <span className="text-xs text-emerald-400 block font-medium">🎉 {promoSuccess}</span>
+            )}
 
-        <div className="text-[10px] text-gym-muted flex flex-col gap-1 border-t border-slate-100/5 pt-2">
-          <span>Available Coupons:</span>
-          <span>• <strong className="text-gym-primary font-bold">GYM20</strong> — 20% discount on all cycles</span>
-          <span>• <strong className="text-gym-primary font-bold">LAUNCH50</strong> — 50% limited time discount</span>
-          <span>• <strong className="text-gym-primary font-bold">ANNUAL30</strong> — 30% discount (applicable for yearly cycle only)</span>
-        </div>
-      </div>
-
-      {/* Plan selector toggles */}
-      <div id="plans-selector" className="space-y-6 scroll-mt-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100/10 pb-4">
-          <div>
-            <h3 className="text-xl font-bold text-gym-text">Upgrade Plan for: <span className="text-gym-primary font-black">{selectedBranchName}</span></h3>
-            <p className="text-xs text-gym-muted">Select the tier and billing cycle that matches your gym operations budget.</p>
+            <div className="text-[10px] text-gym-muted flex flex-col gap-1 border-t border-slate-100/5 pt-2">
+              <span>Available Coupons:</span>
+              <span>• <strong className="text-gym-primary font-bold">GYM20</strong> — 20% discount on all cycles</span>
+              <span>• <strong className="text-gym-primary font-bold">LAUNCH50</strong> — 50% limited time discount</span>
+              <span>• <strong className="text-gym-primary font-bold">ANNUAL30</strong> — 30% discount (applicable for yearly cycle only)</span>
+            </div>
           </div>
-          
-          {/* Toggle Billing Interval */}
-          <div className="inline-flex items-center gap-2 bg-slate-950/40 p-1.5 rounded-xl border border-slate-800">
-            <button
-              onClick={() => setBillingCycle('MONTHLY')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                billingCycle === 'MONTHLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
-              }`}
-            >
-              Monthly Billing
-            </button>
-            <button
-              onClick={() => setBillingCycle('YEARLY')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                billingCycle === 'YEARLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
-              }`}
-            >
-              Yearly (2 Months Free)
-            </button>
-          </div>
-        </div>
 
-        {/* Plan Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {planOptions.map((opt) => {
-            const rawPrice = billingCycle === 'YEARLY' ? opt.yearlyPrice : opt.monthlyPrice;
-            const periodText = billingCycle === 'YEARLY' ? 'yr' : 'mo';
-            const discountAmt = (rawPrice * promoDiscount) / 100;
-            const finalPrice = Math.max(0, rawPrice - discountAmt);
+          {/* Plan selector toggles */}
+          <div id="plans-selector" className="space-y-6 scroll-mt-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100/10 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-gym-text">Upgrade Plan for: <span className="text-gym-primary font-black">{selectedBranchName}</span></h3>
+                <p className="text-xs text-gym-muted">Select the tier and billing cycle that matches your gym operations budget.</p>
+              </div>
+              
+              {/* Toggle Billing Interval */}
+              <div className="inline-flex items-center gap-2 bg-slate-950/40 p-1.5 rounded-xl border border-slate-800">
+                <button
+                  onClick={() => setBillingCycle('MONTHLY')}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    billingCycle === 'MONTHLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
+                  }`}
+                >
+                  Monthly Billing
+                </button>
+                <button
+                  onClick={() => setBillingCycle('YEARLY')}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    billingCycle === 'YEARLY' ? 'bg-gym-primary text-black' : 'text-gym-muted hover:text-gym-text'
+                  }`}
+                >
+                  Yearly (2 Months Free)
+                </button>
+              </div>
+            </div>
 
-            // Is code valid for this cycle
-            const isInvalidForCycle = appliedPromo === 'ANNUAL30' && billingCycle !== 'YEARLY';
+            {/* Plan Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {planOptions.map((opt) => {
+                const rawPrice = billingCycle === 'YEARLY' ? opt.yearlyPrice : opt.monthlyPrice;
+                const periodText = billingCycle === 'YEARLY' ? 'yr' : 'mo';
+                const discountAmt = (rawPrice * promoDiscount) / 100;
+                const finalPrice = Math.max(0, rawPrice - discountAmt);
 
-            return (
-              <div
-                key={opt.name}
-                className={`glass-card rounded-3xl p-6 border relative flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
-                  opt.popular 
-                    ? 'border-gym-primary/40 shadow-lg shadow-gym-primary/5 bg-slate-900/30' 
-                    : 'border-slate-100/10 hover:border-gym-primary/20'
-                } ${isInvalidForCycle ? 'opacity-60' : ''}`}
-              >
-                {opt.popular && (
-                  <span className="absolute -top-3 left-6 px-3 py-1 bg-gym-primary text-black text-[10px] font-extrabold uppercase rounded-full tracking-wider shadow">
-                    Most Popular
-                  </span>
-                )}
+                // Is code valid for this cycle
+                const isInvalidForCycle = appliedPromo === 'ANNUAL30' && billingCycle !== 'YEARLY';
 
-                <div className="space-y-6">
-                  <div>
-                    <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider">{opt.badge}</span>
-                    <h4 className="text-xl font-bold text-gym-text mt-1">{opt.name}</h4>
-                  </div>
-
-                  <div className="flex flex-col">
-                    {promoDiscount > 0 && !isInvalidForCycle ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm line-through text-gym-muted">₹{rawPrice.toLocaleString()}</span>
-                        <span className="text-xs px-1.5 py-0.5 bg-emerald-500/15 text-emerald-400 rounded font-bold">-{promoDiscount}%</span>
-                      </div>
-                    ) : null}
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold text-gym-primary">
-                        ₹{finalPrice.toLocaleString()}
+                return (
+                  <div
+                    key={opt.name}
+                    className={`glass-card rounded-3xl p-6 border relative flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
+                      opt.popular 
+                        ? 'border-gym-primary/40 shadow-lg shadow-gym-primary/5 bg-slate-900/30' 
+                        : 'border-slate-100/10 hover:border-gym-primary/20'
+                    } ${isInvalidForCycle ? 'opacity-60' : ''}`}
+                  >
+                    {opt.popular && (
+                      <span className="absolute -top-3 left-6 px-3 py-1 bg-gym-primary text-black text-[10px] font-extrabold uppercase rounded-full tracking-wider shadow">
+                        Most Popular
                       </span>
-                      <span className="text-xs text-gym-muted">/{periodText}</span>
+                    )}
+
+                    <div className="space-y-6">
+                      <div>
+                        <span className="text-[10px] font-bold text-gym-muted uppercase tracking-wider">{opt.badge}</span>
+                        <h4 className="text-xl font-bold text-gym-text mt-1">{opt.name}</h4>
+                      </div>
+
+                      <div className="flex flex-col">
+                        {promoDiscount > 0 && !isInvalidForCycle ? (
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm line-through text-gym-muted">₹{rawPrice.toLocaleString()}</span>
+                            <span className="text-xs px-1.5 py-0.5 bg-emerald-500/15 text-emerald-400 rounded font-bold">-{promoDiscount}%</span>
+                          </div>
+                        ) : null}
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-extrabold text-gym-primary">
+                            ₹{finalPrice.toLocaleString()}
+                          </span>
+                          <span className="text-xs text-gym-muted">/{periodText}</span>
+                        </div>
+                      </div>
+
+                      <ul className="space-y-3 text-xs text-gym-muted border-t border-slate-100/10 pt-4">
+                        {opt.features.map((f, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <Check className="h-4 w-4 text-gym-primary shrink-0" />
+                            <span>{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mt-8 pt-4">
+                      <button
+                        onClick={() => handleSubscribe(opt.name, billingCycle)}
+                        disabled={actionLoading || isInvalidForCycle}
+                        className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer ${
+                          isInvalidForCycle
+                            ? 'bg-slate-800 text-gym-muted border border-slate-700 cursor-not-allowed'
+                            : opt.popular
+                            ? 'bg-gym-primary hover:bg-gym-primary-hover text-black shadow-gym-primary/10'
+                            : 'bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800'
+                        }`}
+                      >
+                        {isInvalidForCycle 
+                          ? 'Inapplicable Code' 
+                          : `Subscribe & Pay ₹${finalPrice.toLocaleString()}`}
+                      </button>
                     </div>
                   </div>
-
-                  <ul className="space-y-3 text-xs text-gym-muted border-t border-slate-100/10 pt-4">
-                    {opt.features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-gym-primary shrink-0" />
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4">
-                  <button
-                    onClick={() => handleSubscribe(opt.name, billingCycle)}
-                    disabled={actionLoading || isInvalidForCycle}
-                    className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer ${
-                      isInvalidForCycle
-                        ? 'bg-slate-800 text-gym-muted border border-slate-700 cursor-not-allowed'
-                        : opt.popular
-                        ? 'bg-gym-primary hover:bg-gym-primary-hover text-black shadow-gym-primary/10'
-                        : 'bg-slate-900 hover:bg-slate-800 text-gym-text border border-slate-800'
-                    }`}
-                  >
-                    {isInvalidForCycle 
-                      ? 'Inapplicable Code' 
-                      : `Subscribe & Pay ₹${finalPrice.toLocaleString()}`}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-400 text-xs">
+          ℹ️ Plan upgrades, renewals, and promo discount options are restricted to the primary Gym Owner (Admin) account.
         </div>
-      </div>
+      )}
 
       {/* Billing Profiles & Invoices */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -605,6 +615,7 @@ export const SaaSBilling: React.FC = () => {
                 placeholder="27AAAAA1111A1Z1"
                 value={gstin}
                 onChange={(e) => setGstin(e.target.value)}
+                disabled={user?.role !== 'ADMIN'}
                 className="gym-input text-xs"
               />
             </div>
@@ -614,17 +625,20 @@ export const SaaSBilling: React.FC = () => {
                 placeholder="123 Studio Street, Mumbai, MH"
                 value={billingAddress}
                 onChange={(e) => setBillingAddress(e.target.value)}
+                disabled={user?.role !== 'ADMIN'}
                 rows={3}
                 className="gym-input text-xs"
               />
             </div>
-            <button
-              type="submit"
-              disabled={actionLoading}
-              className="px-4 py-2 bg-slate-900 border border-slate-800 text-gym-text hover:bg-slate-800 text-xs font-semibold rounded-xl cursor-pointer"
-            >
-              Save Billing Profile
-            </button>
+            {user?.role === 'ADMIN' && (
+              <button
+                type="submit"
+                disabled={actionLoading}
+                className="px-4 py-2 bg-slate-900 border border-slate-800 text-gym-text hover:bg-slate-800 text-xs font-semibold rounded-xl cursor-pointer"
+              >
+                Save Billing Profile
+              </button>
+            )}
           </form>
         </div>
 

@@ -12,7 +12,7 @@ interface Branch {
 }
 
 export const Branches: React.FC = () => {
-  const { refreshProfile } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [branches, setBranches] = useState<Branch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -229,6 +229,10 @@ export const Branches: React.FC = () => {
     const limitExceeded = !editingBranch && branches.length >= subCount;
 
     if (limitExceeded) {
+      if (user?.role !== 'ADMIN') {
+        setError('Branch limit exceeded. Only the Gym Owner (Admin) can purchase additional branch slots.');
+        return;
+      }
       try {
         setPaymentLoading(true);
         setError('');
