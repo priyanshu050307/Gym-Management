@@ -222,6 +222,8 @@ export const SaaSBilling: React.FC = () => {
 
 
 
+  const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gym-darker">
@@ -229,10 +231,6 @@ export const SaaSBilling: React.FC = () => {
       </div>
     );
   }
-
-
-
-  const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY');
 
   const planOptions = [
     {
